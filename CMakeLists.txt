@@ -15,6 +15,7 @@ include_directories(${SRC_DIR})
 
 set(SRC_LIST
         ${SRC_DIR}/BigNum.cpp
+        ${SRC_DIR}/Polynomial.cpp
         )
 
 set(LIB_NAME ${PROJECT_NAME}core)
@@ -27,7 +28,7 @@ if (ENABLE_TESTS)
     add_subdirectory(${TESTS_DIR})
 endif()
 
-#  executable for quick testing in main.cpp
+# executable for quick testing in main.cpp
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE ${LIBRARY_NAME})
 
