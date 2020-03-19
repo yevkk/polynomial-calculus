@@ -2,6 +2,7 @@
 
 #include <BigNum.hpp>
 #include <vector>
+#include <string>
 
 namespace lab {
 
@@ -11,13 +12,20 @@ namespace lab {
 class Polynomial
 {
 public:
-    //Polynomial(const Polynomial& that) = default;
+    Polynomial(const Polynomial& that) = default;
 
-    //explicit Polynomial(std::string_view pol_str);
+    explicit Polynomial(std::string_view pol_str);
 
-    //Polynomial() = default;
+    Polynomial() = default;
 
-    //Polynomial& operator=(const Polynomial& pol)
+    //Polynomial& operator=(const Polynomial& that)
+
+    /*
+     * @return the highest power of variable with non-zero coefficient
+     */
+    //int degree();
+
+    //friend std::string to_string(const Polynomial& pol);
 
     //friend bool operator==(const Polynomial& left, const Polynomial& right);
     //friend bool operator!=(const Polynomial& left, const Polynomial& right);
@@ -33,11 +41,6 @@ public:
 
     //template<typename IStream>
     //friend IStream& operator>>(IStream& is, const Polynomial& pol);
-
-    /*
-     * @return the highest power of variable with non-zero coefficient
-     */
-    //int degree();
 
     //friend void modify(Polynomial& pol, const BigNum& mod);
 
