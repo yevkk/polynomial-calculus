@@ -55,3 +55,4 @@ private:
 
 } // namespace lab
 
+#include "Polynomial.hxx"

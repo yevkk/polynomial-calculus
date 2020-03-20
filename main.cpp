@@ -1,5 +1,4 @@
 #include <Polynomial.hpp>
-#include <Polynomial.cpp>
 
 int main () {
     const int m = 11;
