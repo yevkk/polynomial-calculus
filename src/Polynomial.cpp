@@ -1,81 +1,154 @@
 #include <Polynomial.hpp>
 #include <cassert>
 #include <cctype>
+#include <iostream>
 
 namespace lab {
 
+/*
+ * @brief Converts string to polynomial
+ * @return Polynomial<modulo> object if string has correct format, otherwise - null
+ */
 template<uint64_t modulo>
 std::optional<Polynomial<modulo>> from_string(std::string_view pol_str)
 {
-    auto error = [](){ assert(0 && "Incorrect input"); };
+    Polynomial<modulo> result;
+    result._coefs.push_back(0);
+
+    static auto increase_coef = [&](unsigned index, uint64_t value)
+    {
+        result._coefs[0] = 15;
+        //TODO: implement this
+    };
 
     /*
      * Possible states:
-     *  0 - BigNum coefficient
-     *  1 - space before '*'
-     *  2 - space after '*'
-     *  3 - space before '^'
-     *  4 - space after '^'
-     *  5 - int degree
-     *  6 - space before '+'
-     *  7 - space after '+'
+     *  0 - coefficient with spaces before and after
+     *  1 - space between '*' and variable char
+     *  2 - space between variable char and '^'
+     *  3 - degree value with spaces before and after
      */
     int state = 0;
     std::string coef_str;
     std::string degree_str;
     char var_ch = ' ';
+    bool digit_met = false;
+    bool space_met = false;
 
-    for (int i = 0; i < pol_str.size(); i++) {
-        char c = pol_str[i];
+    for (const auto& c:pol_str) {
 
-        switch (state)
-        {
+        switch (state) {
         case 0:
             if (std::isdigit(c)) {
+                if (!digit_met) {
+                    digit_met = true;
+                } else {
+                    if (space_met) {
+                        return std::nullopt;
+                    }
+                }
                 coef_str += c;
             } else if (c == '*') {
-                state = 2;
-            } else if (c == '+') {
-                _coefs[0]  = _coefs[0] + BigNum(coef_str); //TODO: fix empty _coefs case
-                coef_str.clear();
-                state = 7;
-            } else if (c == '^') {
-                error;
-            } else if (c == ' ') {
                 state = 1;
+                digit_met = space_met = false;
+            } else if (c == '+') {
+                increase_coef(0, std::stoull(coef_str));
+                coef_str.clear();
+                digit_met = space_met = false;
+            } else if (c == ' ') {
+                if (digit_met) {
+                    space_met = true;
+                }
             } else if (std::isalpha(c)) {
                 if (var_ch == ' ') {
                     var_ch = c;
                 } else {
                     if (var_ch != c) {
-                        error;
+                        return std::nullopt;
                     }
                 }
-                state = 3;
+                state = 2;
+            } else {
+                return std::nullopt;
             }
-        continue;
+            break;
 
-        case 1: {
+        case 1:
+            if (std::isalpha(c)) {
+                if (var_ch == ' ') {
+                    var_ch = c;
+                } else {
+                    if (var_ch != c) {
+                        return std::nullopt;
+                    }
+                }
+                state = 2;
+            } else if (c != ' ') {
+                return std::nullopt;
+            }
             break;
-        }
-        case 2: {
-            break;
-        }
-        case 3: {
-            break;
-        }
-//            case 4: {
-//                break;
-//            }
-//            case 5: {
-//                break;
-//            }
-//            case 6: {
-//                break;
-//            }
 
+        case 2:
+            if (c == '^') {
+                state = 3;
+            } else if (c == '+') {
+                increase_coef(1, std::stoull(coef_str));
+                coef_str.clear();
+                digit_met = space_met = false;
+            } else if (c != ' ') {
+                return std::nullopt;
+            }
+            break;
+
+        case 3:
+            if (std::isdigit(c)) {
+                if (!digit_met) {
+                    digit_met = true;
+                } else {
+                    if (space_met) {
+                        return std::nullopt;
+                    }
+                }
+                degree_str += c;
+            } else if (c == '+') {
+                increase_coef(std::stoi(degree_str), std::stoull(coef_str));
+                degree_str.clear();
+                coef_str.clear();
+                digit_met = space_met = false;
+                state = 0;
+            } else if (c == ' ') {
+                if (digit_met) {
+                    space_met = true;
+                }
+            } else {
+                return std::nullopt;
+            }
+            break;
+
+        default:
+            break;
         }
     }
+
+    switch (state) {
+        case 0:
+            increase_coef(0, std::stoull(coef_str));
+            break;
+
+        case 1:
+        case 2:
+            return std::nullopt;
+
+        case 3:
+            increase_coef(std::stoi(degree_str), std::stoull(coef_str));
+            break;
+
+        default:
+            break;
+    }
+
+    std::cout << result._coefs[0]; //TODO: clear
+    return result;
 }
 
 } // namespace lab
