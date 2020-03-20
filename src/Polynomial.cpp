@@ -4,7 +4,8 @@
 
 namespace lab {
 
-Polynomial::Polynomial(std::string_view pol_str)
+template<uint64_t modulo>
+std::optional<Polynomial<modulo>> from_string(std::string_view pol_str)
 {
     auto error = [](){ assert(0 && "Incorrect input"); };
 
@@ -72,9 +73,7 @@ Polynomial::Polynomial(std::string_view pol_str)
 //            case 6: {
 //                break;
 //            }
-        default: {
-            break;
-        }
+
         }
     }
 }

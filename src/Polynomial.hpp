@@ -1,56 +1,56 @@
 #pragma once
 
-#include <BigNum.hpp>
 #include <vector>
 #include <string>
+#include <optional>
 
 namespace lab {
 
 /**
  * @brief Class for holding polynomials with big integer coefficients
  */
+template<uint64_t modulo>
 class Polynomial
 {
 public:
-    Polynomial(const Polynomial& that) = default;
+    Polynomial(const Polynomial<modulo>& that) = default;
 
-    explicit Polynomial(std::string_view pol_str);
+    //explicit Polynomial(std::initializer_list<uint64_t> coefs); TODO: implement me
 
     Polynomial() = default;
 
-    //Polynomial& operator=(const Polynomial& that)
+    //Polynomial& operator=(const Polynomial<modulo>& that) TODO: implement me
 
     /*
      * @return the highest power of variable with non-zero coefficient
      */
-    //int degree();
+    //int degree(); TODO: implement me
 
-    //friend std::string to_string(const Polynomial& pol);
+    //friend std::string to_string(const Polynomial<modulo>& pol); TODO: implement me
 
-    //friend bool operator==(const Polynomial& left, const Polynomial& right);
-    //friend bool operator!=(const Polynomial& left, const Polynomial& right);
+    friend std::optional<Polynomial<modulo>> from_string(std::string_view pol_str);
 
-    //friend Polynomial operator+(const Polynomial& left, const Polynomial& right);
-    //friend Polynomial operator-(const Polynomial& left, const Polynomial& right);
-    //friend Polynomial operator*(const Polynomial& left, const Polynomial& right);
-    //friend Polynomial operator*(const Polynomial& left, const BigNum& right);
-    //friend Polynomial operator*(const Polynomial& left, int right);
+    //friend bool operator==(const Polynomial& left, const Polynomial& right); TODO: implement me
+    //friend bool operator!=(const Polynomial& left, const Polynomial& right); TODO: implement me
+
+    //friend Polynomial operator+(const Polynomial& left, const Polynomial& right); TODO: implement me
+    //friend Polynomial operator-(const Polynomial& left, const Polynomial& right); TODO: implement me
+    //friend Polynomial operator*(const Polynomial& left, const Polynomial& right); TODO: implement me
+    //friend Polynomial operator*(const Polynomial& left, int right); TODO: implement me
 
     //template<typename OStream>
-    //friend OStream& operator<<(OStream& os, const Polynomial& pol);
+    //friend OStream& operator<<(OStream& os, const Polynomial& pol); TODO: implement me
 
     //template<typename IStream>
-    //friend IStream& operator>>(IStream& is, const Polynomial& pol);
+    //friend IStream& operator>>(IStream& is, const Polynomial& pol); TODO: implement me
 
-    //friend void modify(Polynomial& pol, const BigNum& mod);
+    //friend void modify(Polynomial& pol, const BigNum& mod); TODO: change signature and implement
 
     //add, subtract, multiply
 
 private:
-    BigNum _field_modulo;
-
     // Array of polynomial's coefficients
-    std::vector<BigNum> _coefs;
+    std::vector<uint64_t> _coefs;
 };
 
 } // namespace lab
