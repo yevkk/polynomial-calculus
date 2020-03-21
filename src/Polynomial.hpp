@@ -24,10 +24,18 @@ public:
     /*
      * @return the highest power of variable with non-zero coefficient
      */
-    //int degree(); TODO: implement me
+    int degree();
 
-    //friend std::string to_string(const Polynomial<modulo>& pol); TODO: implement me
+    /*
+    * @brief Converts polynomial to string
+    */
+    template <uint64_t mod>
+    friend std::string to_string(const Polynomial<mod>& pol, char var_ch, bool show_zero);
 
+    /*
+     * @brief Converts string to polynomial
+     * @return Polynomial<modulo> object if string has correct format, otherwise - null
+     */
     template <uint64_t mod>
     friend std::optional<Polynomial<mod>> from_string(std::string_view pol_str);
 

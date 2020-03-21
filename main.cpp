@@ -2,7 +2,7 @@
 
 int main () {
     const int m = 11;
-    lab::Polynomial<m> p;
-    lab::from_string<m>("123 + 122  + 121");
+    lab::Polynomial<m> p{12, 11, 13};
+    std::cout << lab::to_string(p, 'A');
     return 0;
 }
