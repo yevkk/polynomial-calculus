@@ -28,6 +28,14 @@ int degree(const Polynomial<mod>& pol) {
 }
 
 /*
+ * @return the coefficient corresponding to x^power
+ */
+template <uint64_t mod>
+int coefficient(const Polynomial<mod>& pol, unsigned power) {
+    return power < pol._coefs.size() ? pol._coefs[power] : 0;
+}
+
+/*
  * @brief Converts polynomial to string
  */
 template <uint64_t mod>

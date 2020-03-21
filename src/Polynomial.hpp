@@ -28,6 +28,12 @@ public:
     friend int degree(const Polynomial<mod>& pol);
 
     /*
+     * @return the coefficient corresponding to x^power
+     */
+    template <uint64_t mod>
+    friend int coefficient(const Polynomial<mod>& pol, unsigned power);
+
+    /*
     * @brief Converts polynomial to string
     */
     template <uint64_t mod>
