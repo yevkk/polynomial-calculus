@@ -205,4 +205,20 @@ std::optional<Polynomial<mod>> from_string(std::string_view pol_str)
     return result;
 }
 
+template<uint64_t mod>
+bool operator==(const Polynomial <mod> &left, const Polynomial <mod> &right) {
+    if (left.degree - right.degree) return false;
+
+    for (unsigned i = 0; i < left._coefs.size(); i++) {
+        if (left._coefs[i] - right._coefs[i]) return false;
+    }
+
+    return true;
+}
+
+template<uint64_t mod>
+bool operator!=(const Polynomial <mod> &left, const Polynomial <mod> &right) {
+    return !(left == right);
+}
+
 } // namespace lab

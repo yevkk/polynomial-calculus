@@ -39,8 +39,10 @@ public:
     template <uint64_t mod>
     friend std::optional<Polynomial<mod>> from_string(std::string_view pol_str);
 
-    //friend bool operator==(const Polynomial& left, const Polynomial& right); TODO: implement me
-    //friend bool operator!=(const Polynomial& left, const Polynomial& right); TODO: implement me
+    template <uint64_t mod>
+    friend bool operator==(const Polynomial<mod>& left, const Polynomial<mod>& right);
+    template <uint64_t mod>
+    friend bool operator!=(const Polynomial<mod>& left, const Polynomial<mod>& right);
 
     //friend Polynomial operator+(const Polynomial& left, const Polynomial& right); TODO: implement me
     //friend Polynomial operator-(const Polynomial& left, const Polynomial& right); TODO: implement me
