@@ -15,7 +15,7 @@ class Polynomial
 public:
     Polynomial(const Polynomial<modulo>& that) = default;
 
-    //explicit Polynomial(std::initializer_list<uint64_t> coefs); TODO: implement me
+    Polynomial(std::initializer_list<uint64_t> coefs);
 
     Polynomial() = default;
 

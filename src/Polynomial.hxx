@@ -5,7 +5,15 @@
 #include <iostream>
 
 namespace lab {
-
+template<uint64_t modulo>
+Polynomial<modulo>::Polynomial(std::initializer_list<uint64_t> coefs) : _coefs(coefs) {
+    for(auto& item:_coefs) {
+        while (item < 0) {
+            item += modulo;
+        }
+        item = item % modulo;
+    }
+}
 
 /*
  * @brief Converts string to polynomial
