@@ -14,14 +14,17 @@ Polynomial<modulo>::Polynomial(std::initializer_list<uint64_t> coefs) : _coefs(c
         }
         item = item % modulo;
     }
+    while (!_coefs.back()) {
+        _coefs.pop_back();
+    }
 }
 
 /*
  * @return the highest power of variable with non-zero coefficient
  */
-template<uint64_t modulo>
-int Polynomial<modulo>::degree() {
-    return _coefs.size() - 1;
+template<uint64_t mod>
+int degree(const Polynomial<mod>& pol) {
+    return pol._coefs.size() - 1;
 }
 
 /*
@@ -206,8 +209,8 @@ std::optional<Polynomial<mod>> from_string(std::string_view pol_str)
 }
 
 template<uint64_t mod>
-bool operator==(const Polynomial <mod> &left, const Polynomial <mod> &right) {
-    if (left.degree - right.degree) return false;
+bool operator==(const Polynomial<mod> &left, const Polynomial<mod> &right) {
+    if (degree(left) - degree(right)) return false;
 
     for (unsigned i = 0; i < left._coefs.size(); i++) {
         if (left._coefs[i] - right._coefs[i]) return false;
@@ -217,7 +220,7 @@ bool operator==(const Polynomial <mod> &left, const Polynomial <mod> &right) {
 }
 
 template<uint64_t mod>
-bool operator!=(const Polynomial <mod> &left, const Polynomial <mod> &right) {
+bool operator!=(const Polynomial<mod> &left, const Polynomial<mod> &right) {
     return !(left == right);
 }
 

@@ -24,7 +24,8 @@ public:
     /*
      * @return the highest power of variable with non-zero coefficient
      */
-    int degree();
+    template <uint64_t mod>
+    friend int degree(const Polynomial<mod>& pol);
 
     /*
     * @brief Converts polynomial to string
