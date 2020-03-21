@@ -1,20 +1,20 @@
 #pragma once
 
-#include <Polynomial.hpp>
 #include <cassert>
 #include <cctype>
 #include <iostream>
 
 namespace lab {
 
+
 /*
  * @brief Converts string to polynomial
  * @return Polynomial<modulo> object if string has correct format, otherwise - null
  */
-    template<uint64_t modulo>
-    std::optional<Polynomial<modulo>> from_string(std::string_view pol_str)
+    template<uint64_t mod>
+    std::optional<Polynomial<mod>> from_string(std::string_view pol_str)
     {
-        Polynomial<modulo> result;
+        Polynomial<mod> result;
         result._coefs.push_back(0);
 
         static auto increase_coef = [&](unsigned index, uint64_t value)
@@ -138,8 +138,11 @@ namespace lab {
                 break;
 
             case 1:
-            case 2:
                 return std::nullopt;
+
+            case 2:
+                increase_coef(1, std::stoull(coef_str));
+                break;
 
             case 3:
                 increase_coef(std::stoi(degree_str), std::stoull(coef_str));

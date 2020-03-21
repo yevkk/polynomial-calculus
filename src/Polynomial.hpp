@@ -28,7 +28,8 @@ public:
 
     //friend std::string to_string(const Polynomial<modulo>& pol); TODO: implement me
 
-    friend std::optional<Polynomial<modulo>> from_string(std::string_view pol_str);
+    template <uint64_t mod>
+    friend std::optional<Polynomial<mod>> from_string(std::string_view pol_str);
 
     //friend bool operator==(const Polynomial& left, const Polynomial& right); TODO: implement me
     //friend bool operator!=(const Polynomial& left, const Polynomial& right); TODO: implement me
