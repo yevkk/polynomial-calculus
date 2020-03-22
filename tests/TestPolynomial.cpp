@@ -102,4 +102,27 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
             REQUIRE(to_string(p2, 'A', true) == "4*A^4 + 2*A^3 + 1*A^2 + 0*A^1 + 0*A^0");
         }
     }
+
+    SECTION("Relational operators") {
+        const Polynomial<11> p1{};
+        const Polynomial<11> p2{0, 0, 0};
+        REQUIRE(p1 == p2);
+
+        const Polynomial<11> p3{3, 2, 43, 23, 12, 57};
+        const Polynomial<11> p4{3, 2, 10, 1, 1, 2};
+        REQUIRE(p3 == p4);
+
+        const Polynomial<13> p5{56, 132, 46, 13, 75, 13, 2};
+        const Polynomial<13> p6{56, 132, 46, 0, 75, 13, 2, 0, 0, 0};
+        REQUIRE(p5 == p6);
+
+        const Polynomial<121> p7{3, 2, 43, 23, 12, 57};
+        const Polynomial<121> p8{3, 2, 10, 1, 1, 2};
+        REQUIRE(p7 != p8);
+
+        const Polynomial<17> p9{56, 132, 46, 13, 75, 13, 2};
+        const Polynomial<17> p10{56, 132, 46, 13, 76, 13, 2, 0, 0, 0};
+        REQUIRE(p9 != p10);
+
+    }
 }
