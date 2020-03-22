@@ -52,6 +52,7 @@ int coefficient(const Polynomial<mod>& pol, unsigned power) {
  */
 template <uint64_t mod>
 std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_zero = false) {
+    //TODO: 1*x^n = x^n
     std::string result;
     bool flag = false;
 
@@ -59,7 +60,7 @@ std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_z
         var_ch = 'x';
     }
 
-    for (auto i = pol._coefs.size() - 1; i > 0; i--) {
+    for (auto i = degree(pol); i > 0; i--) {
          if (pol._coefs[i] || show_zero) {
              if (flag) {
                  result += " + ";
@@ -71,9 +72,9 @@ std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_z
     }
 
     if (show_zero) {
-        result += " + " + std::to_string(pol._coefs[0]) + '*' + var_ch + "^0";
+        result += (result.empty() ? "" : " + ") + std::to_string(pol._coefs[0]) + '*' + var_ch + "^0";
     } else if (pol._coefs[0]){
-        result += " + " + std::to_string(pol._coefs[0]);
+        result +=  (result.empty() ? "" : " + ") + std::to_string(pol._coefs[0]);
     }
 
     return result;
