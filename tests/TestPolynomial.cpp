@@ -97,12 +97,9 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
 
             const Polynomial<13> p2{0, 0, 1, 2, 4};
             REQUIRE(to_string(p2) == "4*x^4 + 2*x^3 + 1*x^2");
-
-            const Polynomial<13> p3{0, 0, 1, 2, 4};
-            REQUIRE(to_string(p3, 'a') == "4*a^4 + 2*a^3 + 1*a^2");
-
-            const Polynomial<13> p4{0, 0, 1, 2, 4};
-            REQUIRE(to_string(p4, 'A', true) == "4*A^4 + 2*A^3 + 1*A^2 + 0*A^1 + 0*A^0");
+            REQUIRE(to_string(p2, 'a') == "4*a^4 + 2*a^3 + 1*a^2");
+            REQUIRE(to_string(p2, '(') == "4*x^4 + 2*x^3 + 1*x^2");
+            REQUIRE(to_string(p2, 'A', true) == "4*A^4 + 2*A^3 + 1*A^2 + 0*A^1 + 0*A^0");
         }
     }
 }
