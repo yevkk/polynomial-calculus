@@ -15,9 +15,9 @@ class Polynomial
 public:
     Polynomial(const Polynomial<modulo>& that) = default;
 
-    Polynomial(std::initializer_list<uint64_t> coefs);
+    Polynomial(std::initializer_list<int64_t> coefs);
 
-    Polynomial() = default;
+    Polynomial();
 
     //Polynomial& operator=(const Polynomial<modulo>& that) TODO: implement me
 

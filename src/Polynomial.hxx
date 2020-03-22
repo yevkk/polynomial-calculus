@@ -6,15 +6,27 @@
 
 
 namespace lab {
+
 template<uint64_t modulo>
-Polynomial<modulo>::Polynomial(std::initializer_list<uint64_t> coefs) : _coefs(coefs) {
-    for(auto& item:_coefs) {
+Polynomial<modulo>::Polynomial() {
+    _coefs.emplace_back(0);
+}
+
+template<uint64_t modulo>
+Polynomial<modulo>::Polynomial(std::initializer_list<int64_t> coefs) {
+    for(auto item:coefs) {
         while (item < 0) {
             item += modulo;
         }
         item = item % modulo;
+        _coefs.emplace_back(item);
     }
-    while (!_coefs.back()) {
+
+    if (!coefs.size()) {
+        _coefs.emplace_back();
+    }
+
+    while (!_coefs.back() && _coefs.begin() + 1  != _coefs.end()) {
         _coefs.pop_back();
     }
 }
@@ -72,8 +84,7 @@ std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_z
  * @return Polynomial<modulo> object if string has correct format, otherwise - null
  */
 template<uint64_t mod>
-std::optional<Polynomial<mod>> from_string(std::string_view pol_str)
-{
+std::optional<Polynomial<mod>> from_string(std::string_view pol_str) {
     Polynomial<mod> result;
     result._coefs.push_back(0);
 
