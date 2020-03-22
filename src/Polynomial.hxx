@@ -244,4 +244,10 @@ bool operator!=(const Polynomial<mod> &left, const Polynomial<mod> &right) {
     return !(left == right);
 }
 
+template<typename OStream, uint64_t mod>
+OStream& operator<<(OStream& os, const Polynomial<mod>& pol) {
+    os << to_string(pol);
+    return os;
+}
+
 } // namespace lab
