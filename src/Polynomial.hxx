@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cctype>
 #include <iostream>
+#include "Polynomial.hpp"
 
 
 namespace lab {
@@ -248,6 +249,18 @@ template<typename OStream, uint64_t mod>
 OStream& operator<<(OStream& os, const Polynomial<mod>& pol) {
     os << to_string(pol);
     return os;
+}
+
+template<uint64_t modSrc, uint64_t modRes>
+Polynomial <modRes> transform(const Polynomial<modSrc>& pol) {
+    Polynomial<modRes> result{};
+
+    result._coefs = pol._coefs;
+    for (auto& item:result._coefs) {
+        item %= modRes;
+    }
+
+    return result;
 }
 
 } // namespace lab

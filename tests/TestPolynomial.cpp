@@ -123,6 +123,19 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
         const Polynomial<17> p9{56, 132, 46, 13, 75, 13, 2};
         const Polynomial<17> p10{56, 132, 46, 13, 76, 13, 2, 0, 0, 0};
         REQUIRE(p9 != p10);
+    }
 
+    SECTION("Transforming") {
+        const Polynomial<5> p1{};
+        REQUIRE(to_string(transform<5, 3>(p1)).empty());
+
+        const Polynomial<121> p2{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(to_string(transform<121, 2>(p2)) == "1*x^5 + 1*x^4 + 1*x^3 + 1*x^1");
+
+        const Polynomial<13> p3{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(to_string(transform<13, 5>(p3)) == "2*x^6 + 2*x^2 + 2*x^1 + 4");
+
+        const Polynomial<11> p4{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(to_string(transform<11, 17>(p4)) == to_string(p4));
     }
 }

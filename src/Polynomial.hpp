@@ -56,13 +56,14 @@ public:
     //friend Polynomial operator*(const Polynomial& left, const Polynomial& right); TODO: implement me
     //friend Polynomial operator*(const Polynomial& left, int right); TODO: implement me
 
-    //template<typename OStream>
-    //friend OStream& operator<<(OStream& os, const Polynomial& pol); TODO: implement me
+    template <typename OStream, uint64_t mod>
+    friend OStream& operator<<(OStream& os, const Polynomial<mod>& pol);
 
     //template<typename IStream>
     //friend IStream& operator>>(IStream& is, const Polynomial& pol); TODO: implement me
 
-    //friend void modify(Polynomial& pol, const BigNum& mod); TODO: change signature and implement
+    template <uint64_t modSrc, uint64_t modRes>
+    friend Polynomial<modRes> transform(const Polynomial<modSrc>& pol);
 
     //add, subtract, multiply
 
