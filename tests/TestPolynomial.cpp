@@ -81,4 +81,28 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
             REQUIRE(degree(p5) == 0);
         }
     }
+
+    SECTION("String representation") {
+        SECTION("empty") {
+            const Polynomial<13> p1{};
+            REQUIRE(to_string(p1).empty());
+
+            const Polynomial<11> p2{};
+            REQUIRE(to_string(p2, 'x', true) == "0*x^0");
+        }
+
+        SECTION("normal") {
+            const Polynomial<13> p1{1, 1};
+            REQUIRE(to_string(p1) == "1*x^1 + 1");
+
+            const Polynomial<13> p2{0, 0, 1, 2, 4};
+            REQUIRE(to_string(p2) == "4*x^4 + 2*x^3 + 1*x^2");
+
+            const Polynomial<13> p3{0, 0, 1, 2, 4};
+            REQUIRE(to_string(p3, 'a') == "4*a^4 + 2*a^3 + 1*a^2");
+
+            const Polynomial<13> p4{0, 0, 1, 2, 4};
+            REQUIRE(to_string(p4, 'A', true) == "4*A^4 + 2*A^3 + 1*A^2 + 0*A^1 + 0*A^0");
+        }
+    }
 }
