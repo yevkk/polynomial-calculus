@@ -51,7 +51,8 @@ public:
     template <uint64_t mod>
     friend bool operator!=(const Polynomial<mod>& left, const Polynomial<mod>& right);
 
-    //friend Polynomial operator+(const Polynomial& left, const Polynomial& right); TODO: implement me
+    template <uint64_t mod>
+    friend Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& right);
     //friend Polynomial operator-(const Polynomial& left, const Polynomial& right); TODO: implement me
     //friend Polynomial operator*(const Polynomial& left, const Polynomial& right); TODO: implement me
     //friend Polynomial operator*(const Polynomial& left, int right); TODO: implement me

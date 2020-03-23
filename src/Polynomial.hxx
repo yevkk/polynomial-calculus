@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cctype>
+#include <algorithm>
 #include <iostream>
 #include "Polynomial.hpp"
 
@@ -249,6 +250,23 @@ template<typename OStream, uint64_t mod>
 OStream& operator<<(OStream& os, const Polynomial<mod>& pol) {
     os << to_string(pol);
     return os;
+}
+
+template <uint64_t mod>
+Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& right) {
+    Polynomial<mod> result{};
+    auto res_degree = std::max(degree(left), degree(right));
+
+    result._coefs[0] = (coefficient(left, 0) + coefficient(right, 0)) % mod;
+    for (unsigned i = 1; i <= res_degree; i++) {
+        result._coefs.emplace_back((coefficient(left, i) + coefficient(right, i)) % mod);
+    }
+
+    while (!result._coefs.back() && result._coefs.begin() + 1  != result._coefs.end()) {
+        result._coefs.pop_back();
+    }
+
+    return result;
 }
 
 template<uint64_t modSrc, uint64_t modRes>
