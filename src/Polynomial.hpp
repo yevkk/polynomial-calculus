@@ -58,7 +58,8 @@ public:
     friend Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& right);
     template <uint64_t mod>
     friend Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& right);
-    //friend Polynomial operator*(const Polynomial& left, const Polynomial& right); TODO: implement me
+    template <uint64_t mod>
+    friend Polynomial<mod> operator*(const Polynomial<mod>& left, const Polynomial<mod>& right);
     template <uint64_t mod>
     friend Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right);
     template <uint64_t mod>

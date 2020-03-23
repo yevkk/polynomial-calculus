@@ -287,6 +287,28 @@ Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& ri
 }
 
 template <uint64_t mod>
+Polynomial<mod> operator*(const Polynomial<mod>& left, const Polynomial<mod>& right) {
+    Polynomial<mod> result{};
+    result._coefs = std::vector<uint64_t>(degree(left) + degree(right) + 1, 0);
+
+    for (unsigned i = 0; i <= degree(left); i++) {
+        for (unsigned j = 0; j <= degree(right); j++) {
+            result._coefs[i + j] += coefficient(left, i) * coefficient(right, j);
+        }
+    }
+
+    for (auto& item:result._coefs) {
+        item %= mod;
+    }
+
+    while (!result._coefs.back() && result._coefs.begin() + 1 != result._coefs.end()) {
+        result._coefs.pop_back();
+    }
+
+    return result;
+}
+
+template <uint64_t mod>
 Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right) {
     Polynomial<mod> result(left);
 

@@ -286,7 +286,25 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
         }
 
         SECTION("by polynomial") {
+            const Polynomial<11> p1{1, 5, 1};
+            const Polynomial<11> p2{2, 6, 7, 1};
+            REQUIRE(p1 * p2 == Polynomial<11>{2, 5, 6, 9, 1, 1});
+            REQUIRE(p1 * p2 == p2 * p1);
+            REQUIRE(degree(p1 * p2) == 5);
 
+            REQUIRE(p1 * Polynomial<11>{} == Polynomial<11>{});
+
+            const Polynomial<5> p3{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4};
+            const Polynomial<5> p4{4, 3, 2, 1, 4, 3, 2, 1};
+            REQUIRE(p3 * p4 == Polynomial<5>{4, 1, 0, 0, 3, 3, 4, 0, 3, 4, 3, 0, 4, 3, 3, 0, 0, 1, 4});
+            REQUIRE(p3 * p4 == p4 * p3);
+            REQUIRE(degree(p3 * p4) == 18);
+
+            const Polynomial<157> p5{123, 145, 5, 134, 23, 146};
+            const Polynomial<157> p6{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
+            REQUIRE(p5 * p6 == Polynomial<157>{91, 57, 49, 16, 127, 68, 95, 45, 90, 26, 63, 16, 45, 150, 152, 17, 33, 133});
+            REQUIRE(p5 * p6 == p6 * p5);
+            REQUIRE(degree(p5 * p6) == 17);
         }
     }
 }
