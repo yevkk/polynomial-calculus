@@ -203,4 +203,58 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
             REQUIRE(degree(p5 + p6) == 0);
         }
     }
+
+    SECTION("Subtraction") {
+        SECTION("simple") {
+            const Polynomial<17> p1{};
+            const Polynomial<17> p2{};
+            REQUIRE(p1 - p2 == Polynomial<17>{});
+            REQUIRE(degree(p1 - p2) == 0);
+
+            const Polynomial<71> p3{45, 32, 45, 57, 43, 59, 67, 70, 34};
+            const Polynomial<71> p4{12, 23, 44, 57, 12, 23, 45, 67, 12};
+            REQUIRE(p3 - p4 == Polynomial<71>{33, 9, 1, 0, 31, 36, 22, 3, 22});
+            REQUIRE(degree(p3 - p4) == 8);
+
+            REQUIRE(p3 - Polynomial<71>{} == p3);
+            REQUIRE(p4 - Polynomial<71>{} == p4);
+
+            const Polynomial<47> p5{34, 35, 32, 35, 23, 34, 14, 25, 43, 42, 45, 37, 39, 40};
+            const Polynomial<47> p6{12, 13, 14, 15, 16, 17, 14, 25, 43, 12, 12};
+            REQUIRE(p5 - p6 == Polynomial<47>{22, 22, 18, 20, 7, 17, 0, 0, 0, 30, 33, 37, 39, 40});
+            REQUIRE(degree(p5 - p6) == 13);
+        }
+
+        SECTION("with modification") {
+            const Polynomial<5> p1{1, 2, 1, 2, 3, 4, 2, 1, 3, 1};
+            const Polynomial<5> p2{4, 3, 3, 3, 4, 2, 3, 3, 3, 4};
+            REQUIRE(p1 - p2 == Polynomial<5>{2, 4, 3, 4, 4, 2, 4, 3, 0, 2});
+            REQUIRE(degree(p1 - p2) == 9);
+
+            const Polynomial<37> p3{21, 34, 21, 25, 2, 3, 4, 21, 0, 21, 35};
+            const Polynomial<37> p4{21, 34, 26, 3, 9, 36, 32, 21, 21, 20, 24, 34, 36, 36, 36, 21, 23};
+            REQUIRE(p3 - p4 == Polynomial<37>{0, 0, 32, 22, 30, 4, 9, 0, 16, 1, 11, 3, 1, 1, 1, 16, 14});
+            REQUIRE(degree(p3 - p4) == 16);
+
+            const Polynomial<199> p5{123, 145, 165, 134, 23, 146, 175, 123, 198, 111, 143, 43, 98, 143};
+            const Polynomial<199> p6{154, 162, 153, 141, 123, 67, 89, 98, 123, 198, 176, 187, 134, 123, 123, 123, 198};
+            REQUIRE(p5 - p6 == Polynomial<199>{168, 182, 12, 192, 99, 79, 86, 25, 75, 112, 166, 55, 163, 20, 76, 76, 1});
+            REQUIRE(degree(p5 - p6) == 16);
+        }
+
+        SECTION("tail of zeros in result") {
+            const Polynomial<11> p1{5, 5, 5, 5, 6, 10, 10, 3, 2};
+            REQUIRE(p1 - p1 == Polynomial<11>{});
+            REQUIRE(degree(p1 - p1) == 0);
+
+            const Polynomial<11> p2{1, 7, 5, 5, 10, 10, 10, 3, 2};
+            REQUIRE(p1 - p2 == Polynomial<11>{4, 9, 0, 0, 7});
+            REQUIRE(degree(p1 - p2) == 4);
+
+            const Polynomial<157> p3{123, 43, 125, 22, 43, 154, 143, 124, 132, 1, 4, 34, 45};
+            const Polynomial<157> p4{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
+            REQUIRE(p3 - p4 == Polynomial<157>{1, 0, 156, 0, 1, 0, 156});
+            REQUIRE(degree(p3 - p4) == 6);
+        }
+    }
 }
