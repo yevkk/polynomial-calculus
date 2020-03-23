@@ -79,7 +79,7 @@ std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_z
         result +=  (result.empty() ? "" : " + ") + std::to_string(pol._coefs[0]);
     }
 
-    return result;
+    return (result.empty() ? "0" : result);
 }
 
 /*
@@ -284,6 +284,26 @@ Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& ri
     }
 
     return result;
+}
+
+template <uint64_t mod>
+Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right) {
+    Polynomial<mod> result(left);
+
+    for (auto& item:result._coefs) {
+        item = (item * right) % mod;
+    }
+
+    while (!result._coefs.back() && result._coefs.begin() + 1 != result._coefs.end()) {
+        result._coefs.pop_back();
+    }
+
+    return result;
+}
+
+template <uint64_t mod>
+Polynomial<mod> operator*(uint64_t left, const Polynomial<mod>& right) {
+    return right * left;
 }
 
 template<uint64_t modSrc, uint64_t modRes>

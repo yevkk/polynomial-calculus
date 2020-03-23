@@ -19,7 +19,7 @@ public:
 
     Polynomial();
 
-    //Polynomial& operator=(const Polynomial<modulo>& that) TODO: implement me
+    Polynomial& operator=(const Polynomial<modulo>& that) = default;
 
     /*
      * @return the highest power of variable with non-zero coefficient
@@ -51,12 +51,18 @@ public:
     template <uint64_t mod>
     friend bool operator!=(const Polynomial<mod>& left, const Polynomial<mod>& right);
 
+    /*
+     * @note considering all coefficients are correct
+     */
     template <uint64_t mod>
     friend Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& right);
     template <uint64_t mod>
     friend Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& right);
     //friend Polynomial operator*(const Polynomial& left, const Polynomial& right); TODO: implement me
-    //friend Polynomial operator*(const Polynomial& left, int right); TODO: implement me
+    template <uint64_t mod>
+    friend Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right);
+    template <uint64_t mod>
+    friend Polynomial<mod> operator*(uint64_t left, const Polynomial<mod>& right);
 
     template <typename OStream, uint64_t mod>
     friend OStream& operator<<(OStream& os, const Polynomial<mod>& pol);

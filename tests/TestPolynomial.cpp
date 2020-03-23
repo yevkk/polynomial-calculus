@@ -85,7 +85,7 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
     SECTION("String representation") {
         SECTION("empty") {
             const Polynomial<13> p1{};
-            REQUIRE(to_string(p1).empty());
+            REQUIRE(to_string(p1) == "0");
 
             const Polynomial<11> p2{};
             REQUIRE(to_string(p2, 'x', true) == "0*x^0");
@@ -127,7 +127,7 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
 
     SECTION("Transforming") {
         const Polynomial<5> p1{};
-        REQUIRE(to_string(transform<5, 3>(p1)).empty());
+        REQUIRE(to_string(transform<5, 3>(p1)) == "0");
 
         const Polynomial<121> p2{56, 132, 46, 13, 75, 13, 2};
         REQUIRE(to_string(transform<121, 2>(p2)) == "1*x^5 + 1*x^4 + 1*x^3 + 1*x^1");
@@ -255,6 +255,38 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
             const Polynomial<157> p4{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
             REQUIRE(p3 - p4 == Polynomial<157>{1, 0, 156, 0, 1, 0, 156});
             REQUIRE(degree(p3 - p4) == 6);
+        }
+    }
+
+    SECTION("Multiplication") {
+        SECTION("by number") {
+            const Polynomial<11> p1{5, 4, 7, 5, 6, 10, 10, 3, 2};
+            uint64_t num = 0;
+
+            REQUIRE(p1 * num == Polynomial<11>{});
+            REQUIRE(num * p1 == p1 * num);
+
+            num = 11;
+            REQUIRE(p1 * num == Polynomial<11>{});
+            REQUIRE(num * p1 == p1 * num);
+
+            num = 3;
+            REQUIRE(p1 * num == Polynomial<11>{4, 1, 10, 4, 7, 8, 8, 9, 6});
+            REQUIRE(num * p1 == p1 * num);
+
+            const Polynomial<37> p2{21, 34, 21, 25, 2, 3, 4, 21, 0, 21, 35};
+            num = 321;
+            REQUIRE(p2 * num == Polynomial<37>{7, 36, 7, 33, 13, 1, 26, 7, 0, 7, 24});
+            REQUIRE(num * p2 == p2 * num);
+
+            const Polynomial<181> p3{123, 145, 165, 134, 23, 146, 175, 123, 178, 111, 143, 43, 98, 143};
+            num = 654;
+            REQUIRE(p3 * num == Polynomial<181>{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126});
+            REQUIRE(num * p3 == p3 * num);
+        }
+
+        SECTION("by polynomial") {
+
         }
     }
 }
