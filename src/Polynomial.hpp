@@ -10,8 +10,7 @@ namespace lab {
  * @brief Class for holding polynomials with big integer coefficients
  */
 template<uint64_t modulo>
-class Polynomial
-{
+class Polynomial {
 public:
     Polynomial(const Polynomial<modulo>& that) = default;
 
@@ -24,52 +23,52 @@ public:
     /*
      * @return the highest power of variable with non-zero coefficient
      */
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend int degree(const Polynomial<mod>& pol);
 
     /*
      * @return the coefficient corresponding to x^power
      */
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend int coefficient(const Polynomial<mod>& pol, unsigned power);
 
     /*
     * @brief Converts polynomial to string
     */
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend std::string to_string(const Polynomial<mod>& pol, char var_ch, bool show_zero);
 
     /*
      * @brief Converts string to polynomial
      * @return Polynomial<modulo> object if string has correct format, otherwise - null
      */
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend std::optional<Polynomial<mod>> from_string(std::string_view pol_str);
 
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend bool operator==(const Polynomial<mod>& left, const Polynomial<mod>& right);
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend bool operator!=(const Polynomial<mod>& left, const Polynomial<mod>& right);
 
     /*
      * @note considering all coefficients are correct
      */
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& right);
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& right);
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend Polynomial<mod> operator*(const Polynomial<mod>& left, const Polynomial<mod>& right);
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right);
-    template <uint64_t mod>
+    template<uint64_t mod>
     friend Polynomial<mod> operator*(uint64_t left, const Polynomial<mod>& right);
 
     template <typename OStream, uint64_t mod>
     friend OStream& operator<<(OStream& os, const Polynomial<mod>& pol);
 
     //template<typename IStream>
-    //friend IStream& operator>>(IStream& is, const Polynomial& pol); TODO: implement me
+    //friend IStream& operator>>(IStream& is, const Polynomial& pol); TODO: (yevkk) implement me
 
     template <uint64_t modSrc, uint64_t modRes>
     friend Polynomial<modRes> transform(const Polynomial<modSrc>& pol);

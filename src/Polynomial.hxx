@@ -4,8 +4,6 @@
 #include <cctype>
 #include <algorithm>
 #include <iostream>
-#include "Polynomial.hpp"
-
 
 namespace lab {
 
@@ -44,7 +42,7 @@ int degree(const Polynomial<mod>& pol) {
 /*
  * @return the coefficient corresponding to x^power
  */
-template <uint64_t mod>
+template<uint64_t mod>
 int coefficient(const Polynomial<mod>& pol, unsigned power) {
     return power < pol._coefs.size() ? pol._coefs[power] : 0;
 }
@@ -52,7 +50,7 @@ int coefficient(const Polynomial<mod>& pol, unsigned power) {
 /*
  * @brief Converts polynomial to string
  */
-template <uint64_t mod>
+template<uint64_t mod>
 std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_zero = false) {
     //TODO: 1*x^n = x^n
     std::string result;
@@ -231,7 +229,7 @@ std::optional<Polynomial<mod>> from_string(std::string_view pol_str) {
 }
 
 template<uint64_t mod>
-bool operator==(const Polynomial<mod> &left, const Polynomial<mod> &right) {
+bool operator==(const Polynomial<mod>& left, const Polynomial<mod>& right) {
     if (degree(left) - degree(right)) return false;
 
     for (unsigned i = 0; i < left._coefs.size(); i++) {
@@ -242,7 +240,7 @@ bool operator==(const Polynomial<mod> &left, const Polynomial<mod> &right) {
 }
 
 template<uint64_t mod>
-bool operator!=(const Polynomial<mod> &left, const Polynomial<mod> &right) {
+bool operator!=(const Polynomial<mod>& left, const Polynomial<mod>& right) {
     return !(left == right);
 }
 
@@ -252,7 +250,7 @@ OStream& operator<<(OStream& os, const Polynomial<mod>& pol) {
     return os;
 }
 
-template <uint64_t mod>
+template<uint64_t mod>
 Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& right) {
     Polynomial<mod> result{};
     auto res_degree = std::max(degree(left), degree(right));
@@ -269,7 +267,7 @@ Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& ri
     return result;
 }
 
-template <uint64_t mod>
+template<uint64_t mod>
 Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& right) {
     Polynomial<mod> result{};
     auto res_degree = std::max(degree(left), degree(right));
@@ -308,7 +306,7 @@ Polynomial<mod> operator*(const Polynomial<mod>& left, const Polynomial<mod>& ri
     return result;
 }
 
-template <uint64_t mod>
+template<uint64_t mod>
 Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right) {
     Polynomial<mod> result(left);
 
@@ -323,7 +321,7 @@ Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right) {
     return result;
 }
 
-template <uint64_t mod>
+template<uint64_t mod>
 Polynomial<mod> operator*(uint64_t left, const Polynomial<mod>& right) {
     return right * left;
 }
