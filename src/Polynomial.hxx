@@ -52,11 +52,11 @@ int coefficient(const Polynomial<mod>& pol, unsigned power) {
  */
 template<uint64_t mod>
 std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_zero = false) {
-    //TODO: 1*x^n = x^n
+    //TODO: (yevkk) 1*x^n = x^n
     std::string result;
     bool flag = false;
 
-    if (!std::isalpha(var_ch)) { //TODO: maybe change too assert() ???
+    if (!std::isalpha(var_ch)) { //TODO: maybe change too assert()
         var_ch = 'x';
     }
 
@@ -92,7 +92,7 @@ std::optional<Polynomial<mod>> from_string(std::string_view pol_str) {
     static auto increase_coef = [&](unsigned index, uint64_t value)
     {
         result._coefs[0] = 15;
-        //TODO: implement this
+        //TODO: (yevkk) implement this
     };
 
     /*
@@ -224,7 +224,6 @@ std::optional<Polynomial<mod>> from_string(std::string_view pol_str) {
             break;
     }
 
-    std::cout << result._coefs[0]; //TODO: clear
     return result;
 }
 
