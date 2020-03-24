@@ -1,4 +1,4 @@
-#include <BigNum.hpp>
+#include <Polynomial.hpp>
 
 int main () {
 
