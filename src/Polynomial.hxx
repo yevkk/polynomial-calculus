@@ -19,14 +19,14 @@ Polynomial<modulo>::Polynomial(std::initializer_list<int64_t> coefs) {
             item += modulo;
         }
         item = item % modulo;
-        _coefs.emplace_back(item);
+        _coefs.push_back(item);
     }
 
-    if (!coefs.size()) {
-        _coefs.emplace_back();
+    if (coefs.size() == 0) {
+        _coefs.push_back(0);
     }
 
-    while (!_coefs.back() && _coefs.begin() + 1  != _coefs.end()) {
+    while (!_coefs.back() && (_coefs.begin() + 1 != _coefs.end())) {
         _coefs.pop_back();
     }
 }
@@ -34,24 +34,24 @@ Polynomial<modulo>::Polynomial(std::initializer_list<int64_t> coefs) {
 /*
  * @return the highest power of variable with non-zero coefficient
  */
-template<uint64_t mod>
-int degree(const Polynomial<mod>& pol) {
-    return pol._coefs.size() - 1;
+template<uint64_t modulo>
+int Polynomial<modulo>::degree() const {
+    return _coefs.size() - 1;
 }
 
 /*
  * @return the coefficient corresponding to x^power
  */
-template<uint64_t mod>
-int coefficient(const Polynomial<mod>& pol, unsigned power) {
-    return power < pol._coefs.size() ? pol._coefs[power] : 0;
+template<uint64_t modulo>
+uint64_t Polynomial<modulo>::coefficient(unsigned power) const {
+    return power < _coefs.size() ? _coefs[power] : 0;
 }
 
 /*
  * @brief Converts polynomial to string
  */
-template<uint64_t mod>
-std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_zero = false) {
+template<uint64_t modulo>
+std::string Polynomial<modulo>::to_string(char var_ch, bool show_zero) const {
     //TODO: (yevkk) 1*x^n = x^n
     std::string result;
     bool flag = false;
@@ -60,36 +60,41 @@ std::string to_string(const Polynomial<mod>& pol, char var_ch = 'x', bool show_z
         var_ch = 'x';
     }
 
-    for (auto i = degree(pol); i > 0; i--) {
-         if (pol._coefs[i] || show_zero) {
+    for (auto i = degree(); i > 0; i--) {
+         if (_coefs[i] || show_zero) {
              if (flag) {
                  result += " + ";
              } else {
                  flag = true;
              }
-             result += std::to_string(pol._coefs[i]) + '*' + var_ch + '^' + std::to_string(i);
+             result += std::to_string(_coefs[i]) + '*' + var_ch + '^' + std::to_string(i);
          }
     }
 
     if (show_zero) {
-        result += (result.empty() ? "" : " + ") + std::to_string(pol._coefs[0]) + '*' + var_ch + "^0";
-    } else if (pol._coefs[0]){
-        result +=  (result.empty() ? "" : " + ") + std::to_string(pol._coefs[0]);
+        result += (result.empty() ? "" : " + ") + std::to_string(_coefs[0]) + '*' + var_ch + "^0";
+    } else if (_coefs[0]){
+        result +=  (result.empty() ? "" : " + ") + std::to_string(_coefs[0]);
     }
 
     return (result.empty() ? "0" : result);
 }
 
+template<uint64_t modulo>
+std::vector<uint64_t> Polynomial<modulo>::coefficients() const {
+    return _coefs;
+}
+
 /*
  * @brief Converts string to polynomial
- * @return Polynomial<modulo> object if string has correct format, otherwise - null
+ * @return Polynomial<modulo> object if string has correct format, otherwise - std::nullopt
  */
-template<uint64_t mod>
-std::optional<Polynomial<mod>> from_string(std::string_view pol_str) {
-    Polynomial<mod> result;
+template<uint64_t modulo>
+std::optional<Polynomial<modulo>> Polynomial<modulo>::from_string(std::string_view pol_str) {
+    Polynomial<modulo> result;
     result._coefs.push_back(0);
 
-    static auto increase_coef = [&](unsigned index, uint64_t value)
+    constexpr static auto increase_coef = [&](unsigned index, uint64_t value)
     {
         result._coefs[0] = 15;
         //TODO: (yevkk) implement this
@@ -102,14 +107,14 @@ std::optional<Polynomial<mod>> from_string(std::string_view pol_str) {
      *  2 - space between variable char and '^'
      *  3 - degree value with spaces before and after
      */
-    int state = 0;
+    int state = 0; //TODO: (yevkk) change to enum
     std::string coef_str;
     std::string degree_str;
     char var_ch = ' ';
     bool digit_met = false;
     bool space_met = false;
 
-    for (const auto& c:pol_str) {
+    for (const auto& c : pol_str) {
 
         switch (state) {
             case 0:
@@ -229,13 +234,7 @@ std::optional<Polynomial<mod>> from_string(std::string_view pol_str) {
 
 template<uint64_t mod>
 bool operator==(const Polynomial<mod>& left, const Polynomial<mod>& right) {
-    if (degree(left) - degree(right)) return false;
-
-    for (unsigned i = 0; i < left._coefs.size(); i++) {
-        if (left._coefs[i] - right._coefs[i]) return false;
-    }
-
-    return true;
+    return left._coefs == right._coefs;
 }
 
 template<uint64_t mod>
@@ -245,21 +244,21 @@ bool operator!=(const Polynomial<mod>& left, const Polynomial<mod>& right) {
 
 template<typename OStream, uint64_t mod>
 OStream& operator<<(OStream& os, const Polynomial<mod>& pol) {
-    os << to_string(pol);
+    os << pol.to_string();
     return os;
 }
 
 template<uint64_t mod>
 Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& right) {
     Polynomial<mod> result{};
-    auto res_degree = std::max(degree(left), degree(right));
+    auto res_degree = std::max(left.degree(), right.degree());
 
-    result._coefs[0] = (coefficient(left, 0) + coefficient(right, 0)) % mod;
+    result._coefs[0] = (left.coefficient(0) + right.coefficient(0)) % mod;
     for (unsigned i = 1; i <= res_degree; i++) {
-        result._coefs.emplace_back((coefficient(left, i) + coefficient(right, i)) % mod);
+        result._coefs.emplace_back((left.coefficient(i) + right.coefficient(i)) % mod);
     }
 
-    while (!result._coefs.back() && result._coefs.begin() + 1  != result._coefs.end()) {
+    while (!result._coefs.back() && (result._coefs.begin() + 1 != result._coefs.end())) {
         result._coefs.pop_back();
     }
 
@@ -269,14 +268,14 @@ Polynomial<mod> operator+(const Polynomial<mod>& left, const Polynomial<mod>& ri
 template<uint64_t mod>
 Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& right) {
     Polynomial<mod> result{};
-    auto res_degree = std::max(degree(left), degree(right));
+    auto res_degree = std::max(left.degree(), right.degree());
 
-    result._coefs[0] = (coefficient(left, 0) - coefficient(right, 0) + mod) % mod;
+    result._coefs[0] = (left.coefficient(0) - right.coefficient(0) + mod) % mod;
     for (unsigned i = 1; i <= res_degree; i++) {
-        result._coefs.emplace_back((coefficient(left, i) - coefficient(right, i) + mod) % mod);
+        result._coefs.emplace_back((left.coefficient(i) - right.coefficient(i) + mod) % mod);
     }
 
-    while (!result._coefs.back() && result._coefs.begin() + 1 != result._coefs.end()) {
+    while (!result._coefs.back() && (result._coefs.begin() + 1 != result._coefs.end())) {
         result._coefs.pop_back();
     }
 
@@ -286,11 +285,11 @@ Polynomial<mod> operator-(const Polynomial<mod>& left, const Polynomial<mod>& ri
 template <uint64_t mod>
 Polynomial<mod> operator*(const Polynomial<mod>& left, const Polynomial<mod>& right) {
     Polynomial<mod> result{};
-    result._coefs = std::vector<uint64_t>(degree(left) + degree(right) + 1, 0);
+    result._coefs = std::vector<uint64_t>(left.degree() + right.degree() + 1, 0);
 
-    for (unsigned i = 0; i <= degree(left); i++) {
-        for (unsigned j = 0; j <= degree(right); j++) {
-            result._coefs[i + j] += coefficient(left, i) * coefficient(right, j);
+    for (unsigned i = 0; i <= left.degree(); i++) {
+        for (unsigned j = 0; j <= right.degree(); j++) {
+            result._coefs[i + j] += left.coefficient(i) * right.coefficient(j);
         }
     }
 
@@ -298,7 +297,7 @@ Polynomial<mod> operator*(const Polynomial<mod>& left, const Polynomial<mod>& ri
         item %= mod;
     }
 
-    while (!result._coefs.back() && result._coefs.begin() + 1 != result._coefs.end()) {
+    while (!result._coefs.back() && (result._coefs.begin() + 1 != result._coefs.end())) {
         result._coefs.pop_back();
     }
 
@@ -309,11 +308,11 @@ template<uint64_t mod>
 Polynomial<mod> operator*(const Polynomial<mod>& left, uint64_t right) {
     Polynomial<mod> result(left);
 
-    for (auto& item:result._coefs) {
+    for (auto& item : result._coefs) {
         item = (item * right) % mod;
     }
 
-    while (!result._coefs.back() && result._coefs.begin() + 1 != result._coefs.end()) {
+    while (!result._coefs.back() && (result._coefs.begin() + 1 != result._coefs.end())) {
         result._coefs.pop_back();
     }
 
@@ -326,11 +325,11 @@ Polynomial<mod> operator*(uint64_t left, const Polynomial<mod>& right) {
 }
 
 template<uint64_t modSrc, uint64_t modRes>
-Polynomial <modRes> transform(const Polynomial<modSrc>& pol) {
+Polynomial<modRes> transform(const Polynomial<modSrc>& pol) {
     Polynomial<modRes> result{};
 
     result._coefs = pol._coefs;
-    for (auto& item:result._coefs) {
+    for (auto& item : result._coefs) {
         item %= modRes;
     }
 

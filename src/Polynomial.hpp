@@ -23,27 +23,28 @@ public:
     /*
      * @return the highest power of variable with non-zero coefficient
      */
-    template<uint64_t mod>
-    friend int degree(const Polynomial<mod>& pol);
+    int degree() const;
 
     /*
      * @return the coefficient corresponding to x^power
      */
-    template<uint64_t mod>
-    friend int coefficient(const Polynomial<mod>& pol, unsigned power);
+    uint64_t coefficient(unsigned power) const;
+
+    /*
+     * @return the vector of coefficients
+     */
+    std::vector<uint64_t> coefficients() const;
 
     /*
     * @brief Converts polynomial to string
     */
-    template<uint64_t mod>
-    friend std::string to_string(const Polynomial<mod>& pol, char var_ch, bool show_zero);
+    std::string to_string(char var_ch = 'x', bool show_zero = false) const;
 
     /*
      * @brief Converts string to polynomial
      * @return Polynomial<modulo> object if string has correct format, otherwise - null
      */
-    template<uint64_t mod>
-    friend std::optional<Polynomial<mod>> from_string(std::string_view pol_str);
+    static std::optional<Polynomial<modulo>> from_string(std::string_view pol_str);
 
     template<uint64_t mod>
     friend bool operator==(const Polynomial<mod>& left, const Polynomial<mod>& right);
