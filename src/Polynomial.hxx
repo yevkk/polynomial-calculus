@@ -3,9 +3,29 @@
 #include <cassert>
 #include <cctype>
 #include <algorithm>
+#include <tuple>
 #include <iostream>
 
 namespace lab {
+    namespace detail {
+        constexpr inline std::tuple<int64_t, int64_t, int64_t> gcdex(int64_t a, int64_t b) {
+            if (b == 0) {
+                return std::make_tuple(a, 1, 0);
+            } else {
+                auto [g, x, y] = gcdex(b, a % b);
+                return std::make_tuple(g, y, x - y * (a / b));
+            }
+        }
+        
+        template<uint64_t modulo>
+        constexpr uint64_t reverse(uint64_t number) {
+            auto [g, x, y] = gcdex(number, modulo);
+            
+            assert(g == 1);
+            x = (x + (abs(x / modulo) + 1) * modulo) % modulo;
+            return x;
+        }
+    }
 
 template<uint64_t modulo>
 Polynomial<modulo>::Polynomial() {
@@ -333,6 +353,54 @@ Polynomial<modRes> transform(const Polynomial<modSrc>& pol) {
         item %= modRes;
     }
 
+    return result;
+}
+
+template<uint64_t modulo>
+void normalize(Polynomial<modulo> &origin) {
+    uint64_t reverse = detail::reverse<modulo>(origin.coefficient(origin.degree()));
+    for (size_t curr_degree = 0; curr_degree <= origin.degree(); ++curr_degree) {
+        origin._coefs[curr_degree] = (origin._coefs[curr_degree] * reverse) % modulo;
+    }
+}
+
+template<uint64_t modulo>
+Polynomial<modulo> Polynomial<modulo>::normalized() const{
+    Polynomial<modulo> poly_copy(*this);
+    normalize(poly_copy);
+    return poly_copy;
+}
+
+template<uint64_t modulo>
+uint64_t Polynomial<modulo>::calculateIn(uint64_t point) const {
+    uint64_t powered_point = 1;
+    uint64_t result = 0;
+    
+    for (size_t curr_degree = 0; curr_degree <= this->degree(); ++curr_degree) {
+        result += powered_point * this->coefficient(curr_degree);
+        result %= modulo;
+        
+        powered_point *= point;
+        powered_point %= modulo;
+    }
+    
+    return result;
+}
+
+template<uint64_t modulo>
+Polynomial<modulo> derivative(const Polynomial<modulo>& origin) {
+    Polynomial<modulo> result;
+    result._coefs.resize( (origin.degree() < 1) ? 1 : origin.degree());
+    result._coefs[0] = 0;
+    
+    for (size_t curr_degree = 1; curr_degree <= origin.degree(); ++curr_degree) {
+        result._coefs[curr_degree - 1] = (curr_degree * origin.coefficient(curr_degree)) % modulo;
+    }
+    
+    while (!result._coefs.back() && (result._coefs.size() > 1)) {
+        result._coefs.pop_back();
+    }
+    
     return result;
 }
 

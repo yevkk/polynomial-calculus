@@ -45,6 +45,30 @@ public:
      * @return Polynomial<modulo> object if string has correct format, otherwise - null
      */
     static std::optional<Polynomial<modulo>> from_string(std::string_view pol_str);
+    
+    /*
+     * @brief Returns normalized polynomial in modulo field
+     */
+    Polynomial<modulo> normalized() const;
+    
+    /*
+     * @brief Normalizes origin polynomial in modulo field
+    */
+    template<uint64_t mod>
+    friend void normalize(Polynomial<mod>& origin);
+    
+    /*
+     * @brief Calculates value of polynomial at point
+     */
+    uint64_t calculateIn(uint64_t point) const;
+    
+    /*
+     * @brief Finds derivative of polynomial
+     * @return Polynomial that represents derivative of origin
+     */
+    template<uint64_t mod>
+    friend Polynomial<mod> derivative(const Polynomial<mod>& origin);
+    
 
     template<uint64_t mod>
     friend bool operator==(const Polynomial<mod>& left, const Polynomial<mod>& right);

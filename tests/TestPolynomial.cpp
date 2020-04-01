@@ -307,4 +307,157 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
             REQUIRE((p5 * p6).degree() == 17);
         }
     }
+    
+    SECTION("Calculating") {
+        SECTION("empty") {
+            const Polynomial<5> p1{};
+            REQUIRE(p1.calculateIn(0) == 0);
+            REQUIRE(p1.calculateIn(123) == 0);
+            
+            const Polynomial<5> p2{0, 0, 0, 0};
+            REQUIRE(p2.calculateIn(0) == 0);
+            REQUIRE(p2.calculateIn(123) == 0);
+        }
+        
+        SECTION("smaller than modulo") {
+            const Polynomial<10000000> p1{12, 14, 8, 5, 3, 4};
+            REQUIRE(p1.calculateIn(0) == 12);
+            REQUIRE(p1.calculateIn(7) == 76648);
+            
+            const Polynomial<10000000> p2{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126};
+            REQUIRE(p2.calculateIn(0) == 78);
+            REQUIRE(p2.calculateIn(1) == 942);
+            REQUIRE(p2.calculateIn(2) == 1404148);
+            
+            const Polynomial<10000000> p3{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
+            REQUIRE(p3.calculateIn(0) == 122);
+            REQUIRE(p3.calculateIn(1) == 993);
+            REQUIRE(p3.calculateIn(2) == 323928);
+        }
+        
+        SECTION("bigger than modulo") {
+            const Polynomial<13> p1{12, 14, 8, 5, 3, 4};
+            REQUIRE(p1.calculateIn(0) == 12);
+            REQUIRE(p1.calculateIn(7) == 0);
+            
+            const Polynomial<21> p2{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126};
+            REQUIRE(p2.calculateIn(0) == 15);
+            REQUIRE(p2.calculateIn(1) == 18);
+            REQUIRE(p2.calculateIn(2) == 4);
+            
+            const Polynomial<995> p3{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
+            REQUIRE(p3.calculateIn(0) == 122);
+            REQUIRE(p3.calculateIn(1) == 993);
+            REQUIRE(p3.calculateIn(2) == 553);
+            REQUIRE(p3.calculateIn(3) == 921);
+        }
+    }
+    
+    SECTION("Derivative") {
+        const Polynomial<13> l0{};
+        const Polynomial<13> p0 = derivative(l0);
+        REQUIRE(p0.coefficient(0) == 0);
+        REQUIRE(p0.coefficient(1) == 0);
+        REQUIRE(p0.degree() == 0);
+        
+        const Polynomial<13> l1{12, 14, 8, 5, 3, 4};
+        const Polynomial<13> p1 = derivative(l1);
+        REQUIRE(p1.coefficient(0) == 1);
+        REQUIRE(p1.coefficient(1) == 3);
+        REQUIRE(p1.coefficient(2) == 2);
+        REQUIRE(p1.coefficient(3) == 12);
+        REQUIRE(p1.coefficient(4) == 7);
+        REQUIRE(p1.degree() == 4);
+        
+        const Polynomial<1000000> l2{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126};
+        const Polynomial<1000000> p2 = derivative(l2);
+        REQUIRE(p2.coefficient(0) == 167);
+        REQUIRE(p2.coefficient(1) == 68);
+        REQUIRE(p2.coefficient(2) == 96);
+        REQUIRE(p2.coefficient(3) == 76);
+        REQUIRE(p2.coefficient(4) == 485);
+        REQUIRE(p2.coefficient(5) == 348);
+        REQUIRE(p2.coefficient(6) == 546);
+        REQUIRE(p2.coefficient(7) == 232);
+        REQUIRE(p2.coefficient(8) == 117);
+        REQUIRE(p2.coefficient(9) == 1260);
+        REQUIRE(p2.coefficient(10) == 737);
+        REQUIRE(p2.coefficient(11) == 216);
+        REQUIRE(p2.coefficient(12) == 1638);
+        REQUIRE(p2.degree() == 12);
+        
+        const Polynomial<132> l3{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 120, 220};
+        const Polynomial<132> p3 = derivative(l3);
+        REQUIRE(p3.coefficient(0) == 43);
+        REQUIRE(p3.coefficient(1) == 120);
+        REQUIRE(p3.coefficient(2) == 66);
+        REQUIRE(p3.coefficient(3) == 36);
+        REQUIRE(p3.coefficient(4) == 110);
+        REQUIRE(p3.coefficient(5) == 72);
+        REQUIRE(p3.coefficient(6) == 76);
+        REQUIRE(p3.coefficient(7) == 0);
+        REQUIRE(p3.coefficient(8) == 9);
+        REQUIRE(p3.coefficient(9) == 40);
+        REQUIRE(p3.coefficient(10) == 0);
+        REQUIRE(p3.coefficient(11) == 0);
+        REQUIRE(p3.degree() == 9);
+        
+        const Polynomial<13> l4{12314};
+        const Polynomial<13> p4 = derivative(l4);
+        REQUIRE(p4.coefficient(0) == 0);
+        REQUIRE(p4.coefficient(1) == 0);
+        REQUIRE(p4.degree() == 0);
+    }
+    
+    SECTION("Normalizing") {
+        Polynomial<13> l1{8};
+        const auto p1 = l1.normalized();
+        auto z1 = l1;
+        normalize(z1);
+        REQUIRE(z1 == p1);
+        REQUIRE(p1.coefficient(0) == 1);
+        REQUIRE(p1.coefficient(1) == 0);
+        REQUIRE(p1.degree() == 0);
+        
+        const Polynomial<779> l2{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126};
+        auto z2 = l2;
+        normalize(z2);
+        const auto p2 = l2.normalized();
+        REQUIRE(z2 == p2);
+        REQUIRE(p2.coefficient(0) == 149);
+        REQUIRE(p2.coefficient(1) == 329);
+        REQUIRE(p2.coefficient(2) == 25);
+        REQUIRE(p2.coefficient(3) == 161);
+        REQUIRE(p2.coefficient(4) == 266);
+        REQUIRE(p2.coefficient(5) == 415);
+        REQUIRE(p2.coefficient(6) == 730);
+        REQUIRE(p2.coefficient(7) == 149);
+        REQUIRE(p2.coefficient(8) == 365);
+        REQUIRE(p2.coefficient(9) == 674);
+        REQUIRE(p2.coefficient(10) == 1);
+        REQUIRE(p2.coefficient(11) == 118);
+        REQUIRE(p2.coefficient(12) == 334);
+        REQUIRE(p2.coefficient(13) == 1);
+        REQUIRE(p2.degree() == 13);
+        
+        const Polynomial<133> l3{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 120, 220};
+        auto z3 = l3;
+        normalize(z3);
+        const Polynomial<133> p3 = l3.normalized();
+        REQUIRE(z3 == p3);
+        REQUIRE(p3.coefficient(0) == 113);
+        REQUIRE(p3.coefficient(1) == 54);
+        REQUIRE(p3.coefficient(2) == 84);
+        REQUIRE(p3.coefficient(3) == 40);
+        REQUIRE(p3.coefficient(4) == 28);
+        REQUIRE(p3.coefficient(5) == 14);
+        REQUIRE(p3.coefficient(6) == 20);
+        REQUIRE(p3.coefficient(7) == 32);
+        REQUIRE(p3.coefficient(8) == 107);
+        REQUIRE(p3.coefficient(9) == 26);
+        REQUIRE(p3.coefficient(10) == 104);
+        REQUIRE(p3.coefficient(11) == 61);
+        REQUIRE(p3.coefficient(12) == 1);
+        REQUIRE(p3.degree() == 12);
+    }
 }

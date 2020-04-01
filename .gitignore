@@ -75,6 +75,7 @@
 
 # CMake
 cmake-build-*/
+build/
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
@@ -490,3 +491,7 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/c++,clion+all,codeblocks,visualstudio,visualstudiocode
+
+# Kdevelop project
+.kdev4/
+*.kdev4
