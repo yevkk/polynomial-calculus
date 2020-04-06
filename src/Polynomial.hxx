@@ -31,7 +31,7 @@ Polynomial<modulo>::Polynomial(std::initializer_list<int64_t> coefs) {
     }
 }
 
-/*
+/**
  * @return the highest power of variable with non-zero coefficient
  */
 template<uint64_t modulo>
@@ -39,7 +39,7 @@ int Polynomial<modulo>::degree() const {
     return _coefs.size() - 1;
 }
 
-/*
+/**
  * @return the coefficient corresponding to x^power
  */
 template<uint64_t modulo>
@@ -47,7 +47,7 @@ uint64_t Polynomial<modulo>::coefficient(unsigned power) const {
     return power < _coefs.size() ? _coefs[power] : 0;
 }
 
-/*
+/**
  * @brief Converts polynomial to string
  */
 template<uint64_t modulo>
@@ -85,7 +85,7 @@ std::vector<uint64_t> Polynomial<modulo>::coefficients() const {
     return _coefs;
 }
 
-/*
+/**
  * @brief Converts string to polynomial
  * @return Polynomial<modulo> object if string has correct format, otherwise - std::nullopt
  */
@@ -100,7 +100,7 @@ std::optional<Polynomial<modulo>> Polynomial<modulo>::from_string(std::string_vi
         //TODO: (yevkk) implement this
     };
 
-    /*
+    /**
      * Possible states:
      *  0 - coefficient with spaces before and after
      *  1 - space between '*' and variable char

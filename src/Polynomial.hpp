@@ -7,7 +7,7 @@
 namespace lab {
 
 /**
- * @brief Class for holding polynomials with big integer coefficients
+ * @brief Class for holding polynomials with uint coefficients
  */
 template<uint64_t modulo>
 class Polynomial {
@@ -20,27 +20,27 @@ public:
 
     Polynomial& operator=(const Polynomial<modulo>& that) = default;
 
-    /*
+    /**
      * @return the highest power of variable with non-zero coefficient
      */
     int degree() const;
 
-    /*
+    /**
      * @return the coefficient corresponding to x^power
      */
     uint64_t coefficient(unsigned power) const;
 
-    /*
+    /**
      * @return the vector of coefficients
      */
     std::vector<uint64_t> coefficients() const;
 
-    /*
+    /**
     * @brief Converts polynomial to string
     */
     std::string to_string(char var_ch = 'x', bool show_zero = false) const;
 
-    /*
+    /**
      * @brief Converts string to polynomial
      * @return Polynomial<modulo> object if string has correct format, otherwise - null
      */
@@ -51,7 +51,7 @@ public:
     template<uint64_t mod>
     friend bool operator!=(const Polynomial<mod>& left, const Polynomial<mod>& right);
 
-    /*
+    /**
      * @note considering all coefficients are correct
      */
     template<uint64_t mod>
