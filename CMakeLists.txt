@@ -31,12 +31,14 @@ add_library(${LIB_NAME} STATIC ${SRC_LIST})
 
 option(ENABLE_TESTS "Build tests for project" ON)
 if (ENABLE_TESTS)
+    enable_testing()
     add_subdirectory(${TESTS_DIR})
 endif()
 
 # executable for quick testing in main.cpp
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE ${LIB_NAME})
+
 
 
 

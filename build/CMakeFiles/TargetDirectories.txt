@@ -1,0 +1,8 @@
+/home/ilya/projects/polynomial-calculus/build/CMakeFiles/rebuild_cache.dir
+/home/ilya/projects/polynomial-calculus/build/CMakeFiles/edit_cache.dir
+/home/ilya/projects/polynomial-calculus/build/CMakeFiles/main.dir
+/home/ilya/projects/polynomial-calculus/build/CMakeFiles/test.dir
+/home/ilya/projects/polynomial-calculus/build/tests/CMakeFiles/edit_cache.dir
+/home/ilya/projects/polynomial-calculus/build/tests/CMakeFiles/rebuild_cache.dir
+/home/ilya/projects/polynomial-calculus/build/tests/CMakeFiles/tests.dir
+/home/ilya/projects/polynomial-calculus/build/tests/CMakeFiles/test.dir

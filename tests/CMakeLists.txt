@@ -7,5 +7,8 @@ set(SRC_LIST
         TestPolynomialField.cpp
         )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LIB_NAME})
+add_executable(tests ${SRC_LIST})
+target_link_libraries(tests PRIVATE ${LIB_NAME})
+
+
+add_test(NAME TestAll COMMAND tests)
