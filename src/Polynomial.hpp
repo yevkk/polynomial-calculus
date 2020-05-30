@@ -22,17 +22,17 @@ public:
     /**
      * @return the highest power of variable with non-zero coefficient
      */
-    [[nodiscard]] int degree() const;
+    [[nodiscard]] size_t degree() const;
 
     /**
      * @return the coefficient corresponding to x^power
      */
-    [[nodiscard]] int64_t coefficient(unsigned power) const;
+    [[nodiscard]] int64_t coefficient(size_t power) const;
 
     /**
      * @return the vector of coefficients
      */
-    [[nodiscard]] std::vector<int64_t> coefficients() const;
+    [[nodiscard]] const std::vector<int64_t>& coefficients() const;
 
     friend bool operator==(const Polynomial& left, const Polynomial& right);
     friend bool operator!=(const Polynomial& left, const Polynomial& right);

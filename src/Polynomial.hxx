@@ -8,11 +8,11 @@
 namespace lab {
 
     Polynomial::Polynomial() {
-        _coefs.emplace_back(0);
+        _coefs.push_back(0);
     }
 
     Polynomial::Polynomial(std::initializer_list<int64_t> coefs) : _coefs{coefs} {
-        if (coefs.size() == 0) {
+        if (_coefs.empty()) {
             _coefs.push_back(0);
         }
 
@@ -24,21 +24,21 @@ namespace lab {
 /**
  * @return the highest power of variable with non-zero coefficient
  */
-    int Polynomial::degree() const {
+    size_t Polynomial::degree() const {
         return _coefs.size() - 1;
     }
 
 /**
  * @return the coefficient corresponding to x^power
  */
-    int64_t Polynomial::coefficient(unsigned power) const {
+    int64_t Polynomial::coefficient(size_t power) const {
         return power < _coefs.size() ? _coefs[power] : 0;
     }
 
 /**
  * @return the vector of coefficients
  */
-    std::vector<int64_t> Polynomial::coefficients() const {
+    const std::vector<int64_t>& Polynomial::coefficients() const {
         return _coefs;
     }
 
