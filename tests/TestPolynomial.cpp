@@ -190,4 +190,18 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
             REQUIRE((p3 * p4).degree() == 18);
         }
     }
+
+    SECTION("Modifying by modulo") {
+        Polynomial p1{};
+        REQUIRE(to_string(p1.modify(3)) == "0");
+
+        Polynomial p2{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(to_string(p2.modify(2)) == "1*x^5 +1*x^4 +1*x^3");
+
+        Polynomial p3{56, 132, -45, 13, 75, -13, 3};
+        REQUIRE(to_string(p3.modify(5)) == "3*x^6 +2*x^5 +3*x^3 +2*x^1 +1");
+
+        Polynomial p4{1, 14, 10, 2, 1, 7, 8};
+        REQUIRE(to_string(p4.modify(17)) == to_string(p4));
+    }
 }

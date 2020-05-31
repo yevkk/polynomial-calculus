@@ -4,6 +4,8 @@
 #include <cctype>
 #include <algorithm>
 #include <iostream>
+#include "Polynomial.hpp"
+
 
 namespace lab {
 
@@ -40,6 +42,26 @@ int64_t Polynomial::coefficient(size_t power) const {
  */
 const std::vector<int64_t>& Polynomial::coefficients() const {
     return _coefs;
+}
+
+/*
+ * @brief calculates all coefficients by modulo
+ */
+Polynomial Polynomial::modify(int64_t modulo) const {
+    Polynomial result = *this;
+
+    for(auto& item:result._coefs) {
+        while (item < 0) {
+            item += modulo;
+        }
+        item = item % modulo;
+    }
+
+    while ((result._coefs.back() == 0) && (result._coefs.begin() + 1 != result._coefs.end())) {
+        result._coefs.pop_back();
+    }
+
+    return result;
 }
 
 bool operator==(const Polynomial &left, const Polynomial &right) {
