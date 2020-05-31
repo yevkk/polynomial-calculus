@@ -5,6 +5,12 @@
 #include <optional>
 
 namespace lab {
+class Polynomial;
+
+/**
+ * @brief Converts polynomial to string
+ */
+std::string to_string(const Polynomial& polynomial, char var_ch = 'x', bool show_zero = false);
 
 /**
  * @brief Class for holding polynomials with uint coefficients
@@ -50,19 +56,16 @@ public:
     friend Polynomial operator*(int64_t left, const Polynomial& right);
 
     template <typename OStream>
-    friend OStream& operator<<(OStream& os, const Polynomial& polynomial);
+    friend inline OStream& operator<<(OStream& os, const Polynomial& polynomial) {
+        os << to_string(polynomial);
+        return os;
+    }
 
 private:
     // Array of polynomial's coefficients
     std::vector<int64_t> _coefs;
 };
 
-/**
-* @brief Converts polynomial to string
-*/
-std::string to_string(const Polynomial& polynomial, char var_ch = 'x', bool show_zero = false);
 
 
 } // namespace lab
-
-#include "Polynomial.hxx"

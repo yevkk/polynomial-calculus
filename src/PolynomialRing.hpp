@@ -27,5 +27,3 @@ private:
 };
 
 } // namespace lab
-
-#include "PolynomialRing.hxx"

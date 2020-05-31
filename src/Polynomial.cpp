@@ -1,6 +1,5 @@
-#pragma once
+#include "Polynomial.hpp"
 
-#include <cassert>
 #include <cctype>
 #include <algorithm>
 #include <iostream>
@@ -137,12 +136,6 @@ Polynomial operator*(const Polynomial &left, int64_t right) {
 
 Polynomial operator*(int64_t left, const Polynomial &right) {
     return right * left;
-}
-
-template<typename OStream>
-OStream &operator<<(OStream &os, const Polynomial &polynomial) {
-    os << to_string(polynomial);
-    return os;
 }
 
 /**

@@ -109,10 +109,10 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             const Polynomial p2{1, 7, 5, 5, 10, 10, 10, 3, 2};
             REQUIRE(ring11.subtract(p1, p2) == Polynomial{4, 9, 0, 0, 7});
 
-            const PolynomialRing ring199{199};
+            const PolynomialRing ring157{157};
             const Polynomial p3{123, 43, 125, 22, 43, 154, 143, 124, 132, 1, 4, 34, 45};
             const Polynomial p4{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
-            REQUIRE(ring199.subtract(p3, p4) == Polynomial{1, 0, 156, 0, 1, 0, 156});
+            REQUIRE(ring157.subtract(p3, p4) == Polynomial{1, 0, 156, 0, 1, 0, 156});
         }
     }
 

@@ -1,4 +1,4 @@
-#pragma once
+#include "PolynomialRing.hpp"
 
 #include <cmath>
 #include <cassert>
