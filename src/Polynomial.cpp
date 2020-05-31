@@ -42,21 +42,28 @@ const std::vector<int64_t>& Polynomial::coefficients() const {
 }
 
 /*
+ * @brief removes extra 0 from back of coefficients vector
+ */
+void Polynomial::finilize() {
+    while ((_coefs.back() == 0) && (_coefs.begin() + 1 != _coefs.end())) {
+        _coefs.pop_back();
+    }
+}
+
+/*
  * @brief calculates all coefficients by modulo
  */
 Polynomial Polynomial::modify(int64_t modulo) const {
     Polynomial result = *this;
 
-    for(auto& item:result._coefs) {
+    for(auto& item : result._coefs) {
         while (item < 0) {
             item += modulo;
         }
         item = item % modulo;
     }
 
-    while ((result._coefs.back() == 0) && (result._coefs.begin() + 1 != result._coefs.end())) {
-        result._coefs.pop_back();
-    }
+    result.finilize();
 
     return result;
 }
@@ -79,9 +86,7 @@ Polynomial operator+(const Polynomial &left, const Polynomial &right) {
         result._coefs.push_back(left.coefficient(i) + right.coefficient(i));
     }
 
-    while ((result._coefs.back() == 0) && (result._coefs.begin() + 1 != result._coefs.end())) {
-        result._coefs.pop_back();
-    }
+    result.finilize();
 
     return result;
 }
@@ -96,9 +101,7 @@ Polynomial operator-(const Polynomial &left, const Polynomial &right) {
         result._coefs.push_back(left.coefficient(i) - right.coefficient(i));
     }
 
-    while ((result._coefs.back() == 0) && (result._coefs.begin() + 1 != result._coefs.end())) {
-        result._coefs.pop_back();
-    }
+    result.finilize();
 
     return result;
 }
@@ -113,9 +116,7 @@ Polynomial operator*(const Polynomial &left, const Polynomial &right) {
         }
     }
 
-    while ((result._coefs.back() == 0) && (result._coefs.begin() + 1 != result._coefs.end())) {
-        result._coefs.pop_back();
-    }
+    result.finilize();
 
     return result;
 }
@@ -127,9 +128,7 @@ Polynomial operator*(const Polynomial &left, int64_t right) {
         item = item * right;
     }
 
-    while ((result._coefs.back() == 0) && (result._coefs.begin() + 1 != result._coefs.end())) {
-        result._coefs.pop_back();
-    }
+    result.finilize();
 
     return result;
 }

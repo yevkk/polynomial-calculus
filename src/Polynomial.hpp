@@ -64,6 +64,11 @@ public:
 private:
     // Array of polynomial's coefficients
     std::vector<int64_t> _coefs;
+
+    /*
+     * @brief removes extra 0 from back of coefficients vector
+     */
+    void finilize();
 };
 
 } // namespace lab
