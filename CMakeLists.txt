@@ -15,6 +15,7 @@ include_directories(${SRC_DIR})
 
 set(SRC_LIST
         ${SRC_DIR}/Polynomial.hxx
+        ${SRC_DIR}/PolynomialRing.hxx
         )
 
 #set(LIB_NAME ${PROJECT_NAME}core)
