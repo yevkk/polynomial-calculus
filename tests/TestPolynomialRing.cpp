@@ -63,107 +63,110 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         }
     }
 
-//    SECTION("Subtraction") {
-//        SECTION("simple") {
-//            const Polynomial<17> p1{};
-//            const Polynomial<17> p2{};
-//            REQUIRE(p1 - p2 == Polynomial<17>{});
-//            REQUIRE((p1 - p2).degree() == 0);
-//
-//            const Polynomial<71> p3{45, 32, 45, 57, 43, 59, 67, 70, 34};
-//            const Polynomial<71> p4{12, 23, 44, 57, 12, 23, 45, 67, 12};
-//            REQUIRE(p3 - p4 == Polynomial<71>{33, 9, 1, 0, 31, 36, 22, 3, 22});
-//            REQUIRE((p3 - p4).degree() == 8);
-//
-//            REQUIRE(p3 - Polynomial<71>{} == p3);
-//            REQUIRE(p4 - Polynomial<71>{} == p4);
-//
-//            const Polynomial<47> p5{34, 35, 32, 35, 23, 34, 14, 25, 43, 42, 45, 37, 39, 40};
-//            const Polynomial<47> p6{12, 13, 14, 15, 16, 17, 14, 25, 43, 12, 12};
-//            REQUIRE(p5 - p6 == Polynomial<47>{22, 22, 18, 20, 7, 17, 0, 0, 0, 30, 33, 37, 39, 40});
-//            REQUIRE((p5 - p6).degree() == 13);
-//        }
-//
-//        SECTION("with modification") {
-//            const Polynomial<5> p1{1, 2, 1, 2, 3, 4, 2, 1, 3, 1};
-//            const Polynomial<5> p2{4, 3, 3, 3, 4, 2, 3, 3, 3, 4};
-//            REQUIRE(p1 - p2 == Polynomial<5>{2, 4, 3, 4, 4, 2, 4, 3, 0, 2});
-//            REQUIRE((p1 - p2).degree() == 9);
-//
-//            const Polynomial<37> p3{21, 34, 21, 25, 2, 3, 4, 21, 0, 21, 35};
-//            const Polynomial<37> p4{21, 34, 26, 3, 9, 36, 32, 21, 21, 20, 24, 34, 36, 36, 36, 21, 23};
-//            REQUIRE(p3 - p4 == Polynomial<37>{0, 0, 32, 22, 30, 4, 9, 0, 16, 1, 11, 3, 1, 1, 1, 16, 14});
-//            REQUIRE((p3 - p4).degree() == 16);
-//
-//            const Polynomial<199> p5{123, 145, 165, 134, 23, 146, 175, 123, 198, 111, 143, 43, 98, 143};
-//            const Polynomial<199> p6{154, 162, 153, 141, 123, 67, 89, 98, 123, 198, 176, 187, 134, 123, 123, 123, 198};
-//            REQUIRE(p5 - p6 == Polynomial<199>{168, 182, 12, 192, 99, 79, 86, 25, 75, 112, 166, 55, 163, 20, 76, 76, 1});
-//            REQUIRE((p5 - p6).degree() == 16);
-//        }
-//
-//        SECTION("tail of zeros in result") {
-//            const Polynomial<11> p1{5, 5, 5, 5, 6, 10, 10, 3, 2};
-//            REQUIRE(p1 - p1 == Polynomial<11>{});
-//            REQUIRE((p1 - p1).degree() == 0);
-//
-//            const Polynomial<11> p2{1, 7, 5, 5, 10, 10, 10, 3, 2};
-//            REQUIRE(p1 - p2 == Polynomial<11>{4, 9, 0, 0, 7});
-//            REQUIRE((p1 - p2).degree() == 4);
-//
-//            const Polynomial<157> p3{123, 43, 125, 22, 43, 154, 143, 124, 132, 1, 4, 34, 45};
-//            const Polynomial<157> p4{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
-//            REQUIRE(p3 - p4 == Polynomial<157>{1, 0, 156, 0, 1, 0, 156});
-//            REQUIRE((p3 - p4).degree() == 6);
-//        }
-//    }
-//
-//    SECTION("Multiplication") {
-//        SECTION("by number") {
-//            const Polynomial<11> p1{5, 4, 7, 5, 6, 10, 10, 3, 2};
-//            uint64_t num = 0;
-//
-//            REQUIRE(p1 * num == Polynomial<11>{});
-//            REQUIRE(num * p1 == p1 * num);
-//
-//            num = 11;
-//            REQUIRE(p1 * num == Polynomial<11>{});
-//            REQUIRE(num * p1 == p1 * num);
-//
-//            num = 3;
-//            REQUIRE(p1 * num == Polynomial<11>{4, 1, 10, 4, 7, 8, 8, 9, 6});
-//            REQUIRE(num * p1 == p1 * num);
-//
-//            const Polynomial<37> p2{21, 34, 21, 25, 2, 3, 4, 21, 0, 21, 35};
-//            num = 321;
-//            REQUIRE(p2 * num == Polynomial<37>{7, 36, 7, 33, 13, 1, 26, 7, 0, 7, 24});
-//            REQUIRE(num * p2 == p2 * num);
-//
-//            const Polynomial<181> p3{123, 145, 165, 134, 23, 146, 175, 123, 178, 111, 143, 43, 98, 143};
-//            num = 654;
-//            REQUIRE(p3 * num == Polynomial<181>{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126});
-//            REQUIRE(num * p3 == p3 * num);
-//        }
-//
-//        SECTION("by polynomial") {
-//            const Polynomial<11> p1{1, 5, 1};
-//            const Polynomial<11> p2{2, 6, 7, 1};
-//            REQUIRE(p1 * p2 == Polynomial<11>{2, 5, 6, 9, 1, 1});
-//            REQUIRE(p1 * p2 == p2 * p1);
-//            REQUIRE((p1 * p2).degree() == 5);
-//
-//            REQUIRE(p1 * Polynomial<11>{} == Polynomial<11>{});
-//
-//            const Polynomial<5> p3{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4};
-//            const Polynomial<5> p4{4, 3, 2, 1, 4, 3, 2, 1};
-//            REQUIRE(p3 * p4 == Polynomial<5>{4, 1, 0, 0, 3, 3, 4, 0, 3, 4, 3, 0, 4, 3, 3, 0, 0, 1, 4});
-//            REQUIRE(p3 * p4 == p4 * p3);
-//            REQUIRE((p3 * p4).degree() == 18);
-//
-//            const Polynomial<157> p5{123, 145, 5, 134, 23, 146};
-//            const Polynomial<157> p6{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
-//            REQUIRE(p5 * p6 == Polynomial<157>{91, 57, 49, 16, 127, 68, 95, 45, 90, 26, 63, 16, 45, 150, 152, 17, 33, 133});
-//            REQUIRE(p5 * p6 == p6 * p5);
-//            REQUIRE((p5 * p6).degree() == 17);
-//        }
-//    }
+    SECTION("Subtraction") {
+        SECTION("simple") {
+            const PolynomialRing ring17{17};
+            const Polynomial p1{};
+            const Polynomial p2{};
+            REQUIRE(ring17.subtract(p1, p2) == Polynomial{});
+
+            const PolynomialRing ring71{71};
+            const Polynomial p3{45, 32, 45, 57, 43, 59, 67, 70, 34};
+            const Polynomial p4{12, 23, 44, 57, 12, 23, 45, 67, 12};
+            REQUIRE(ring71.subtract(p3, p4) == Polynomial{33, 9, 1, 0, 31, 36, 22, 3, 22});
+
+            REQUIRE(ring71.subtract(p3, Polynomial{}) == p3);
+            REQUIRE(ring71.subtract(p4, Polynomial{}) == p4);
+
+            const PolynomialRing ring47{47};
+            const Polynomial p5{34, 35, 32, 35, 23, 34, 14, 25, 43, 42, 45, 37, 39, 40};
+            const Polynomial p6{12, 13, 14, 15, 16, 17, 14, 25, 43, 12, 12};
+            REQUIRE(ring47.subtract(p5, p6) == Polynomial{22, 22, 18, 20, 7, 17, 0, 0, 0, 30, 33, 37, 39, 40});
+        }
+
+        SECTION("with modification") {
+            const PolynomialRing ring5{5};
+            const Polynomial p1{1, 2, 1, 2, 3, 4, 2, 1, 3, 1};
+            const Polynomial p2{4, 3, 3, 3, 4, 2, 3, 3, 3, 4};
+            REQUIRE(ring5.subtract(p1, p2) == Polynomial{2, 4, 3, 4, 4, 2, 4, 3, 0, 2});
+
+            const PolynomialRing ring37{37};
+            const Polynomial p3{21, 34, 21, 25, 2, 3, 4, 21, 0, 21, 35};
+            const Polynomial p4{21, 34, 26, 3, 9, 36, 32, 21, 21, 20, 24, 34, 36, 36, 36, 21, 23};
+            REQUIRE(ring37.subtract(p3, p4) == Polynomial{0, 0, 32, 22, 30, 4, 9, 0, 16, 1, 11, 3, 1, 1, 1, 16, 14});
+
+            const PolynomialRing ring199{199};
+            const Polynomial p5{123, 145, 165, 134, 23, 146, 175, 123, 198, 111, 143, 43, 98, 143};
+            const Polynomial p6{154, 162, 153, 141, 123, 67, 89, 98, 123, 198, 176, 187, 134, 123, 123, 123, 198};
+            REQUIRE(ring199.subtract(p5, p6) == Polynomial{168, 182, 12, 192, 99, 79, 86, 25, 75, 112, 166, 55, 163, 20, 76, 76, 1});
+        }
+
+        SECTION("tail of zeros in result") {
+            const PolynomialRing ring11{11};
+            const Polynomial p1{5, 5, 5, 5, 6, 10, 10, 3, 2};
+            REQUIRE(ring11.subtract(p1, p1) == Polynomial{});
+
+            const Polynomial p2{1, 7, 5, 5, 10, 10, 10, 3, 2};
+            REQUIRE(ring11.subtract(p1, p2) == Polynomial{4, 9, 0, 0, 7});
+
+            const PolynomialRing ring199{199};
+            const Polynomial p3{123, 43, 125, 22, 43, 154, 143, 124, 132, 1, 4, 34, 45};
+            const Polynomial p4{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
+            REQUIRE(ring199.subtract(p3, p4) == Polynomial{1, 0, 156, 0, 1, 0, 156});
+        }
+    }
+
+    SECTION("Multiplication") {
+        SECTION("by number") {
+            const PolynomialRing ring11{11};
+            const Polynomial p1{5, 4, 7, 5, 6, 10, 10, 3, 2};
+            uint64_t num = 0;
+
+            REQUIRE(ring11.multiply(p1, num) == Polynomial{});
+            REQUIRE(ring11.multiply(num, p1) == Polynomial{});
+
+            num = 11;
+            REQUIRE(ring11.multiply(p1, num) == Polynomial{});
+            REQUIRE(ring11.multiply(num, p1) == Polynomial{});
+
+            num = 3;
+            REQUIRE(ring11.multiply(p1, num) == Polynomial{4, 1, 10, 4, 7, 8, 8, 9, 6});
+            REQUIRE(ring11.multiply(num, p1) == Polynomial{4, 1, 10, 4, 7, 8, 8, 9, 6});
+
+            const PolynomialRing ring37{37};
+            const Polynomial p2{21, 34, 21, 25, 2, 3, 4, 21, 0, 21, 35};
+            num = 321;
+            REQUIRE(ring37.multiply(p2, num) == Polynomial{7, 36, 7, 33, 13, 1, 26, 7, 0, 7, 24});
+            REQUIRE(ring37.multiply(num, p2) == Polynomial{7, 36, 7, 33, 13, 1, 26, 7, 0, 7, 24});
+
+            const PolynomialRing ring181{181};
+            const Polynomial p3{123, 145, 165, 134, 23, 146, 175, 123, 178, 111, 143, 43, 98, 143};
+            num = 654;
+            REQUIRE(ring181.multiply(p3, num) == Polynomial{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126});
+            REQUIRE(ring181.multiply(num, p3) == Polynomial{78, 167, 34, 32, 19, 97, 58, 78, 29, 13, 126, 67, 18, 126});
+        }
+
+        SECTION("by polynomial") {
+            const PolynomialRing ring11{11};
+            const Polynomial p1{1, 5, 1};
+            const Polynomial p2{2, 6, 7, 1};
+            REQUIRE(ring11.multiply(p1, p2) == Polynomial{2, 5, 6, 9, 1, 1});
+            REQUIRE(ring11.multiply(p2, p1) == Polynomial{2, 5, 6, 9, 1, 1});
+
+            REQUIRE(ring11.multiply(p1, Polynomial{}) == Polynomial{});
+            REQUIRE(ring11.multiply(Polynomial{}, p1) == Polynomial{});
+
+            const PolynomialRing ring5{5};
+            const Polynomial p3{1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4};
+            const Polynomial p4{4, 3, 2, 1, 4, 3, 2, 1};
+            REQUIRE(ring5.multiply(p3, p4) == Polynomial{4, 1, 0, 0, 3, 3, 4, 0, 3, 4, 3, 0, 4, 3, 3, 0, 0, 1, 4});
+            REQUIRE(ring5.multiply(p4, p3) == Polynomial{4, 1, 0, 0, 3, 3, 4, 0, 3, 4, 3, 0, 4, 3, 3, 0, 0, 1, 4});
+
+            const PolynomialRing ring157{157};
+            const Polynomial p5{123, 145, 5, 134, 23, 146};
+            const Polynomial p6{122, 43, 126, 22, 42, 154, 144, 124, 132, 1, 4, 34, 45};
+            REQUIRE(ring157.multiply(p5, p6) == Polynomial{91, 57, 49, 16, 127, 68, 95, 45, 90, 26, 63, 16, 45, 150, 152, 17, 33, 133});
+            REQUIRE(ring157.multiply(p6, p5) == Polynomial{91, 57, 49, 16, 127, 68, 95, 45, 90, 26, 63, 16, 45, 150, 152, 17, 33, 133});
+        }
+    }
 }
