@@ -4,8 +4,6 @@
 #include <cctype>
 #include <algorithm>
 #include <iostream>
-#include "Polynomial.hpp"
-
 
 namespace lab {
 

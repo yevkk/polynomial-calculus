@@ -1,7 +1,5 @@
 #include <cmath>
 #include <cassert>
-#include "PolynomialRing.hpp"
-
 
 namespace lab {
 
