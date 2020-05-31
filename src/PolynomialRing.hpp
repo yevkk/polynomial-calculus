@@ -6,7 +6,21 @@ namespace lab {
 
 class PolynomialRing {
 public:
+    PolynomialRing(const PolynomialRing& that) = default;
 
+    PolynomialRing(uint64_t p);
+
+    [[nodiscard]] uint64_t getP() const;
+
+    Polynomial add(const Polynomial& left, const Polynomial& right) const;
+
+    Polynomial subtract(const Polynomial& left, const Polynomial& right) const;
+
+    Polynomial multiply(const Polynomial& left, const Polynomial& right) const;
+
+    Polynomial multiply(const Polynomial& polynomial, const uint64_t & num) const;
+
+    Polynomial multiply(const uint64_t & num, const Polynomial& polynomial) const;
 
 private:
     uint64_t _p;
