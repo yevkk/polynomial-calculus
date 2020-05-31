@@ -1,4 +1,5 @@
 #include <Polynomial.hpp>
+#include <PolynomialRing.hpp>
 
 int main () {
 
