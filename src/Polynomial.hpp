@@ -66,6 +66,4 @@ private:
     std::vector<int64_t> _coefs;
 };
 
-
-
 } // namespace lab
