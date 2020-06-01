@@ -2,8 +2,7 @@
 
 #include <cctype>
 #include <algorithm>
-#include <cmath>
-#include <iostream>
+#include <utility>
 
 namespace lab {
 
@@ -81,6 +80,13 @@ bool operator==(const Polynomial &left, const Polynomial &right) {
 
 bool operator!=(const Polynomial &left, const Polynomial &right) {
     return !(left == right);
+}
+
+bool operator<(const Polynomial &left, const Polynomial &right) {
+    if (left.degree() != right.degree()) {
+        return left.degree() < right.degree();
+    }
+    return std::lexicographical_compare(left.coefficients().rbegin(), left.coefficients().rend(), right.coefficients().rbegin(), right.coefficients().rend());
 }
 
 Polynomial operator+(const Polynomial &left, const Polynomial &right) {

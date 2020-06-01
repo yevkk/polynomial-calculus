@@ -49,6 +49,7 @@ public:
 
     friend bool operator==(const Polynomial& left, const Polynomial& right);
     friend bool operator!=(const Polynomial& left, const Polynomial& right);
+    friend bool operator<(const Polynomial& left, const Polynomial& right);
 
     friend Polynomial operator+(const Polynomial& left, const Polynomial& right);
     friend Polynomial operator-(const Polynomial& left, const Polynomial& right);
