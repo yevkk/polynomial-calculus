@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <cmath>
-#include <iostream> // TODO: delete include!!!
+#include <map>
 
 namespace lab {
 
@@ -41,10 +41,6 @@ PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
             }
         }
     }
-
-    for (auto& item : _elements) {
-        std::cout << item << std::endl;
-    }
 }
 
 /*
@@ -52,6 +48,30 @@ PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
  */
 std::vector<Polynomial> PolynomialField::elements() const {
     return _elements;
+}
+
+uint64_t PolynomialField::getP() const {
+    return _p;
+}
+
+uint64_t PolynomialField::getN() const {
+    return _n;
+}
+
+Polynomial PolynomialField::getIrreducible() const {
+    return _irreducible;
+}
+
+Polynomial PolynomialField::add(const Polynomial &left, const Polynomial &right) const {
+    assert(left.degree() < _n);
+    assert(right.degree() < _n);
+    return (left + right).modify(_p);
+}
+
+Polynomial PolynomialField::subtract(const Polynomial &left, const Polynomial &right) const {
+    assert(left.degree() < _n);
+    assert(right.degree() < _n);
+    return (left - right).modify(_p);
 }
 
 Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &right) const {
@@ -65,5 +85,11 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
     if (cache_map.find({right, left}) != cache_map.end()) {
         return cache_map[{right, left}];
     }
+
+    Polynomial result = (left * right).modify(_p);
+
+
+    return Polynomial{};
+}
 
 } // namespace lab
