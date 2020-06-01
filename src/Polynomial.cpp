@@ -190,8 +190,10 @@ Polynomial Polynomial::derivate() const {
 
 int64_t Polynomial::evaluate(int64_t point) const {
     int64_t result = 0;
+    int64_t point_power = 1;
     for (size_t power = 0; power < _coefs.size(); ++power) {
-        result += _coefs[power]*std::pow(point, power);
+        result += _coefs[power] * point_power;
+        point_power *= point;
     }
     return result;
 }
