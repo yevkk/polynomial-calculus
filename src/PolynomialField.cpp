@@ -65,13 +65,13 @@ Polynomial PolynomialField::getIrreducible() const {
 Polynomial PolynomialField::add(const Polynomial &left, const Polynomial &right) const {
     assert(left.degree() < _n);
     assert(right.degree() < _n);
-    return (left + right).modify(_p);
+    return (left + right).modified(_p);
 }
 
 Polynomial PolynomialField::subtract(const Polynomial &left, const Polynomial &right) const {
     assert(left.degree() < _n);
     assert(right.degree() < _n);
-    return (left - right).modify(_p);
+    return (left - right).modified(_p);
 }
 
 Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &right) const {
@@ -84,7 +84,7 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
         return cached_result.value();
     }
 
-    Polynomial result = (left * right).modify(_p);
+    Polynomial result = (left * right).modified(_p);
 
     auto irreducible_coefs = _irreducible.coefficients();
     irreducible_coefs.pop_back();
@@ -99,7 +99,7 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
         result = Polynomial{result_coefs} + (from_irreducible * tmp);
     }
 
-    result = result.modify(_p);
+    result = result.modified(_p);
 
     detail::FieldMultiplicationCache::instance().setResult(_p, _irreducible, left, right, result);
     return result;

@@ -59,7 +59,7 @@ void Polynomial::finilize() {
 /*
  * @brief calculates all coefficients by modulo
  */
-Polynomial Polynomial::modify(int64_t modulo) const {
+Polynomial Polynomial::modified(int64_t modulo) const {
     Polynomial result = *this;
 
     for(auto& item : result._coefs) {
