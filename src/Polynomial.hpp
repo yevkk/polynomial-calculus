@@ -37,7 +37,7 @@ public:
      */
     [[nodiscard]] int64_t coefficient(size_t power) const;
 
-    /*
+    /**
      * @brief calculates all coefficients by modulo
      */
     [[nodiscard]] Polynomial modify(int64_t modulo) const;
@@ -56,6 +56,17 @@ public:
     friend Polynomial operator*(const Polynomial& left, const Polynomial& right);
     friend Polynomial operator*(const Polynomial& left, int64_t right);
     friend Polynomial operator*(int64_t left, const Polynomial& right);
+    
+    /**
+     * @brief Calculates derivative from polynomial
+     */
+    Polynomial derivate() const;
+    
+    /**
+     * @brief Evaluates polynomial in point
+     */
+    int64_t evaluate(int64_t point) const;
+    
 
     template <typename OStream>
     friend inline OStream& operator<<(OStream& os, const Polynomial& polynomial) {

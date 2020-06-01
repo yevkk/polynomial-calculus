@@ -169,4 +169,59 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(ring157.multiply(p6, p5) == Polynomial{91, 57, 49, 16, 127, 68, 95, 45, 90, 26, 63, 16, 45, 150, 152, 17, 33, 133});
         }
     }
+    
+    SECTION("Derivative") {
+        const PolynomialRing r{11};
+        Polynomial p1{};
+        REQUIRE(r.derivate(p1) == Polynomial{});
+
+        Polynomial p2{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(r.derivate(p2) == Polynomial{0, 4, 6, 3, 10, 1});
+        REQUIRE(r.derivate(p2).degree() == 5);
+
+        Polynomial p3{56, 132, -45, 13, 75, -13, 3};
+        REQUIRE(r.derivate(p3) == Polynomial{0, 9, 6, 3, 1, 7});
+        REQUIRE(r.derivate(p3).degree() == 5);
+
+        Polynomial p4{1, 14, 10, 2, 1, 7, 8};
+        REQUIRE(r.derivate(p4) == Polynomial{3, 9, 6, 4, 2, 4});
+        REQUIRE(r.derivate(p4).degree() == 5);
+        
+        Polynomial p5{0, 1};
+        REQUIRE(r.derivate(p5) == Polynomial{1});
+        REQUIRE(r.derivate(p5).degree() == 0);
+    }
+    
+    SECTION("Evaluation") {
+        const PolynomialRing r{11};
+        Polynomial p1{};
+        REQUIRE(r.evaluate(p1, 42) == 0);
+
+        Polynomial p2{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(r.evaluate(p2, 2) == 9);
+
+        Polynomial p3{56, 132, -45, 13, 75, -13, 3};
+        REQUIRE(r.evaluate(p3, 3) == 1);
+
+        Polynomial p4{1, 14, 10, 2, 1, 7, 8};
+        REQUIRE(r.evaluate(p4, 0) == 1);
+        
+        Polynomial p5{0, 1};
+        REQUIRE(r.evaluate(p5, 42) == 9);
+    }
+    
+    SECTION("Normalize") {
+        const PolynomialRing r{11};
+        Polynomial p1{};
+        REQUIRE(r.normalize(p1) == Polynomial{0});
+
+        Polynomial p2{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(r.normalize(p2) == Polynomial{6, 0, 1, 1, 10, 1, 1});
+
+        Polynomial p3{1, 14, 10, 2, 1, 7, 8};
+        REQUIRE(r.normalize(p3) == Polynomial{7, 10, 4, 3, 7, 5, 1});
+        
+        Polynomial p4{0, 1};
+        REQUIRE(r.normalize(p4) == Polynomial{0, 1});
+    }
 }
