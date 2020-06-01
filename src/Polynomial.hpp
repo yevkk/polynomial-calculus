@@ -63,6 +63,8 @@ public:
         return os;
     }
 
+    static Polynomial x(size_t power);
+
 private:
     // Array of polynomial's coefficients
     std::vector<int64_t> _coefs;

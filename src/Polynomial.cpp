@@ -143,6 +143,13 @@ Polynomial operator*(int64_t left, const Polynomial &right) {
     return right * left;
 }
 
+Polynomial Polynomial::x(size_t power) {
+    std::vector<int64_t> coefs(power, 0);
+    coefs.push_back(1);
+
+    return Polynomial{coefs};
+}
+
 /**
  * @brief Converts polynomial to string
  */

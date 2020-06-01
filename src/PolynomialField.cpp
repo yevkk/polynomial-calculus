@@ -30,14 +30,13 @@ PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
         _elements.push_back(Polynomial{i});
     }
 
-    Polynomial x{0, 1};
     std::vector<Polynomial> tmp;
     for (int64_t n = _n - 2; n >= 0; n--) {
         tmp = _elements;
         _elements.clear();
         for (auto& item : tmp) {
             for (int64_t j = 0; j < _p; j++) {
-                _elements.push_back(item * x + Polynomial{j});
+                _elements.push_back(item * Polynomial::x(1) + Polynomial{j});
             }
         }
     }
@@ -78,18 +77,33 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
     assert(left.degree() < _n);
     assert(right.degree() < _n);
 
-    static std::map<std::pair<Polynomial, Polynomial>, Polynomial> cache_map;
-    if (cache_map.find({left, right}) != cache_map.end()) {
-        return cache_map[{left, right}];
-    }
-    if (cache_map.find({right, left}) != cache_map.end()) {
-        return cache_map[{right, left}];
-    }
+//    static std::map<std::pair<Polynomial, Polynomial>, Polynomial> cache_map;
+//    if (cache_map.find({left, right}) != cache_map.end()) {
+//        return cache_map[{left, right}];
+//    }
+//    if (cache_map.find({right, left}) != cache_map.end()) {
+//        return cache_map[{right, left}];
+//    }
 
     Polynomial result = (left * right).modify(_p);
 
+    auto irreducible_coefs = _irreducible.coefficients();
+    irreducible_coefs.pop_back();
+    static Polynomial from_irreducible = -1 * Polynomial{irreducible_coefs};
 
-    return Polynomial{};
+    while (result.degree() >= _n) {
+        auto tmp = result.coefficients().back() * Polynomial::x(result.degree() - _n);
+
+        auto result_coefs = result.coefficients();
+        result_coefs.pop_back();
+
+        result = Polynomial{result_coefs} + (from_irreducible * tmp);
+    }
+
+    result = result.modify(_p);
+
+//    cache_map[{left, right}] = result;
+    return result;
 }
 
 } // namespace lab
