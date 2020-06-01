@@ -59,13 +59,6 @@ public:
         cache_map[{p, irreducible}][{left, right}] = result;
     }
 
-    bool contains(uint64_t p, const Polynomial& irreducible, const Polynomial& left, const Polynomial& right) {
-        const auto cache_item = cache_map.find({p, irreducible});
-        return cache_item != cache_map.end()
-               && (cache_item->second.find({left, right}) != cache_item->second.end()
-                   || cache_item->second.find({right, left}) != cache_item->second.end());
-    }
-
 private:
     FieldMultiplicationCache() = default;
 

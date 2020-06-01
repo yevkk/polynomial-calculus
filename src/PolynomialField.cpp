@@ -25,17 +25,20 @@ PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
         _n{irreducible.degree()},
         _irreducible{irreducible} {
     assert(prime(p));
+    _generateElements();
+}
 
-    //creating elements vector
-    for (int64_t i = 0; i < p; i++) {
+void PolynomialField::_generateElements() {
+    _elements.reserve(std::pow(_p, _n));
+    for (int64_t i = 0; i < _p; i++) {
         _elements.push_back(Polynomial{i});
     }
 
     std::vector<Polynomial> tmp;
     for (int64_t n = _n - 2; n >= 0; n--) {
-        tmp = _elements;
+        tmp = std::move(_elements);
         _elements.clear();
-        for (auto& item : tmp) {
+        for (const auto& item : tmp) {
             for (int64_t j = 0; j < _p; j++) {
                 _elements.push_back(item * Polynomial::x(1) + Polynomial{j});
             }
@@ -46,7 +49,7 @@ PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
 /*
  * @return elements of field
  */
-std::vector<Polynomial> PolynomialField::elements() const {
+const std::vector<Polynomial>& PolynomialField::elements() const {
     return _elements;
 }
 
@@ -58,29 +61,35 @@ uint64_t PolynomialField::getN() const {
     return _n;
 }
 
-Polynomial PolynomialField::getIrreducible() const {
+const Polynomial& PolynomialField::getIrreducible() const {
     return _irreducible;
 }
 
+namespace utils{
+    void assert_(const Polynomial& polynomial, uint64_t n) {
+        assert(polynomial.degree() < n && "polynomial is not in the field");
+    }
+}
+
 Polynomial PolynomialField::add(const Polynomial &left, const Polynomial &right) const {
-    assert(left.degree() < _n);
-    assert(right.degree() < _n);
+    utils::assert_(left, _n);
+    utils::assert_(right, _n);
     return (left + right).modified(_p);
 }
 
 Polynomial PolynomialField::subtract(const Polynomial &left, const Polynomial &right) const {
-    assert(left.degree() < _n);
-    assert(right.degree() < _n);
+    utils::assert_(left, _n);
+    utils::assert_(right, _n);
     return (left - right).modified(_p);
 }
 
 Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &right) const {
-    assert(left.degree() < _n);
-    assert(right.degree() < _n);
+    utils::assert_(left, _n);
+    utils::assert_(right, _n);
 
     auto cached_result = detail::FieldMultiplicationCache::instance().getResult(_p, _irreducible, left, right);
 
-    if (cached_result != std::nullopt) {
+    if (cached_result.has_value()) {
         return cached_result.value();
     }
 

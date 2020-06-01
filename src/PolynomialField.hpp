@@ -21,13 +21,13 @@ public:
     /*
      * @return elements of field
      */
-    [[nodiscard]] std::vector<Polynomial> elements() const;
+    [[nodiscard]] const std::vector<Polynomial>& elements() const;
 
     [[nodiscard]] uint64_t getP() const;
 
     [[nodiscard]] uint64_t getN() const;
 
-    [[nodiscard]] Polynomial getIrreducible() const;
+    [[nodiscard]] const Polynomial& getIrreducible() const;
 
     [[nodiscard]] Polynomial add(const Polynomial& left, const Polynomial& right) const;
 
@@ -36,6 +36,8 @@ public:
     [[nodiscard]] Polynomial multiply(const Polynomial& left, const Polynomial& right) const;
 
 private:
+    void _generateElements();
+
     uint64_t _p;
     uint64_t _n;
     Polynomial _irreducible;
