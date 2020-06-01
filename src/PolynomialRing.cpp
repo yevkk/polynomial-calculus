@@ -46,4 +46,27 @@ Polynomial PolynomialRing::multiply(const uint64_t &num, const Polynomial &polyn
     return multiply(polynomial, num);
 }
 
+Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
+    Polynomial result(polynomial.modify(_p));
+    uint64_t normalizator = 1;
+    if (_p > 2) {
+        normalizator = std::pow(polynomial.coefficient(polynomial.degree()), _p-2);
+    }
+    return (result*normalizator).modify(_p);
+}
+
+uint64_t PolynomialRing::evaluate(Polynomial &polynomial, uint64_t point) const {
+    polynomial = polynomial.modify(_p);
+    uint64_t result = 0;
+    for (size_t power = 0; power <= polynomial.degree(); ++power) {
+        result += polynomial.coefficient(power)*static_cast<uint64_t>(std::pow(point, power)) % _p;
+    }
+    result %= _p;
+    return result;
+}
+
+Polynomial PolynomialRing::derivate(Polynomial &polynomial) const {
+    return polynomial.derivate().modify(_p);
+}
+
 } // namespace lab
