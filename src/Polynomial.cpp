@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
 namespace lab {
@@ -185,6 +186,29 @@ std::string to_string(const Polynomial &polynomial, char var_ch, bool show_zero)
     }
 
     return (result.empty() ? "0" : result);
+}
+
+Polynomial Polynomial::derivate() const {
+    Polynomial derivate(*this);
+    if (derivate._coefs.size() == 1) {
+        derivate._coefs[0] = 0;
+    } else {
+        for (size_t power = 1; power < derivate._coefs.size(); ++power) {
+            derivate._coefs[power - 1] = derivate._coefs[power] * power;
+        }
+        derivate._coefs.pop_back();
+    } 
+    return derivate;
+}
+
+int64_t Polynomial::evaluate(int64_t point) const {
+    int64_t result = 0;
+    int64_t point_power = 1;
+    for (size_t power = 0; power < _coefs.size(); ++power) {
+        result += _coefs[power] * point_power;
+        point_power *= point;
+    }
+    return result;
 }
 
 } // namespace lab

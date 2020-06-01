@@ -21,6 +21,21 @@ public:
     [[nodiscard]] Polynomial multiply(const Polynomial& polynomial, const uint64_t & num) const;
 
     [[nodiscard]] Polynomial multiply(const uint64_t & num, const Polynomial& polynomial) const;
+    
+    /**
+     * @brief Finds normalized polynomial in field
+     */
+    [[nodiscard]] Polynomial normalize(Polynomial &polynomial) const;
+    
+    /**
+     * @brief Evaluates polynomial in point
+     */
+    [[nodiscard]] uint64_t evaluate(Polynomial &polynomial, uint64_t point) const;
+    
+    /**
+     * @brief Calculates derivative from polynomial
+     */
+    [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
 
 private:
     uint64_t _p;

@@ -490,3 +490,6 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/c++,clion+all,codeblocks,visualstudio,visualstudiocode
+.kdev4/
+build/
+*.kdev4
