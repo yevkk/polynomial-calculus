@@ -21,6 +21,8 @@ public:
 
     Polynomial(std::initializer_list<int64_t> coefs);
 
+    Polynomial(std::vector<int64_t> coefs);
+
     Polynomial();
 
     Polynomial& operator=(const Polynomial& that) = default;

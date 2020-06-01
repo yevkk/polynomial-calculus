@@ -15,9 +15,15 @@ Polynomial::Polynomial(std::initializer_list<int64_t> coefs) : _coefs{coefs} {
         _coefs.push_back(0);
     }
 
-    while (!_coefs.back() && (_coefs.begin() + 1 != _coefs.end())) {
-        _coefs.pop_back();
+    finilize();
+}
+
+Polynomial::Polynomial(std::vector<int64_t> coefs) : _coefs{coefs} {
+    if (_coefs.empty()) {
+        _coefs.push_back(0);
     }
+
+    finilize();
 }
 
 /**
