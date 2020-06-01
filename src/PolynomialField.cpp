@@ -54,4 +54,16 @@ std::vector<Polynomial> PolynomialField::elements() const {
     return _elements;
 }
 
+Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &right) const {
+    assert(left.degree() < _n);
+    assert(right.degree() < _n);
+
+    static std::map<std::pair<Polynomial, Polynomial>, Polynomial> cache_map;
+    if (cache_map.find({left, right}) != cache_map.end()) {
+        return cache_map[{left, right}];
+    }
+    if (cache_map.find({right, left}) != cache_map.end()) {
+        return cache_map[{right, left}];
+    }
+
 } // namespace lab

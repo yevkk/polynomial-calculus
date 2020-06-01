@@ -27,7 +27,7 @@ public:
 
     [[nodiscard]] uint64_t getN() const;
 
-    [[nodiscard]] uint64_t getQ() const;
+    [[nodiscard]] Polynomial getIrreducible() const;
 
     [[nodiscard]] Polynomial add(const Polynomial& left, const Polynomial& right) const;
 

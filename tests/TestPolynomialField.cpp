@@ -2,8 +2,7 @@
 
 #include "catch.hpp"
 
-TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
+TEST_CASE("Polynomial Field test", "[Polynomial field]") {
     using namespace lab;
 
-    PolynomialField p{2, Polynomial{1, 0, 1}};
 }
