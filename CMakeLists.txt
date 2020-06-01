@@ -16,8 +16,10 @@ include_directories(${SRC_DIR})
 set(SRC_LIST
         ${SRC_DIR}/Polynomial.cpp
         ${SRC_DIR}/PolynomialRing.cpp
+        ${SRC_DIR}/PolynomialField.cpp
         ${SRC_DIR}/Polynomial.hpp
         ${SRC_DIR}/PolynomialRing.hpp
+        ${SRC_DIR}/PolynomialField.hpp
         )
 
 #set(LIB_NAME ${PROJECT_NAME}core)

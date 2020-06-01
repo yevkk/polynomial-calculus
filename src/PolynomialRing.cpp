@@ -5,8 +5,8 @@
 
 namespace lab {
 
-namespace details {
 
+namespace {
     bool prime(const uint64_t& n){
         for(uint64_t i = 2; i <= sqrt(n); i++) {
             if (n % i == 0) {
@@ -15,11 +15,10 @@ namespace details {
         }
         return true;
     }
-
-} // namespace details
+} // namespace
 
 PolynomialRing::PolynomialRing(uint64_t p) : _p{p} {
-    assert(details::prime(p));
+    assert(prime(p));
 }
 
 uint64_t PolynomialRing::getP() const {

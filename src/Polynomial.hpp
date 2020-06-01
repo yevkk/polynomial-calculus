@@ -38,7 +38,7 @@ public:
     /*
      * @brief calculates all coefficients by modulo
      */
-    Polynomial modify(int64_t modulo) const;
+    [[nodiscard]] Polynomial modify(int64_t modulo) const;
 
     /**
      * @return the vector of coefficients
