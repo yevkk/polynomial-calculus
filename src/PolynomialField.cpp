@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cmath>
 #include <map>
+#include <utility>
 
 namespace lab {
 
@@ -77,13 +78,13 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
     assert(left.degree() < _n);
     assert(right.degree() < _n);
 
-//    static std::map<std::pair<Polynomial, Polynomial>, Polynomial> cache_map;
-//    if (cache_map.find({left, right}) != cache_map.end()) {
-//        return cache_map[{left, right}];
-//    }
-//    if (cache_map.find({right, left}) != cache_map.end()) {
-//        return cache_map[{right, left}];
-//    }
+    static std::map<std::pair<Polynomial, Polynomial>, Polynomial> cache_map;
+    if (cache_map.find({left, right}) != cache_map.end()) {
+        return cache_map[{left, right}];
+    }
+    if (cache_map.find({right, left}) != cache_map.end()) {
+        return cache_map[{right, left}];
+    }
 
     Polynomial result = (left * right).modify(_p);
 
@@ -102,7 +103,7 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
 
     result = result.modify(_p);
 
-//    cache_map[{left, right}] = result;
+    cache_map[{left, right}] = result;
     return result;
 }
 
