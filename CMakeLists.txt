@@ -21,6 +21,7 @@ set(SRC_LIST
         ${SRC_DIR}/Polynomial.hpp
         ${SRC_DIR}/PolynomialRing.hpp
         ${SRC_DIR}/PolynomialField.hpp
+        ${SRC_DIR}/FieldMultiplicationCache.hpp
         )
 
 set(LIB_NAME ${PROJECT_NAME}core)
