@@ -178,6 +178,26 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(ring11.divide(p1, p2) == Polynomial{1,1});
             REQUIRE(ring11.div_mod(p1, p2) == std::make_pair(Polynomial{1,1}, Polynomial{0}));
         }
+
+        SECTION("Mod test") {
+            /*const PolynomialRing ring11{23};
+            const Polynomial p1{7, 13};
+            const Polynomial p2{15};
+            REQUIRE(ring11.mod(p1, p2).degree() == 0);*/
+        }
+    }
+
+    SECTION("GCD") {
+        SECTION("without overflow") {
+            const PolynomialRing ring11{23};
+            const Polynomial p1{1, 2, 1};
+            const Polynomial p2{1, 1};
+            REQUIRE(ring11.gcd(p1, p2) == Polynomial{1,1});
+            /*
+            const Polynomial p3{1, 0, 1, 0, -3, -3, 8, 2, -5};
+            const Polynomial p4{3, 0, 5, 0, -4, -9, 21};
+            REQUIRE(ring11.gcd(p3, p4) == Polynomial{1});*/
+        }
     }
 
     SECTION("Derivative") {
@@ -196,12 +216,12 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         Polynomial p4{1, 14, 10, 2, 1, 7, 8};
         REQUIRE(r.derivate(p4) == Polynomial{3, 9, 6, 4, 2, 4});
         REQUIRE(r.derivate(p4).degree() == 5);
-        
+
         Polynomial p5{0, 1};
         REQUIRE(r.derivate(p5) == Polynomial{1});
         REQUIRE(r.derivate(p5).degree() == 0);
     }
-    
+
     SECTION("Evaluation") {
         const PolynomialRing r{11};
         Polynomial p1{};
@@ -215,11 +235,11 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
         Polynomial p4{1, 14, 10, 2, 1, 7, 8};
         REQUIRE(r.evaluate(p4, 0) == 1);
-        
+
         Polynomial p5{0, 1};
         REQUIRE(r.evaluate(p5, 42) == 9);
     }
-    
+
     SECTION("Normalize") {
         const PolynomialRing r{11};
         Polynomial p1{};
@@ -230,7 +250,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
         Polynomial p3{1, 14, 10, 2, 1, 7, 8};
         REQUIRE(r.normalize(p3) == Polynomial{7, 10, 4, 3, 7, 5, 1});
-        
+
         Polynomial p4{0, 1};
         REQUIRE(r.normalize(p4) == Polynomial{0, 1});
     }
