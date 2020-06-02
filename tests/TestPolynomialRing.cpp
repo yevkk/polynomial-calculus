@@ -169,7 +169,17 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(ring157.multiply(p6, p5) == Polynomial{91, 57, 49, 16, 127, 68, 95, 45, 90, 26, 63, 16, 45, 150, 152, 17, 33, 133});
         }
     }
-    
+
+    SECTION("Division") {
+        SECTION("simple") {
+            const PolynomialRing ring11{7};
+            const Polynomial p1{1, 2, 1};
+            const Polynomial p2{1, 1};
+            REQUIRE(ring11.divide(p1, p2) == Polynomial{1,1});
+            REQUIRE(ring11.div_mod(p1, p2) == std::make_pair(Polynomial{1,1}, Polynomial{0}));
+        }
+    }
+
     SECTION("Derivative") {
         const PolynomialRing r{11};
         Polynomial p1{};
