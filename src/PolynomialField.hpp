@@ -41,6 +41,7 @@ private:
     uint64_t _p;
     uint64_t _n;
     Polynomial _irreducible;
+    Polynomial _from_irreducible;
     std::vector<Polynomial> _elements;
 };
 

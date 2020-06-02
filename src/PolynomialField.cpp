@@ -26,6 +26,10 @@ PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
         _irreducible{irreducible} {
     assert(prime(p));
     _generateElements();
+
+    auto irreducible_coefs = _irreducible.coefficients();
+    irreducible_coefs.pop_back();
+    _from_irreducible = -1 * Polynomial{irreducible_coefs};
 }
 
 void PolynomialField::_generateElements() {
@@ -95,17 +99,13 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
 
     Polynomial result = (left * right).modified(_p);
 
-    auto irreducible_coefs = _irreducible.coefficients();
-    irreducible_coefs.pop_back();
-    static Polynomial from_irreducible = -1 * Polynomial{irreducible_coefs};
-
     while (result.degree() >= _n) {
         auto tmp = result.coefficients().back() * Polynomial::x(result.degree() - _n);
 
         auto result_coefs = result.coefficients();
         result_coefs.pop_back();
 
-        result = Polynomial{result_coefs} + (from_irreducible * tmp);
+        result = Polynomial{result_coefs} + (_from_irreducible * tmp);
     }
 
     result = result.modified(_p);
