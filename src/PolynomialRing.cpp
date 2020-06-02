@@ -17,8 +17,25 @@ namespace {
     }
 } // namespace
 
+
+uint64_t PolynomialRing::divide_coefficients(uint64_t a, uint64_t b) const{
+    return dividing_table[a][b];
+}
+
+void PolynomialRing::create_dividing_table(int field) {
+    dividing_table.resize(field, std::vector<uint64_t>(field, 1));
+    for(int i = 1; i < field; i++){
+        for(int j = 1; j < field; j++){
+            int64_t res = (i * j) % field;
+            dividing_table[res][i] = j;
+            dividing_table[res][j] = i;
+        }
+    }
+}
+
 PolynomialRing::PolynomialRing(uint64_t p) : _p{p} {
     assert(prime(p));
+    create_dividing_table(p);
 }
 
 uint64_t PolynomialRing::getP() const {
@@ -45,6 +62,69 @@ Polynomial PolynomialRing::multiply(const uint64_t &num, const Polynomial &polyn
     return multiply(polynomial, num);
 }
 
+/*
+ * @brief calculates the result of left polynomial divided by right one in terms of a ring or a field
+ * @return a pair - the value of division and the remainder
+ */
+std::pair <Polynomial, Polynomial> PolynomialRing::div_mod(const Polynomial &left, const Polynomial &right) const {
+
+    Polynomial divided = left.modified(_p);
+    Polynomial divisor = right.modified(_p);
+
+    unsigned PolyLen = divisor.degree();
+    unsigned PolyDiff = divided.degree() - divisor.degree();
+
+    if(divided.degree() < divisor.degree())
+        return {Polynomial{0}, Polynomial{0}};
+    std::vector <int64_t> div(PolyDiff+1);
+    std::vector <int64_t> mod;
+    std::vector <int64_t> rest;
+    for(int i = 0; i <= divided.degree(); i++){
+        rest.push_back(divided.coefficient(i));
+    }
+
+
+
+    for (unsigned i = divided.degree(); i >= divisor.degree(); i--) {
+        uint64_t higher_divided = rest[i];
+        if(higher_divided == 0){
+            div[i - PolyDiff] = 0;
+            continue;
+        }
+        uint64_t higher_divisor = divisor.coefficient(PolyLen);
+        uint64_t next_coefficient = divide_coefficients(higher_divided, higher_divisor);
+        div[i - divisor.degree()] = next_coefficient;
+        for(int j = (int) i; j >= i - divisor.degree() && j >= 0; j--){
+            rest[j] = rest[j] - ((divisor.coefficient(PolyLen - (i - j)) * next_coefficient) % _p);
+            while(rest[j] < 0) rest[j] += _p;
+        }
+        assert(rest[i] == 0);
+    }
+
+    Polynomial modulo{rest};
+    Polynomial result{div};
+    modulo = modulo.modified(_p);
+    result = result.modified(_p);
+    return  {result, modulo};
+}
+
+/*
+ * @brief calculates the result of left polynomial divided by right one in terms of a ring or a field
+ * @return the result of division
+ */
+Polynomial PolynomialRing::divide(const Polynomial &left, const Polynomial &right) const{
+    std::pair<Polynomial, Polynomial> div_mod_result = div_mod(left, right);
+    return div_mod_result.first;
+}
+
+/*
+ * @brief calculates the remainder of left polynomial divided by right
+ */
+Polynomial PolynomialRing::mod(const Polynomial &left, const Polynomial &right) const{
+    std::pair<Polynomial, Polynomial> div_mod_result = div_mod(left, right);
+    return div_mod_result.second;
+}
+
 Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
     Polynomial result(polynomial.modified(_p));
     uint64_t normalizator = 1;
@@ -69,5 +149,6 @@ uint64_t PolynomialRing::evaluate(Polynomial &polynomial, uint64_t point) const 
 Polynomial PolynomialRing::derivate(Polynomial &polynomial) const {
     return polynomial.derivate().modified(_p);
 }
+
 
 } // namespace lab

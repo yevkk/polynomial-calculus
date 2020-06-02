@@ -16,12 +16,23 @@ public:
 
     [[nodiscard]] Polynomial subtract(const Polynomial& left, const Polynomial& right) const;
 
+
     [[nodiscard]] Polynomial multiply(const Polynomial& left, const Polynomial& right) const;
 
     [[nodiscard]] Polynomial multiply(const Polynomial& polynomial, const uint64_t & num) const;
 
     [[nodiscard]] Polynomial multiply(const uint64_t & num, const Polynomial& polynomial) const;
-    
+
+
+    [[nodiscard]] Polynomial divide(const Polynomial& left, const Polynomial& right) const;
+
+    [[nodiscard]] Polynomial mod(const Polynomial& left, const Polynomial& right) const;
+
+    [[nodiscard]] std::pair<Polynomial, Polynomial> div_mod(const Polynomial& left, const Polynomial& right) const;
+
+
+
+
     /**
      * @brief Finds normalized polynomial in field
      */
@@ -39,6 +50,9 @@ public:
 
 private:
     uint64_t _p;
+    std::vector <std::vector <uint64_t>> dividing_table;
+    [[nodiscard]] uint64_t divide_coefficients(uint64_t a, uint64_t b) const;
+    void create_dividing_table(int field);
 };
 
 } // namespace lab
