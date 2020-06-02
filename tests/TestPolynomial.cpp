@@ -193,15 +193,53 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
 
     SECTION("Modifying by modulo") {
         Polynomial p1{};
-        REQUIRE(to_string(p1.modify(3)) == "0");
+        REQUIRE(to_string(p1.modified(3)) == "0");
 
         Polynomial p2{56, 132, 46, 13, 75, 13, 2};
-        REQUIRE(to_string(p2.modify(2)) == "1*x^5 +1*x^4 +1*x^3");
+        REQUIRE(to_string(p2.modified(2)) == "1*x^5 +1*x^4 +1*x^3");
 
         Polynomial p3{56, 132, -45, 13, 75, -13, 3};
-        REQUIRE(to_string(p3.modify(5)) == "3*x^6 +2*x^5 +3*x^3 +2*x^1 +1");
+        REQUIRE(to_string(p3.modified(5)) == "3*x^6 +2*x^5 +3*x^3 +2*x^1 +1");
 
         Polynomial p4{1, 14, 10, 2, 1, 7, 8};
-        REQUIRE(to_string(p4.modify(17)) == to_string(p4));
+        REQUIRE(to_string(p4.modified(17)) == to_string(p4));
+    }
+    
+    SECTION("Derivative") {
+        Polynomial p1{};
+        REQUIRE(p1.derivate() == Polynomial{});
+
+        Polynomial p2{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(p2.derivate() == Polynomial{132, 92, 39, 300, 65, 12});
+        REQUIRE(p2.derivate().degree() == 5);
+
+        Polynomial p3{56, 132, -45, 13, 75, -13, 3};
+        REQUIRE(p3.derivate() == Polynomial{132, -90, 39, 300, -65, 18});
+        REQUIRE(p3.derivate().degree() == 5);
+
+        Polynomial p4{1, 14, 10, 2, 1, 7, 8};
+        REQUIRE(p4.derivate() == Polynomial{14, 20, 6, 4, 35, 48});
+        REQUIRE(p4.derivate().degree() == 5);
+        
+        Polynomial p5{0, 1};
+        REQUIRE(p5.derivate() == Polynomial{1});
+        REQUIRE(p5.derivate().degree() == 0);
+    }
+    
+    SECTION("Evaluation") {
+        Polynomial p1{};
+        REQUIRE(p1.evaluate(42) == 0);
+
+        Polynomial p2{56, 132, 46, 13, 75, 13, 2};
+        REQUIRE(p2.evaluate(2) == 2352);
+
+        Polynomial p3{56, 132, -45, 13, 75, -13, 3};
+        REQUIRE(p3.evaluate(3) == 5501);
+
+        Polynomial p4{1, 14, 10, 2, 1, 7, 8};
+        REQUIRE(p4.evaluate(0) == 1);
+        
+        Polynomial p5{0, 1};
+        REQUIRE(p5.evaluate(23) == 23);
     }
 }

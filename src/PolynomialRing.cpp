@@ -5,8 +5,8 @@
 
 namespace lab {
 
-namespace details {
 
+namespace {
     bool prime(const uint64_t& n){
         for(uint64_t i = 2; i <= sqrt(n); i++) {
             if (n % i == 0) {
@@ -15,11 +15,10 @@ namespace details {
         }
         return true;
     }
-
-} // namespace details
+} // namespace
 
 PolynomialRing::PolynomialRing(uint64_t p) : _p{p} {
-    assert(details::prime(p));
+    assert(prime(p));
 }
 
 uint64_t PolynomialRing::getP() const {
@@ -27,23 +26,48 @@ uint64_t PolynomialRing::getP() const {
 }
 
 Polynomial PolynomialRing::add(const Polynomial &left, const Polynomial &right) const {
-    return (left + right).modify(_p);
+    return (left + right).modified(_p);
 }
 
 Polynomial PolynomialRing::subtract(const Polynomial &left, const Polynomial &right) const {
-    return (left - right).modify(_p);
+    return (left - right).modified(_p);
 }
 
 Polynomial PolynomialRing::multiply(const Polynomial &left, const Polynomial &right) const {
-    return (left * right).modify(_p);
+    return (left * right).modified(_p);
 }
 
 Polynomial PolynomialRing::multiply(const Polynomial &polynomial, const uint64_t &num) const {
-    return (polynomial * num).modify(_p);
+    return (polynomial * num).modified(_p);
 }
 
 Polynomial PolynomialRing::multiply(const uint64_t &num, const Polynomial &polynomial) const {
     return multiply(polynomial, num);
+}
+
+Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
+    Polynomial result(polynomial.modified(_p));
+    uint64_t normalizator = 1;
+    if (_p > 2) {
+        normalizator = std::pow(polynomial.coefficient(polynomial.degree()), _p - 2);
+    }
+    return (result * normalizator).modified(_p);
+}
+
+uint64_t PolynomialRing::evaluate(Polynomial &polynomial, uint64_t point) const {
+    polynomial = polynomial.modified(_p);
+    uint64_t result = 0;
+    int64_t point_power = 1;
+    for (size_t power = 0; power <= polynomial.degree(); ++power) {
+        result += (polynomial.coefficient(power) * point_power) % _p;
+        point_power *= point;
+    }
+    result %= _p;
+    return result;
+}
+
+Polynomial PolynomialRing::derivate(Polynomial &polynomial) const {
+    return polynomial.derivate().modified(_p);
 }
 
 } // namespace lab

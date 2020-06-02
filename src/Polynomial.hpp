@@ -21,6 +21,8 @@ public:
 
     Polynomial(std::initializer_list<int64_t> coefs);
 
+    Polynomial(std::vector<int64_t> coefs);
+
     Polynomial();
 
     Polynomial& operator=(const Polynomial& that) = default;
@@ -35,10 +37,10 @@ public:
      */
     [[nodiscard]] int64_t coefficient(size_t power) const;
 
-    /*
+    /**
      * @brief calculates all coefficients by modulo
      */
-    Polynomial modify(int64_t modulo) const;
+    [[nodiscard]] Polynomial modified(int64_t modulo) const;
 
     /**
      * @return the vector of coefficients
@@ -47,6 +49,7 @@ public:
 
     friend bool operator==(const Polynomial& left, const Polynomial& right);
     friend bool operator!=(const Polynomial& left, const Polynomial& right);
+    friend bool operator<(const Polynomial& left, const Polynomial& right);
 
     friend Polynomial operator+(const Polynomial& left, const Polynomial& right);
     friend Polynomial operator-(const Polynomial& left, const Polynomial& right);
@@ -54,12 +57,25 @@ public:
     friend Polynomial operator*(const Polynomial& left, const Polynomial& right);
     friend Polynomial operator*(const Polynomial& left, int64_t right);
     friend Polynomial operator*(int64_t left, const Polynomial& right);
+    
+    /**
+     * @brief Calculates derivative from polynomial
+     */
+    Polynomial derivate() const;
+    
+    /**
+     * @brief Evaluates polynomial in point
+     */
+    int64_t evaluate(int64_t point) const;
+    
 
     template <typename OStream>
     friend inline OStream& operator<<(OStream& os, const Polynomial& polynomial) {
         os << to_string(polynomial);
         return os;
     }
+
+    static Polynomial x(size_t power);
 
 private:
     // Array of polynomial's coefficients

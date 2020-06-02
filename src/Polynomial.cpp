@@ -2,7 +2,7 @@
 
 #include <cctype>
 #include <algorithm>
-#include <iostream>
+#include <utility>
 
 namespace lab {
 
@@ -15,9 +15,15 @@ Polynomial::Polynomial(std::initializer_list<int64_t> coefs) : _coefs{coefs} {
         _coefs.push_back(0);
     }
 
-    while (!_coefs.back() && (_coefs.begin() + 1 != _coefs.end())) {
-        _coefs.pop_back();
+    finilize();
+}
+
+Polynomial::Polynomial(std::vector<int64_t> coefs) : _coefs{coefs} {
+    if (_coefs.empty()) {
+        _coefs.push_back(0);
     }
+
+    finilize();
 }
 
 /**
@@ -53,7 +59,7 @@ void Polynomial::finilize() {
 /*
  * @brief calculates all coefficients by modulo
  */
-Polynomial Polynomial::modify(int64_t modulo) const {
+Polynomial Polynomial::modified(int64_t modulo) const {
     Polynomial result = *this;
 
     for(auto& item : result._coefs) {
@@ -74,6 +80,13 @@ bool operator==(const Polynomial &left, const Polynomial &right) {
 
 bool operator!=(const Polynomial &left, const Polynomial &right) {
     return !(left == right);
+}
+
+bool operator<(const Polynomial &left, const Polynomial &right) {
+    if (left.degree() != right.degree()) {
+        return left.degree() < right.degree();
+    }
+    return std::lexicographical_compare(left.coefficients().rbegin(), left.coefficients().rend(), right.coefficients().rbegin(), right.coefficients().rend());
 }
 
 Polynomial operator+(const Polynomial &left, const Polynomial &right) {
@@ -137,6 +150,13 @@ Polynomial operator*(int64_t left, const Polynomial &right) {
     return right * left;
 }
 
+Polynomial Polynomial::x(size_t power) {
+    std::vector<int64_t> coefs(power, 0);
+    coefs.push_back(1);
+
+    return Polynomial{coefs};
+}
+
 /**
  * @brief Converts polynomial to string
  */
@@ -172,6 +192,29 @@ std::string to_string(const Polynomial &polynomial, char var_ch, bool show_zero)
     }
 
     return (result.empty() ? "0" : result);
+}
+
+Polynomial Polynomial::derivate() const {
+    Polynomial derivate(*this);
+    if (derivate._coefs.size() == 1) {
+        derivate._coefs[0] = 0;
+    } else {
+        for (size_t power = 1; power < derivate._coefs.size(); ++power) {
+            derivate._coefs[power - 1] = derivate._coefs[power] * power;
+        }
+        derivate._coefs.pop_back();
+    } 
+    return derivate;
+}
+
+int64_t Polynomial::evaluate(int64_t point) const {
+    int64_t result = 0;
+    int64_t point_power = 1;
+    for (size_t power = 0; power < _coefs.size(); ++power) {
+        result += _coefs[power] * point_power;
+        point_power *= point;
+    }
+    return result;
 }
 
 } // namespace lab
