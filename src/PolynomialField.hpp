@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Polynomial.hpp"
+#include "PolynomialRing.hpp"
 #include <vector>
 
 namespace lab {
@@ -9,7 +10,7 @@ namespace lab {
  * @brief class for extension of field Fp to Fq
  * @note q = p^n, where n is a degree of irreducible polynomial in Fp
  */
-class PolynomialField {
+class PolynomialField : public PolynomialRing {
 public:
     PolynomialField(const PolynomialField& that) = default;
 
@@ -23,22 +24,19 @@ public:
      */
     [[nodiscard]] const std::vector<Polynomial>& elements() const;
 
-    [[nodiscard]] uint64_t getP() const;
-
     [[nodiscard]] uint64_t getN() const;
 
     [[nodiscard]] const Polynomial& getIrreducible() const;
 
-    [[nodiscard]] Polynomial add(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]] Polynomial add(const Polynomial& left, const Polynomial& right) const final;
 
-    [[nodiscard]] Polynomial subtract(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]] Polynomial subtract(const Polynomial& left, const Polynomial& right) const final;
 
-    [[nodiscard]] Polynomial multiply(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]] Polynomial multiply(const Polynomial& left, const Polynomial& right) const final;
 
 private:
     void _generateElements();
 
-    uint64_t _p;
     uint64_t _n;
     Polynomial _irreducible;
     Polynomial _from_irreducible;

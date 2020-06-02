@@ -12,11 +12,11 @@ public:
 
     [[nodiscard]] uint64_t getP() const;
 
-    [[nodiscard]] Polynomial add(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]] virtual Polynomial add(const Polynomial& left, const Polynomial& right) const;
 
-    [[nodiscard]] Polynomial subtract(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]] virtual Polynomial subtract(const Polynomial& left, const Polynomial& right) const;
 
-    [[nodiscard]] Polynomial multiply(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]] virtual Polynomial multiply(const Polynomial& left, const Polynomial& right) const;
 
     [[nodiscard]] Polynomial multiply(const Polynomial& polynomial, const uint64_t & num) const;
 
@@ -37,7 +37,7 @@ public:
      */
     [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
 
-private:
+protected:
     uint64_t _p;
 };
 

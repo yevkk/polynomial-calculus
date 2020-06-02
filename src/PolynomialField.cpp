@@ -7,24 +7,10 @@
 
 namespace lab {
 
-namespace {
-
-    bool prime(const uint64_t& n){
-        for(uint64_t i = 2; i <= sqrt(n); i++) {
-            if (n % i == 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-} // namespace
-
 PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
-        _p{p},
+        PolynomialRing{p},
         _n{irreducible.degree()},
         _irreducible{irreducible} {
-    assert(prime(p));
     _generateElements();
 
     auto irreducible_coefs = _irreducible.coefficients();
@@ -55,10 +41,6 @@ void PolynomialField::_generateElements() {
  */
 const std::vector<Polynomial>& PolynomialField::elements() const {
     return _elements;
-}
-
-uint64_t PolynomialField::getP() const {
-    return _p;
 }
 
 uint64_t PolynomialField::getN() const {

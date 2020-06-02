@@ -18,7 +18,7 @@ namespace {
 } // namespace
 
 PolynomialRing::PolynomialRing(uint64_t p) : _p{p} {
-    assert(prime(p));
+    assert(prime(p) && "p should be prime");
 }
 
 uint64_t PolynomialRing::getP() const {
