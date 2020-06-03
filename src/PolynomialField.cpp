@@ -53,7 +53,7 @@ const Polynomial& PolynomialField::getIrreducible() const {
 
 namespace utils{
     void assert_(const Polynomial& polynomial, uint64_t n) {
-        assert(polynomial.degree() <= n && "polynomial is not in the field");
+        assert(polynomial.degree() < n && "polynomial is not in the field");
     }
 }
 
@@ -129,6 +129,17 @@ Polynomial PolynomialField::inverted(const Polynomial& polynomial) const {
         result = divide(result, Polynomial({ div.coefficient(0) }));
     }
     return result;
+}
+
+Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
+    if (power == 1){
+        return poly;
+    }
+    if (power % 2 == 1){
+        return multiply(pow(poly, power - 1), poly);
+    }
+    const auto poly2 = pow(poly, power / 2);
+    return multiply(poly2, poly2);
 }
 
 } // namespace lab

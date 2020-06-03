@@ -4,6 +4,12 @@
 
 namespace lab {
 
+    namespace detail{
+        std::vector<uint64_t> sieveOfEratosthenes (uint64_t n);
+
+        int8_t moebiusFunction (uint64_t n);
+    }//namespace detail
+
     class PolynomialRing {
     public:
         PolynomialRing(const PolynomialRing& that) = default;
@@ -41,8 +47,8 @@ namespace lab {
         [[nodiscard]]
         Polynomial gcd(Polynomial left, Polynomial right) const;
 
-
-
+        [[nodiscard]]
+        Polynomial cyclotomicPolinomial(uint64_t order) const;
 
         /**
          * @brief Finds normalized polynomial in field
