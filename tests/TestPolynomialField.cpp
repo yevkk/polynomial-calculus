@@ -44,22 +44,17 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             REQUIRE(F3.multiply(Polynomial{2}, Polynomial{2}) == Polynomial{1});
         }
 
-<<<<<<< HEAD
         SECTION("inverted polynomial") {
             REQUIRE(F3.inverted(Polynomial{1,2}) == Polynomial({2}));
             REQUIRE(F3.inverted(Polynomial{2,0,0,0,2,0,1}) == Polynomial({2}));
             REQUIRE(F3.inverted(Polynomial{ 2,0,0,0,1,0,1 }) == Polynomial({1}));
             REQUIRE(F3.inverted(Polynomial{0,0,0,1,0,0,0,0,2,0,0,0,2,1,0,1}) == Polynomial({1}));
         }
-=======
         SECTION("powering"){
             REQUIRE(F3.pow(Polynomial{2}, 2) == F3.multiply(Polynomial{2}, Polynomial{2}));
             REQUIRE(F3.pow(Polynomial{2}, 4) == F3.multiply(F3.multiply(Polynomial{2}, Polynomial{2}),
                                                             F3.multiply(Polynomial{2}, Polynomial{2})));
         }
-
->>>>>>> 82c19d22ba6f7ff0f2977a314595d0c25ae8855d
-    }
 
     SECTION("F4") {
         PolynomialField F4{2, {1, 1, 1}};
