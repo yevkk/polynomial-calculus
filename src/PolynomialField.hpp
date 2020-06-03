@@ -40,8 +40,22 @@ public:
     [[nodiscard]]
     Polynomial multiply(const Polynomial& left, const Polynomial& right) const final;
 
+    [[nodiscard]] 
+    Polynomial inverted(const Polynomial& polynomial) const;
 private:
     void _generateElements();
+    
+    /*
+     * @note gcd(a,b) = x*a + y*b
+     */
+    [[nodiscard]] 
+    Polynomial _gcdExtended(const Polynomial& a, const Polynomial& b, Polynomial& x, Polynomial& y) const;
+
+    /*
+     * @note transforms of any polynomial to polynomial which belongs to field
+     */
+    [[nodiscard]]
+    Polynomial _reduceDegree(Polynomial polynomial) const;
 
     uint64_t _n;
     Polynomial _irreducible;

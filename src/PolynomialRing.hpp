@@ -60,7 +60,7 @@ namespace lab {
         [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
 
 
-    private:
+    protected:
         uint64_t _p;
         std::vector <std::vector <uint64_t>> _dividing_table;
         [[nodiscard]] uint64_t _divide_coefficients(uint64_t a, uint64_t b) const;

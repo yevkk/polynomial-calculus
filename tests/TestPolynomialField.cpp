@@ -43,6 +43,13 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             REQUIRE(F3.multiply(Polynomial{2}, Polynomial{1}) == Polynomial{2});
             REQUIRE(F3.multiply(Polynomial{2}, Polynomial{2}) == Polynomial{1});
         }
+
+        SECTION("inverted polynomial") {
+            REQUIRE(F3.inverted(Polynomial{1,2}) == Polynomial({2}));
+            REQUIRE(F3.inverted(Polynomial{2,0,0,0,2,0,1}) == Polynomial({2}));
+            REQUIRE(F3.inverted(Polynomial{ 2,0,0,0,1,0,1 }) == Polynomial({1}));
+            REQUIRE(F3.inverted(Polynomial{0,0,0,1,0,0,0,0,2,0,0,0,2,1,0,1}) == Polynomial({1}));
+        }
     }
 
     SECTION("F4") {
@@ -100,6 +107,12 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             REQUIRE(F4.multiply(Polynomial{1, 1}, Polynomial{1}) == Polynomial{1, 1});
             REQUIRE(F4.multiply(Polynomial{1, 1}, Polynomial{0, 1}) == Polynomial{1});
             REQUIRE(F4.multiply(Polynomial{1, 1}, Polynomial{1, 1}) == Polynomial{0, 1});
+        }
+
+        SECTION("inverted polynomial") {
+            REQUIRE(F4.inverted(Polynomial{ 1,2 }) == Polynomial({ 1 }));
+            REQUIRE(F4.inverted(Polynomial{ 2,0,0,0,1,0,1 }) == Polynomial({ 0,1 }));
+            REQUIRE(F4.inverted(Polynomial{ 0,0,0,1,0,0,0,0,2,0,0,0,2,1,0,1 }) == Polynomial({ 1,1 }));
         }
     }
 
@@ -302,6 +315,12 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             REQUIRE(F9.multiply(Polynomial{2, 2}, Polynomial{0, 2}) == Polynomial{2, 1});
             REQUIRE(F9.multiply(Polynomial{2, 2}, Polynomial{1, 2}) == Polynomial{1, 0});
             REQUIRE(F9.multiply(Polynomial{2, 2}, Polynomial{2, 2}) == Polynomial{0, 2});
+        }
+
+        SECTION("inverted polynomial") {
+            REQUIRE(F9.inverted(Polynomial{ 0,1,1 }) == Polynomial({ 1,1 }));
+            REQUIRE(F9.inverted(Polynomial{ 2,0,0,1,2 }) == Polynomial({ 2,2 }));
+            REQUIRE(F9.inverted(Polynomial{ 1,0,0,0,2,1,0,0,2 }) == Polynomial({ 1,1 }));
         }
     }
 }
