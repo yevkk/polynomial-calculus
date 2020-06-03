@@ -156,10 +156,10 @@ Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
     }
 
 Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
-    assert(order % _p);
+    assert((order % _p) && "_p can`t be a divider of order");
     auto polynomial1 = Polynomial{1};
     auto polynomial2 = Polynomial{1};
-    for (uint64_t i = 1; i <= uint64_t(sqrt(order)); i++){
+    for (uint64_t i = 1; i <= static_cast<uint64_t>(sqrt(order)); i++){
         if (order % i == 0) {
             std::vector<int64_t> poly1(i, 0);
             poly1[0] = -1;
@@ -212,7 +212,7 @@ namespace detail {
             return 1;
         if (prime(n))
             return -1;
-        auto primes = sieveOfEratosthenes(uint64_t(n));
+        auto primes = sieveOfEratosthenes(static_cast<uint64_t>(n));
         auto pow = true;
         for (const auto &prime: primes) {
             if (n % prime == 0) {

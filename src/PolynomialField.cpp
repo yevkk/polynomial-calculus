@@ -103,7 +103,7 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
     if (power % 2 == 1){
         return multiply(pow(poly, power - 1), poly);
     }
-    auto poly2 = pow(poly, power / 2);
+    const auto poly2 = pow(poly, power / 2);
     return multiply(poly2, poly2);
 }
 
