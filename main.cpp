@@ -4,8 +4,8 @@
 #include <iostream>
 
 int main() {
-    const lab::PolynomialRing ring3{3};
-    std::vector <lab::Polynomial> ans = ring3.cyclotomicFactorization(52);
+    const lab::PolynomialRing ring7{3};
+    std::vector <lab::Polynomial> ans = ring7.cyclotomicFactorization(2);
     for (auto &it:ans)
         std::cout<<it<<"     ____  ";
 

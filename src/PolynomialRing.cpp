@@ -224,7 +224,7 @@ std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) 
             }
         }
         factors=std::move(updatedFactors);
-        factorizationR = detail::rPolynom(++i, order, _p);
+        if (i < order - 1)factorizationR = detail::rPolynom(++i, order, _p);
     }
 
     for (auto &it: factors) it = normalize(it);
