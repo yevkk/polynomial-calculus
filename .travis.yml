@@ -1,5 +1,4 @@
-dist:     trusty  
-sudo:     required
+dist: bionic
 
 language: cpp
 
@@ -8,37 +7,41 @@ os :
   - osx
 
 compiler:
-  - clang
   - gcc
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-9
+      - g++-9
+      - cmake
+
 env:
-    - TARGET_CPU=amd64 BUILD_CONFIGURATION=Debug
-    - TARGET_CPU=amd64 BUILD_CONFIGURATION=Release
-    - TARGET_CPU=x86 BUILD_CONFIGURATION=Debug
-    - TARGET_CPU=x86 BUILD_CONFIGURATION=Release
+  - TARGET_CPU=amd64 BUILD_CONFIGURATION=Debug
+  - TARGET_CPU=amd64 BUILD_CONFIGURATION=Release
+  - TARGET_CPU=x86 BUILD_CONFIGURATION=Debug
+  - TARGET_CPU=x86 BUILD_CONFIGURATION=Release
 
 
 matrix:
-    exclude:
-        - os:       osx
-          compiler: gcc
+  exclude:
+    - os:       osx
+      compiler: gcc
 
-        - os:  osx
-          env: TARGET_CPU=x86 BUILD_CONFIGURATION=Debug
+    - os:  osx
+      env: TARGET_CPU=x86 BUILD_CONFIGURATION=Debug
 
-        - os:  osx
-          env: TARGET_CPU=x86 BUILD_CONFIGURATION=Release
-
-install:
-    - source ci/travis/install-$TRAVIS_OS_NAME.sh
+    - os:  osx
+      env: TARGET_CPU=x86 BUILD_CONFIGURATION=Release
 
 script:
-    - mkdir build
-    - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DTARGET_CPU=$TARGET_CPU
-    - cmake --build .
-    - ctest --output-on-failure
-
-
-
-
+  - export CC=gcc-9
+  - export CXX=g++-9
+  - gcc -v && g++ -v && cmake --version
+  - mkdir build
+  - cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DTARGET_CPU=$TARGET_CPU
+  - cmake --build .
+  - ctest --output-on-failure
