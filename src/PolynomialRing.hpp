@@ -61,5 +61,4 @@ namespace lab {
         void _create_dividing_table(int field);
     };
 
-
 } // namespace lab

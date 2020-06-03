@@ -34,7 +34,8 @@ void PolynomialRing::_create_dividing_table(int field) {
 }
 
 PolynomialRing::PolynomialRing(uint64_t p) : _p{p} {
-    assert(prime(p));
+
+    assert(prime(p) && "p should be prime");
     _create_dividing_table(p);
 }
 
