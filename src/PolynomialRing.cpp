@@ -68,6 +68,7 @@ Polynomial PolynomialRing::multiply(const uint64_t &num, const Polynomial &polyn
  */
 std::pair <Polynomial, Polynomial> PolynomialRing::div_mod(const Polynomial &left, const Polynomial &right) const {
 
+    assert(right != Polynomial{0});
     Polynomial divided = left.modified(_p);
     Polynomial divisor = right.modified(_p);
 
@@ -85,10 +86,10 @@ std::pair <Polynomial, Polynomial> PolynomialRing::div_mod(const Polynomial &lef
 
 
 
-    for (unsigned i = divided.degree(); i >= divisor.degree(); i--) {
+    for (int i = divided.degree(); i >= divisor.degree() && i >= 0; i--) {
         uint64_t higher_divided = rest[i];
         if(higher_divided == 0){
-            div[i - PolyDiff] = 0;
+            div[i - divisor.degree()] = 0;
             continue;
         }
         uint64_t higher_divisor = divisor.coefficient(PolyLen);
