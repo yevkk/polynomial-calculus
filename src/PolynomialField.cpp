@@ -113,7 +113,8 @@ Polynomial PolynomialField::_gcdExtended(const Polynomial& a, const Polynomial& 
     const auto&[quotient, remainder] = div_mod(b, a);
     Polynomial GCD = _gcdExtended(remainder, a, x1, y1);
 
-    x = subtract(y1, multiply(quotient, x1));
+    Polynomial tmp = _reduceDegree(PolynomialRing::multiply(quotient, x1));
+    x = subtract(y1, tmp);
     y = x1;
 
     return GCD;
