@@ -23,7 +23,8 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QInputDialog {background-color: #ffffff; border: 2px solid #fcab35;}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
@@ -83,7 +84,7 @@ border-bottom: 5px solid #fcab35;</string>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="selectPHolder" stretch="1,1,1,2">
+         <layout class="QHBoxLayout" name="selectPHolder" stretch="2,2,1,2,3">
           <property name="topMargin">
            <number>10</number>
           </property>
@@ -126,12 +127,25 @@ border-bottom: 5px solid #fcab35;</string>
              <string notr="true">color: #272727;</string>
             </property>
             <property name="text">
-             <string>3</string>
+             <string>0</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="changePBtn">
@@ -164,7 +178,7 @@ border-bottom: 5px solid #fcab35;</string>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="selectNHolder" stretch="1,1,1,2">
+         <layout class="QHBoxLayout" name="selectNHolder" stretch="2,2,1,2,3">
           <property name="topMargin">
            <number>10</number>
           </property>
@@ -207,12 +221,25 @@ border-bottom: 5px solid #fcab35;</string>
              <string notr="true">color: #272727;</string>
             </property>
             <property name="text">
-             <string>1</string>
+             <string>0</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="changeNBtn">
@@ -265,7 +292,26 @@ border-bottom: 5px solid #fcab35;</string>
            </widget>
           </item>
           <item>
-           <widget class="QListWidget" name="listWidget"/>
+           <widget class="QListWidget" name="irreducibleList">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">::item {
+    color: #272727;
+}
+
+::item:selected {
+    background-color: #fcab35;
+	color: #272727;
+}</string>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -301,7 +347,7 @@ border-bottom: 5px solid #fcab35;</string>
      <x>0</x>
      <y>0</y>
      <width>654</width>
-     <height>32</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
