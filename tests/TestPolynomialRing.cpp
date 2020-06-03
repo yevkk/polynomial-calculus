@@ -1,6 +1,7 @@
 #include "../src/PolynomialRing.hpp"
 
 #include "catch.hpp"
+#include <iostream>
 
 TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
     using namespace lab;
@@ -374,13 +375,35 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             SECTION("F11"){
                 const PolynomialRing r{11};
                 REQUIRE(r.cyclotomicPolinomial(12) == Polynomial{1, 0, 10, 0, 1});
+                REQUIRE(r.cyclotomicPolinomial(8) == Polynomial{1, 0, 0, 0, 1});
 
             }
             SECTION("F3"){
                 const PolynomialRing r{3};
                 REQUIRE(r.cyclotomicPolinomial(52) ==
                         Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
+                REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1, 1});
             }
         }
+    }
+    SECTION("Cyclotomic factorization"){
+        SECTION("RPolynomial"){
+            REQUIRE(detail::rPolynom(2, 52, 3) == Polynomial{0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+            REQUIRE(detail::rPolynom(1, 8, 3) == Polynomial{0, 1, 0, 1});
+            REQUIRE(detail::rPolynom(2, 8, 3) == Polynomial{0, 0, 1, 0, 0, 0, 1});
+            REQUIRE(detail::rPolynom(1, 3, 2) == Polynomial{0, 1, 1});
+            REQUIRE(detail::rPolynom(1, 8, 7) == Polynomial{0, 1, 0, 0, 0, 0, 0, 1});
+        }
+        SECTION("Cyclotomic factorization"){
+            const PolynomialRing r7{7};
+            REQUIRE(r7.cyclotomicFactorization(8) == std::vector <Polynomial>{Polynomial{1, 3, 1}, Polynomial{1, 4, 1}});
+            REQUIRE(r7.cyclotomicFactorization(2) == std::vector <Polynomial>{Polynomial{1, 1}});
+            const PolynomialRing r3{3};
+            REQUIRE(r3.cyclotomicFactorization(52) == std::vector <Polynomial>
+                    {Polynomial{1, 0, 2, 0, 0, 0, 1}, Polynomial{1, 0, 2, 0, 1, 0, 1},
+                     Polynomial{1, 0, 1, 0, 2, 0, 1}, Polynomial{1, 0, 0, 0, 2, 0, 1}});
+        }
+
+
     }
 }

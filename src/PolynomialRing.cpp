@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cassert>
+#include <algorithm>
 
 namespace lab {
 
@@ -199,6 +200,50 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
     return divide(polynomial1, polynomial2);
 }
 
+std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
+    uint64_t d = 1, tmp = _p;
+    while (tmp % order != 1) {
+        d++;
+        tmp *= _p;
+    }
+
+    Polynomial cyclotomic = cyclotomicPolinomial(order);
+    std::vector<Polynomial> factors{cyclotomic};
+
+    int64_t i = 1;
+    Polynomial factorizationR = detail::rPolynom(i, order, _p);
+    bool factorized = false;
+
+    while (!factorized && i < order) {
+        while (mod(factorizationR, cyclotomic).degree() == 0 && i < order - 1){
+            factorizationR = detail::rPolynom(++i, order, _p);
+        }
+
+        std::vector <Polynomial> updatedFactors;
+        factorized = true;
+
+        for (auto &item: factors){
+            if (item.degree() > d){
+                for(int64_t c = 0; c < _p; c++){
+                    Polynomial f = gcd(item, factorizationR + Polynomial{c});
+                    if (f.degree())
+                        updatedFactors.push_back(f);
+                    if (f.degree() > d)
+                        factorized = false;
+                }
+            } else{
+                updatedFactors.push_back(item);
+            }
+        }
+        factors=std::move(updatedFactors);
+        if (i < order - 1)factorizationR = detail::rPolynom(++i, order, _p);
+    }
+
+    for (auto &it: factors) it = normalize(it);
+
+    return factors;
+}
+
 
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
@@ -236,6 +281,23 @@ namespace detail {
         }
 
         return pow ? 1 : -1;
+    }
+
+    Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod){
+        uint64_t m = 1, modulo = order/std::__gcd(order, i), tmp = polyMod;
+        while(tmp % modulo != 1){
+            tmp*=polyMod;
+            m++;
+        }
+
+        std::vector<int64_t> rCoefs(i*(tmp/polyMod)+1);
+        tmp = 1;
+        for (uint64_t polyModPow = 0; polyModPow < m; polyModPow++, tmp*=polyMod){
+            rCoefs[i*tmp] = 1;
+        }
+
+        return Polynomial(rCoefs);
+
     }
 }//namespace detail
 
