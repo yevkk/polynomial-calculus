@@ -56,9 +56,9 @@ namespace lab {
 
     private:
         uint64_t _p;
-        std::vector <std::vector <uint64_t>> dividing_table;
-        [[nodiscard]] uint64_t divide_coefficients(uint64_t a, uint64_t b) const;
-        void create_dividing_table(int field);
+        std::vector <std::vector <uint64_t>> _dividing_table;
+        [[nodiscard]] uint64_t _divide_coefficients(uint64_t a, uint64_t b) const;
+        void _create_dividing_table(int field);
     };
 
 

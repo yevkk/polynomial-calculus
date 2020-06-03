@@ -207,7 +207,24 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 REQUIRE(ring7.divide(p3, p4_6) == Polynomial{5,3,1});
             }
 
+            SECTION("a < b"){
+                const Polynomial p3{2, 4, 6};
+                const Polynomial p4{3, 5, 5, 11};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4) == Polynomial{0});
+                REQUIRE(ring7.mod(p3, p4) == p3);
+
+            }
+
             SECTION("Middle"){
+
+                const Polynomial p3{2, 4, 6, 10};
+                const Polynomial p4{3, 5, 5, 11};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4) == Polynomial{6});
+                REQUIRE(ring7.mod(p3, p4) == Polynomial{5,2,4});
+
+
                 const Polynomial p1[3] = {{1, 2, 2},{1, 0, 2},{21, 0, 1}};
                 const Polynomial p2{1, 1};
                 REQUIRE(ring7.divide(p1[0], p2) == Polynomial{0,2});
