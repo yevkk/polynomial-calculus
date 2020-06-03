@@ -96,4 +96,15 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
     return result;
 }
 
+Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
+    if (power == 1){
+        return poly;
+    }
+    if (power % 2 == 1){
+        return multiply(pow(poly, power - 1), poly);
+    }
+    const auto poly2 = pow(poly, power / 2);
+    return multiply(poly2, poly2);
+}
+
 } // namespace lab
