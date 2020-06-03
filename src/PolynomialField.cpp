@@ -19,8 +19,8 @@ PolynomialField::PolynomialField(uint64_t p, const Polynomial &irreducible) :
 }
 
 void PolynomialField::_generateElements() {
-    _elements.reserve(std::pow(_p, _n));
-    for (int64_t i = 0; i < _p; i++) {
+    _elements.reserve(std::pow(getP(), _n));
+    for (int64_t i = 0; i < getP(); i++) {
         _elements.push_back(Polynomial{i});
     }
 
@@ -29,7 +29,7 @@ void PolynomialField::_generateElements() {
         tmp = std::move(_elements);
         _elements.clear();
         for (const auto& item : tmp) {
-            for (int64_t j = 0; j < _p; j++) {
+            for (int64_t j = 0; j < getP(); j++) {
                 _elements.push_back(item * Polynomial::x(1) + Polynomial{j});
             }
         }
@@ -60,26 +60,26 @@ namespace utils{
 Polynomial PolynomialField::add(const Polynomial &left, const Polynomial &right) const {
     utils::assert_(left, _n);
     utils::assert_(right, _n);
-    return (left + right).modified(_p);
+    return (left + right).modified(getP());
 }
 
 Polynomial PolynomialField::subtract(const Polynomial &left, const Polynomial &right) const {
     utils::assert_(left, _n);
     utils::assert_(right, _n);
-    return (left - right).modified(_p);
+    return (left - right).modified(getP());
 }
 
 Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &right) const {
     utils::assert_(left, _n);
     utils::assert_(right, _n);
 
-    auto cached_result = detail::FieldMultiplicationCache::instance().getResult(_p, _irreducible, left, right);
+    auto cached_result = detail::FieldMultiplicationCache::instance().getResult(getP(), _irreducible, left, right);
 
     if (cached_result.has_value()) {
         return cached_result.value();
     }
 
-    Polynomial result = (left * right).modified(_p);
+    Polynomial result = (left * right).modified(getP());
 
     while (result.degree() >= _n) {
         auto tmp = result.coefficients().back() * Polynomial::x(result.degree() - _n);
@@ -90,9 +90,9 @@ Polynomial PolynomialField::multiply(const Polynomial &left, const Polynomial &r
         result = Polynomial{result_coefs} + (_from_irreducible * tmp);
     }
 
-    result = result.modified(_p);
+    result = result.modified(getP());
 
-    detail::FieldMultiplicationCache::instance().setResult(_p, _irreducible, left, right, result);
+    detail::FieldMultiplicationCache::instance().setResult(getP(), _irreducible, left, right, result);
     return result;
 }
 

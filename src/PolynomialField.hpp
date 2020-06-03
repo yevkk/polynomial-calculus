@@ -22,17 +22,23 @@ public:
     /*
      * @return elements of field
      */
-    [[nodiscard]] const std::vector<Polynomial>& elements() const;
+    [[nodiscard]]
+    const std::vector<Polynomial>& elements() const;
 
-    [[nodiscard]] uint64_t getN() const;
+    [[nodiscard]]
+    uint64_t getN() const;
 
-    [[nodiscard]] const Polynomial& getIrreducible() const;
+    [[nodiscard]]
+    const Polynomial& getIrreducible() const;
 
-    [[nodiscard]] Polynomial add(const Polynomial& left, const Polynomial& right) const final;
+    [[nodiscard]]
+    Polynomial add(const Polynomial& left, const Polynomial& right) const final;
 
-    [[nodiscard]] Polynomial subtract(const Polynomial& left, const Polynomial& right) const final;
+    [[nodiscard]]
+    Polynomial subtract(const Polynomial& left, const Polynomial& right) const final;
 
-    [[nodiscard]] Polynomial multiply(const Polynomial& left, const Polynomial& right) const final;
+    [[nodiscard]]
+    Polynomial multiply(const Polynomial& left, const Polynomial& right) const final;
 
 private:
     void _generateElements();
