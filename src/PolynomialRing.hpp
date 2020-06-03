@@ -49,32 +49,10 @@ namespace lab {
          * @brief Calculates derivative from polynomial
          */
         [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
-    [[nodiscard]] Polynomial multiply(const uint64_t & num, const Polynomial& polynomial) const;
-
-
-    [[nodiscard]] Polynomial divide(const Polynomial& left, const Polynomial& right) const;
-
-    [[nodiscard]] Polynomial mod(const Polynomial& left, const Polynomial& right) const;
-
-    [[nodiscard]] std::pair<Polynomial, Polynomial> div_mod(const Polynomial& left, const Polynomial& right) const;
 
 
 
 
-    /**
-     * @brief Finds normalized polynomial in field
-     */
-    [[nodiscard]] Polynomial normalize(Polynomial &polynomial) const;
-
-    /**
-     * @brief Evaluates polynomial in point
-     */
-    [[nodiscard]] uint64_t evaluate(Polynomial &polynomial, uint64_t point) const;
-
-    /**
-     * @brief Calculates derivative from polynomial
-     */
-    [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
 
     private:
         uint64_t _p;
