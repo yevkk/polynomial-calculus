@@ -9,6 +9,9 @@ namespace lab {
 
         int8_t moebiusFunction (uint64_t n);
 
+        /**
+         * @brief Finds auxiliary polynomials for cyclotomic factorization algorithm
+         */
         Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
 
         }//namespace detail
@@ -53,6 +56,7 @@ namespace lab {
         [[nodiscard]]
         Polynomial cyclotomicPolinomial(uint64_t order) const;
 
+        [[nodiscard]]
         std::vector<Polynomial> cyclotomicFactorization(uint64_t order) const;
 
 

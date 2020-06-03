@@ -2,7 +2,7 @@
 
 #include <cmath>
 #include <cassert>
-#include <algorithm>
+#include <numeric>
 
 namespace lab {
 
@@ -189,45 +189,50 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
 }
 
 std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
-    uint64_t d = 1, tmp = _p;
+    uint64_t factorDegree = 1,
+                tmp = getP();
     while (tmp % order != 1) {
-        d++;
-        tmp *= _p;
+        factorDegree++;
+        tmp *= getP();
     }
 
     Polynomial cyclotomic = cyclotomicPolinomial(order);
     std::vector<Polynomial> factors{cyclotomic};
 
     int64_t i = 1;
-    Polynomial factorizationR = detail::rPolynom(i, order, _p);
+    Polynomial factorizationR = detail::rPolynom(i, order, getP());
     bool factorized = false;
 
     while (!factorized && i < order) {
         while (mod(factorizationR, cyclotomic).degree() == 0 && i < order - 1){
-            factorizationR = detail::rPolynom(++i, order, _p);
+            factorizationR = detail::rPolynom(++i, order, getP());
         }
 
         std::vector <Polynomial> updatedFactors;
         factorized = true;
 
         for (auto &item: factors){
-            if (item.degree() > d){
-                for(int64_t c = 0; c < _p; c++){
+            if (item.degree() > factorDegree){
+                for(int64_t c = 0; c < getP(); c++){
                     Polynomial f = gcd(item, factorizationR + Polynomial{c});
                     if (f.degree())
                         updatedFactors.push_back(f);
-                    if (f.degree() > d)
+                    if (f.degree() > factorDegree)
                         factorized = false;
                 }
             } else{
                 updatedFactors.push_back(item);
             }
         }
-        factors=std::move(updatedFactors);
-        if (i < order - 1)factorizationR = detail::rPolynom(++i, order, _p);
+        factors = std::move(updatedFactors);
+        if (i < order - 1) {
+            factorizationR = detail::rPolynom(++i, order, getP());
+        }
     }
 
-    for (auto &it: factors) it = normalize(it);
+    for (auto &it: factors){
+        it = normalize(it);
+    }
 
     return factors;
 }
@@ -272,16 +277,16 @@ namespace detail {
     }
 
     Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod){
-        uint64_t m = 1, modulo = order/std::__gcd(order, i), tmp = polyMod;
+        uint64_t m = 1, modulo = order / std::gcd(order, i), tmp = polyMod;
         while(tmp % modulo != 1){
-            tmp*=polyMod;
+            tmp *= polyMod;
             m++;
         }
 
-        std::vector<int64_t> rCoefs(i*(tmp/polyMod)+1);
+        std::vector<int64_t> rCoefs(i * (tmp / polyMod) + 1);
         tmp = 1;
-        for (uint64_t polyModPow = 0; polyModPow < m; polyModPow++, tmp*=polyMod){
-            rCoefs[i*tmp] = 1;
+        for (uint64_t polyModPow = 0; polyModPow < m; polyModPow++, tmp *= polyMod){
+            rCoefs[i * tmp] = 1;
         }
 
         return Polynomial(rCoefs);
