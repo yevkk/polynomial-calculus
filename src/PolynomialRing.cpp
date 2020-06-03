@@ -15,6 +15,18 @@ namespace lab {
             }
             return true;
         }
+        
+        int64_t modulusPow(int64_t number, uint64_t power, uint64_t modulus) {
+            if (power == 0) {
+                return 1;
+            }
+            int64_t temp = modulusPow(number, power / 2, modulus) % modulus;
+            int64_t result = 1;
+            if (power % 2 != 0) {
+                result = number % modulus;
+            }
+            return (temp * temp * result) % modulus;
+        }
     } // namespace
 
 
@@ -124,7 +136,7 @@ Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
     Polynomial result(polynomial.modified(_p));
     uint64_t normalizator = 1;
     if (_p > 2) {
-        normalizator = std::pow(polynomial.coefficient(polynomial.degree()), _p - 2);
+        normalizator = modulusPow(polynomial.coefficient(polynomial.degree()), _p - 2, _p);
     }
     return (result * normalizator).modified(_p);
 }
