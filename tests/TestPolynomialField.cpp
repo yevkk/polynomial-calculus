@@ -43,6 +43,13 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             REQUIRE(F3.multiply(Polynomial{2}, Polynomial{1}) == Polynomial{2});
             REQUIRE(F3.multiply(Polynomial{2}, Polynomial{2}) == Polynomial{1});
         }
+
+        SECTION("powering"){
+            REQUIRE(F3.pow(Polynomial{2}, 2) == F3.multiply(Polynomial{2}, Polynomial{2}));
+            REQUIRE(F3.pow(Polynomial{2}, 4) == F3.multiply(F3.multiply(Polynomial{2}, Polynomial{2}),
+                                                            F3.multiply(Polynomial{2}, Polynomial{2})));
+        }
+
     }
 
     SECTION("F4") {

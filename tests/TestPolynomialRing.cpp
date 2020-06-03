@@ -339,4 +339,26 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         Polynomial p4{0, 1};
         REQUIRE(r.normalize(p4) == Polynomial{0, 1});
     }
+    SECTION("Cyclotomic polinomial") {
+        SECTION("Moebius`s function") {
+            REQUIRE(detail::moebiusFunction(1) == 1);
+            REQUIRE(detail::moebiusFunction(5) == -1);
+            REQUIRE(detail::moebiusFunction(25) == 0);
+            REQUIRE(detail::moebiusFunction(190) == -1);
+            REQUIRE(detail::moebiusFunction(214) == 1);
+            REQUIRE(detail::moebiusFunction(5 * 13 * 17) == -1);
+        }
+        SECTION("Cyclotomic") {
+            SECTION("F11"){
+                const PolynomialRing r{11};
+                REQUIRE(r.cyclotomicPolinomial(12) == Polynomial{1, 0, 10, 0, 1});
+
+            }
+            SECTION("F3"){
+                const PolynomialRing r{3};
+                REQUIRE(r.cyclotomicPolinomial(52) ==
+                        Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
+            }
+        }
+    }
 }

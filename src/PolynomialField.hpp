@@ -40,6 +40,9 @@ public:
     [[nodiscard]]
     Polynomial multiply(const Polynomial& left, const Polynomial& right) const final;
 
+    [[nodiscard]]
+    Polynomial pow(const Polynomial& num, uint64_t pow) const;
+
 private:
     void _generateElements();
 

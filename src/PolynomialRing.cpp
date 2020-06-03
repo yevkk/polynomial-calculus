@@ -155,5 +155,77 @@ Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
         return left;
     }
 
+Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
+    assert(order % _p);
+    auto polynomial1 = Polynomial{1};
+    auto polynomial2 = Polynomial{1};
+    for (uint64_t i = 1; i <= uint64_t(sqrt(order)); i++){
+        if (order % i == 0) {
+            std::vector<int64_t> poly1(i, 0);
+            poly1[0] = -1;
+            poly1.push_back(1);
+            auto pow = detail::moebiusFunction(order / i);
+            if (pow == 1) {
+                polynomial1 = multiply(polynomial1, poly1);
+            } else if (pow == -1) {
+                polynomial2 = multiply(polynomial2, poly1);
+            }
+
+
+            std::vector<int64_t> poly2(order / i, 0);
+            poly2[0] = -1;
+            poly2.push_back(1);
+            pow = detail::moebiusFunction(i);
+            if (pow == 1) {
+                polynomial1 = multiply(polynomial1, poly2);
+            } else if (pow == -1) {
+                polynomial2 = multiply(polynomial2, poly2);
+
+            }
+        }
+    }
+    return divide(polynomial1, polynomial2);
+}
+
+
+namespace detail {
+    std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
+        std::vector<char> prime(n + 1, true);
+        prime[0] = prime[1] = false;
+        for (uint64_t i = 2; i <= n; ++i) {
+            if (prime[i]) {
+                for (uint64_t j = i * i; j <= n; j += i)
+                    prime[j] = false;
+            }
+        }
+        std::vector<uint64_t> result(0);
+        for (uint64_t number = 2; number <= n; ++number){
+            if (prime[number]){
+                result.push_back(number);
+            }
+        }
+        return result;
+    }
+
+    int8_t moebiusFunction(uint64_t n) {
+        if (n == 1)
+            return 1;
+        if (prime(n))
+            return -1;
+        auto primes = sieveOfEratosthenes(uint64_t(n));
+        auto pow = true;
+        for (const auto &prime: primes) {
+            if (n % prime == 0) {
+                pow = !pow;
+                if (n % (prime * prime) == 0) {
+                    return 0;
+                }
+            }
+        }
+
+        return pow ? 1 : -1;
+    }
+}//namespace detail
+
 
 } // namespace lab
