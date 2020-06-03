@@ -171,19 +171,104 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
     }
 
     SECTION("Division") {
-        SECTION("simple") {
-            const PolynomialRing ring11{7};
-            const Polynomial p1{1, 2, 1};
-            const Polynomial p2{1, 1};
-            REQUIRE(ring11.divide(p1, p2) == Polynomial{1,1});
-            REQUIRE(ring11.div_mod(p1, p2) == std::make_pair(Polynomial{1,1}, Polynomial{0}));
+        const PolynomialRing ring5{5};
+        const PolynomialRing ring7{7};
+        const PolynomialRing ring23{23};
+        const PolynomialRing ring31{31};
+        SECTION("Div") {
+            SECTION("Simple"){
+
+                const Polynomial p1{1, 2, 1};
+                const Polynomial p2{1, 1};
+                REQUIRE(ring7.divide(p1, p2) == Polynomial{1,1});
+                REQUIRE(ring7.div_mod(p1, p2) == std::make_pair(Polynomial{1,1}, Polynomial{0}));
+
+                const Polynomial p3{4, 3, 0, 3, 2};
+                const Polynomial p4{1, 3, 2};
+                REQUIRE(ring5.divide(p3, p4) == Polynomial{2, 0, 1});
+                REQUIRE(ring7.divide(p3, p4) != Polynomial{2, 0, 1});
+            }
+
+            SECTION("by number"){
+                const Polynomial p3{2, 4, 6};
+                const Polynomial p4_0{0};
+                const Polynomial p4_1{1};
+                const Polynomial p4_2{2};
+                const Polynomial p4_3{3};
+                const Polynomial p4_4{4};
+                const Polynomial p4_5{5};
+                const Polynomial p4_6{6};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4_1) == Polynomial{2,4,6});
+                REQUIRE(ring7.divide(p3, p4_2) == Polynomial{1,2,3});
+                REQUIRE(ring7.divide(p3, p4_3) == Polynomial{3,6,2});
+                REQUIRE(ring7.divide(p3, p4_4) == Polynomial{4,1,5});
+                REQUIRE(ring7.divide(p3, p4_5) == Polynomial{6,5,4});
+                REQUIRE(ring7.divide(p3, p4_6) == Polynomial{5,3,1});
+            }
+
+            SECTION("a < b"){
+                const Polynomial p3{2, 4, 6};
+                const Polynomial p4{3, 5, 5, 11};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4) == Polynomial{0});
+                REQUIRE(ring7.mod(p3, p4) == p3);
+
+            }
+
+            SECTION("Middle"){
+
+                const Polynomial p3{2, 4, 6, 10};
+                const Polynomial p4{3, 5, 5, 11};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4) == Polynomial{6});
+                REQUIRE(ring7.mod(p3, p4) == Polynomial{5,2,4});
+
+
+                const Polynomial p1[3] = {{1, 2, 2},{1, 0, 2},{21, 0, 1}};
+                const Polynomial p2{1, 1};
+                REQUIRE(ring7.divide(p1[0], p2) == Polynomial{0,2});
+                REQUIRE(ring7.divide(p1[1], p2) == Polynomial{5,2});
+
+                std::pair <const Polynomial, const Polynomial> pp[3] = {
+                        ring7.div_mod(p1[0], p2),
+                        ring7.div_mod(p1[1], p2),
+                        ring23.div_mod(p1[2], p2)
+                };
+
+                REQUIRE(pp[0].first == Polynomial{0,2});
+                REQUIRE(pp[0].second == Polynomial{1});
+
+                REQUIRE(pp[1].first == Polynomial{5,2});
+                REQUIRE(pp[1].second == Polynomial{3});
+
+                REQUIRE(pp[2].first == Polynomial{22,1});
+                REQUIRE(pp[2].second == Polynomial{22});
+
+            }
+
+            SECTION("Hard"){
+                const Polynomial px{7,30,0,0,10,6,0,15,23};
+                const Polynomial py{4,17,0,0,5};
+                REQUIRE(ring31.divide(px, py) == Polynomial{3,24,0,3,17});
+                REQUIRE(ring31.mod(px, py) == Polynomial{26,7,26,19});
+
+                REQUIRE(ring23.divide(px, py) == Polynomial{1,15,0,3});
+                REQUIRE(ring23.mod(px, py) == Polynomial{3,22,21,11});
+            }
+
+
+
         }
 
-        SECTION("Mod test") {
-            /*const PolynomialRing ring11{23};
+        SECTION("Mod") {
             const Polynomial p1{7, 13};
             const Polynomial p2{15};
-            REQUIRE(ring11.mod(p1, p2).degree() == 0);*/
+            REQUIRE(ring23.mod(p1, p2).degree() == 0);
+
+            const Polynomial p3{4, 3, 0, 3, 2};
+            const Polynomial p4{1, 3, 2};
+            REQUIRE(ring5.mod(p3, p4) == Polynomial{2, 2});
         }
     }
 
