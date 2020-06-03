@@ -6,16 +6,16 @@
 namespace lab {
 
 
-namespace {
-    bool prime(const uint64_t& n){
-        for(uint64_t i = 2; i <= sqrt(n); i++) {
-            if (n % i == 0) {
-                return false;
+    namespace {
+        bool prime(const uint64_t& n){
+            for(uint64_t i = 2; i <= sqrt(n); i++) {
+                if (n % i == 0) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
-    }
-} // namespace
+    } // namespace
 
 
 uint64_t PolynomialRing::divide_coefficients(uint64_t a, uint64_t b) const{
@@ -134,21 +134,31 @@ Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
     return (result * normalizator).modified(_p);
 }
 
-uint64_t PolynomialRing::evaluate(Polynomial &polynomial, uint64_t point) const {
-    polynomial = polynomial.modified(_p);
-    uint64_t result = 0;
-    int64_t point_power = 1;
-    for (size_t power = 0; power <= polynomial.degree(); ++power) {
-        result += (polynomial.coefficient(power) * point_power) % _p;
-        point_power *= point;
+    uint64_t PolynomialRing::evaluate(Polynomial &polynomial, uint64_t point) const {
+        polynomial = polynomial.modified(_p);
+        uint64_t result = 0;
+        int64_t point_power = 1;
+        for (size_t power = 0; power <= polynomial.degree(); ++power) {
+            result += (polynomial.coefficient(power) * point_power) % _p;
+            point_power *= point;
+        }
+        result %= _p;
+        return result;
     }
-    result %= _p;
-    return result;
-}
 
-Polynomial PolynomialRing::derivate(Polynomial &polynomial) const {
-    return polynomial.derivate().modified(_p);
-}
+    Polynomial PolynomialRing::derivate(Polynomial &polynomial) const {
+        return polynomial.derivate().modified(_p);
+    }
+
+    Polynomial PolynomialRing::gcd(Polynomial left, Polynomial right) const{
+        while (left != Polynomial{0} && right != Polynomial{0}) {
+            left = mod(left, right);
+            std::swap(left, right);
+        }
+        if (left == Polynomial{0})
+            return right;
+        return left;
+    }
 
 
 } // namespace lab
