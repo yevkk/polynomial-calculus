@@ -20,12 +20,12 @@ namespace lab {
             if (power == 0) {
                 return 1;
             }
-            int64_t temp = modulusPow(number, power/2, modulus) % modulus;
+            int64_t temp = modulusPow(number, power / 2, modulus) % modulus;
             int64_t result = 1;
             if (power % 2 != 0) {
                 result = number % modulus;
             }
-            return temp*temp*result % modulus;
+            return (temp * temp * result) % modulus;
         }
     } // namespace
 
