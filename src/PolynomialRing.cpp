@@ -132,7 +132,7 @@ Polynomial PolynomialRing::mod(const Polynomial &left, const Polynomial &right) 
     return div_mod(left, right).second;
 }
 
-Polynomial PolynomialRing::normalize(Polynomial &polynomial) const {
+Polynomial PolynomialRing::normalize(const Polynomial &polynomial) const {
     Polynomial result(polynomial.modified(_p));
     uint64_t normalizator = 1;
     if (_p > 2) {
@@ -199,6 +199,24 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
     return divide(polynomial1, polynomial2);
 }
 
+    bool PolynomialRing::isIrreducible(const Polynomial &polynomial) const {
+        if(polynomial == Polynomial{0})
+            return false;
+        auto f = normalize(polynomial);
+        if(mod(Polynomial::x(std::pow(getP(), f.degree())), f) != Polynomial{0, 1})
+            return false;
+        auto primes = detail::sieveOfEratosthenes(f.degree());
+        //for all prime divisors of f.degree
+        for(auto i : primes) {
+            if(i != f.degree() && f.degree() % i == 0) {
+                auto g = subtract(Polynomial::x(std::pow(getP(), f.degree()/i)), Polynomial{0, 1});
+                //is a product of irreducible polynomials
+                if(gcd(f, g).degree() > 0)
+                    return false;
+            }
+        }
+        return true;
+    }
 
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {

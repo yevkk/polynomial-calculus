@@ -361,4 +361,48 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             }
         }
     }
+    SECTION("Irreducibility") {
+        SECTION("F3") {
+            const PolynomialRing r{3};
+            REQUIRE(r.isIrreducible(Polynomial{1, 2, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{1, 1, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 2, 2, 0, 1, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 2, 2, 2, 2, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1, 2, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{1, 2, 2, 2, 2, 2, 1, 1}));
+
+            REQUIRE(!r.isIrreducible(Polynomial{0}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 0, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 1, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 2, 2, 0, 2, 0, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 2, 1, 2, 1, 0, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 1, 2, 0, 1, 1, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 0, 1, 2, 1, 2, 2, 1}));
+        }
+        SECTION("F7") {
+            const PolynomialRing r{7};
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 0, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{5, 0, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{6, 6, 5, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 1, 5, 5, 1}));
+
+            REQUIRE(!r.isIrreducible(Polynomial{0}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{0, 0, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 6, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{4, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 5, 6, 1 ,1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 6, 6, 6, 1}));
+
+        }
+    }
 }
