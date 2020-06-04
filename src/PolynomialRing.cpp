@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cassert>
 #include <numeric>
+#include <algorithm>
 
 namespace lab {
 
@@ -262,15 +263,19 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
 
 
     for(auto expression_divisor : expression_divisors){
-        bool need = true;
-        for(auto n_divisor : n_divisors){
-            if ((uint64_t)std::pow(_p, n_divisor) % expression_divisor == 0){
-                need = false;
+        if (expression_divisor < 1000) {
+            bool need = true;
+            for (auto n_divisor : n_divisors) {
+                if ((uint64_t) std::pow(_p, n_divisor) % expression_divisor == 0) {
+                    need = false;
+                }
             }
-        }
 
-        if (need){
-            needed.push_back(expression_divisor);
+            if (need) {
+                needed.push_back(expression_divisor);
+            }
+        } else{
+            break;
         }
     }
 
@@ -408,6 +413,8 @@ namespace detail {
                 }
             }
         }
+
+        std::sort(result.begin(), result.end());
 
         return result;
     }
