@@ -644,7 +644,7 @@ QTabWidget::pane {
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="fieldResultLabel">
+             <widget class="QPlainTextEdit" name="fieldResultText">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -652,16 +652,13 @@ QTabWidget::pane {
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">color: #272727; border-top: 5px solid #fcab35;</string>
+               <string notr="true">border-top: 4px solid #fcab35; color: #272727;</string>
               </property>
-              <property name="text">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="plainText">
                <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-              </property>
-              <property name="margin">
-               <number>10</number>
               </property>
              </widget>
             </item>
@@ -671,7 +668,7 @@ QTabWidget::pane {
            <attribute name="title">
             <string>Ring</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,5,1,0,3">
+           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,5,1,0,0">
             <item>
              <widget class="QComboBox" name="ringActionSelect">
               <property name="font">
@@ -738,6 +735,11 @@ QTabWidget::pane {
               <item>
                <property name="text">
                 <string>roots count</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>is irreducible</string>
                </property>
               </item>
              </widget>
@@ -943,7 +945,7 @@ QTabWidget::pane {
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="ringResultLabel">
+             <widget class="QPlainTextEdit" name="ringResultText">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -951,16 +953,10 @@ QTabWidget::pane {
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">color: #272727; border-top: 5px solid #fcab35;</string>
+               <string notr="true">border-top: 4px solid #fcab35; color: #272727;</string>
               </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-              </property>
-              <property name="margin">
-               <number>10</number>
+              <property name="readOnly">
+               <bool>true</bool>
               </property>
              </widget>
             </item>

@@ -234,9 +234,8 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     case 5: {
         auto left = detail_ui::from_qstring(pol_str1);
-        //TODO: check if left is irreducible;
 
-        if (!(left.degree() < _setup.n)) {
+        if (!_field->isIrreducible(left)) {
             showError();
             return;
         }
@@ -250,7 +249,7 @@ void MainWindow::on_runFieldBtn_clicked() {
         break;
     }
 
-    ui->fieldResultLabel->setText(QString::fromStdString(result_str));
+    ui->fieldResultText->setPlainText(QString::fromStdString(result_str));
 }
 
 
@@ -291,6 +290,9 @@ void MainWindow::on_ringActionSelect_activated(int index) {
         break;
     case 10:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+    case 11:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+
         break;
     default:
         break;
@@ -416,11 +418,19 @@ void MainWindow::on_runRingBtn_clicked() {
         break;
     }
 
+    case 11: {
+        auto left = detail_ui::from_qstring(pol_str1);
+
+        result_str = std::to_string(_ring->isIrreducible(left));
+
+        break;
+    }
+
     default:
         break;
     }
 
-    ui->ringResultLabel->setText(QString::fromStdString(result_str));
+    ui->ringResultText->setPlainText(QString::fromStdString(result_str));
 }
 
 void MainWindow::on_actionReset_triggered() {
@@ -434,4 +444,16 @@ void MainWindow::on_actionReset_triggered() {
 
     on_fieldActionSelect_activated(0);
     on_ringActionSelect_activated(0);
+
+    ui->polynomial1RingLine->clear();
+    ui->polynomial2RingLine->clear();
+    ui->numRingLine->clear();
+
+    ui->polynomial1FieldLine->clear();
+    ui->polynomial2FieldLine->clear();
+    ui->numFieldLine->clear();
+
+    ui->fieldResultText->clear();
+    ui->ringResultText->clear();
 }
+
