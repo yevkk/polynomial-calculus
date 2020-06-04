@@ -358,6 +358,11 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 REQUIRE(r.cyclotomicPolinomial(8) == Polynomial{1, 0, 0, 0, 1});
 
             }
+            SECTION("F13"){
+                const PolynomialRing r{13};
+                //REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
+
+            }
             SECTION("F3"){
                 const PolynomialRing r{3};
                 REQUIRE(r.cyclotomicPolinomial(52) ==
@@ -386,6 +391,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(r13.cyclotomicFactorization(14) == std::vector
                     {Polynomial{1, 7, 1}, Polynomial{1, 8, 1},
                     Polynomial{1, 10, 1}});
+            //REQUIRE(r13.cyclotomicFactorization(1) == std::vector{Polynomial{12, 1}});
         }
 
 

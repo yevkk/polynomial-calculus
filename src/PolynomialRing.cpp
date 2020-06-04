@@ -191,7 +191,7 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
 std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
     uint64_t factorDegree = 1,
                 tmp = getP();
-    while (tmp % order != 1) {
+    while (tmp % order != 1 && order > 1) {
         factorDegree++;
         tmp *= getP();
     }
@@ -277,6 +277,9 @@ namespace detail {
     }
 
     Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod){
+        if (i >= order){
+            return Polynomial{1};
+        }
         uint64_t m = 1, modulo = order / std::gcd(order, i), tmp = polyMod;
         while(tmp % modulo != 1){
             tmp *= polyMod;
