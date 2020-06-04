@@ -280,8 +280,10 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             const PolynomialRing ring277{277};
             const Polynomial p1{1, 2, 1};
             const Polynomial p2{1, 1};
-            REQUIRE(ring23.gcd(p1, p2) == Polynomial{1,1});
 
+            const PolynomialRing r7{7};
+            REQUIRE(r7.gcd(Polynomial{4, 1, 0, 0, 0, 0, 0, 1}, Polynomial{1, 0, 0, 0, 1})==Polynomial{1, 4, 1});
+          
             const Polynomial p3{1, 0, 1, 0, -3, -3, 8, 2, -5};
             const Polynomial p4{3, 0, 5, 0, -4, -9, 21};
             Polynomial g1 = ring23.gcd(p3, p4);
@@ -372,16 +374,16 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(detail::moebiusFunction(5 * 13 * 17) == -1);
         }
         SECTION("Cyclotomic") {
-            SECTION("F11") {
+            SECTION("F11"){
                 const PolynomialRing r{11};
                 REQUIRE(r.cyclotomicPolinomial(12) == Polynomial{1, 0, 10, 0, 1});
                 REQUIRE(r.cyclotomicPolinomial(8) == Polynomial{1, 0, 0, 0, 1});
 
             }
-            SECTION("F3") {
+            SECTION("F3"){
                 const PolynomialRing r{3};
                 REQUIRE(r.cyclotomicPolinomial(52) ==
-                        Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1});
+                        Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
                 REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1, 1});
             }
         }
@@ -407,6 +409,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                     {Polynomial{1, 7, 1}, Polynomial{1, 8, 1},
                      Polynomial{1, 10, 1}});
         }
+    }
 
 
         SECTION("Irreducibility") {
