@@ -88,7 +88,7 @@ private:
     /*
      * @brief removes extra 0 from back of coefficients vector
      */
-    void finilize();
+    void finalize();
 };
 
 } // namespace lab

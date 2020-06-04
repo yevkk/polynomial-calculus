@@ -15,7 +15,7 @@ Polynomial::Polynomial(std::initializer_list<int64_t> coefs) : _coefs{coefs} {
         _coefs.push_back(0);
     }
 
-    finilize();
+    finalize();
 }
 
 Polynomial::Polynomial(std::vector<int64_t> coefs) : _coefs{coefs} {
@@ -23,7 +23,7 @@ Polynomial::Polynomial(std::vector<int64_t> coefs) : _coefs{coefs} {
         _coefs.push_back(0);
     }
 
-    finilize();
+    finalize();
 }
 
 /**
@@ -50,7 +50,7 @@ const std::vector<int64_t>& Polynomial::coefficients() const {
 /*
  * @brief removes extra 0 from back of coefficients vector
  */
-void Polynomial::finilize() {
+void Polynomial::finalize() {
     while ((_coefs.back() == 0) && (_coefs.begin() + 1 != _coefs.end())) {
         _coefs.pop_back();
     }
@@ -69,7 +69,7 @@ Polynomial Polynomial::modified(int64_t modulo) const {
         item = item % modulo;
     }
 
-    result.finilize();
+        result.finalize();
 
     return result;
 }
@@ -99,7 +99,7 @@ Polynomial operator+(const Polynomial &left, const Polynomial &right) {
         result._coefs.push_back(left.coefficient(i) + right.coefficient(i));
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
@@ -114,7 +114,7 @@ Polynomial operator-(const Polynomial &left, const Polynomial &right) {
         result._coefs.push_back(left.coefficient(i) - right.coefficient(i));
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
@@ -129,7 +129,7 @@ Polynomial operator*(const Polynomial &left, const Polynomial &right) {
         }
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
@@ -141,7 +141,7 @@ Polynomial operator*(const Polynomial &left, int64_t right) {
         item = item * right;
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
