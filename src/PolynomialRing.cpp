@@ -1,4 +1,5 @@
 #include "PolynomialRing.hpp"
+#include "Utils.hpp"
 
 #include <cmath>
 #include <cassert>
@@ -323,6 +324,45 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
                 return false;
         }
         return true;
+    }
+
+    int PolynomialRing::order_of_irreducible(const Polynomial& polynomial) const {
+
+        assert (isIrreducible(polynomial));
+        const auto qm = static_cast<int64_t> (std::pow(getP(), polynomial.degree())) - 1;
+
+        const auto factors = utils::get_divisors(qm);
+
+        const auto grouped_factors = [&] {
+            std::vector <std::pair <int64_t, std::size_t>> grouped;
+
+            for (const auto factor : factors) {
+                if (!grouped.empty() && grouped.back().first == factor) {
+                    ++grouped.back().second;
+                }
+                else {
+                    grouped.emplace_back(factor, 1);
+                }
+            }
+            return grouped;
+        } ();
+
+        auto e_divisors = std::vector<int64_t>{};
+
+        for (auto [factor, amount] : grouped_factors) {
+            auto powed_factor = factor;
+            for (auto degree = 0; degree < amount; ++degree, powed_factor *= factor) {
+                if (mod(Polynomial::x(qm / powed_factor), polynomial) != Polynomial{1}) {
+                    e_divisors.push_back(std::pow(factor, amount - degree));
+                    break;
+                }
+
+            }
+        }
+        return std::accumulate (e_divisors.begin(), e_divisors.end(), 1,
+                                [] (const auto sum, const auto divisor) {
+                                    return sum * divisor;
+                                });
     }
 
     std::vector<uint64_t> PolynomialRing::returnRoots(Polynomial& gPoly, Polynomial& toMod) const{

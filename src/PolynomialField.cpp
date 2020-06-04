@@ -1,6 +1,5 @@
 #include "PolynomialField.hpp"
 #include "FieldMultiplicationCache.hpp"
-#include "Utils.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -147,42 +146,6 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
 }
 
 
-    int64_t PolynomialField::order_of_irreducible() const {
 
-        const auto qm = static_cast<int64_t> (std::pow(getP(), getN())) - 1;
-
-        const auto factors = utils::get_divisors(qm);
-
-        const auto grouped_factors = [&] {
-            std::vector <std::pair <int64_t, std::size_t>> grouped;
-
-            for (const auto factor : factors) {
-                if (!grouped.empty() && grouped.back().first == factor) {
-                    ++grouped.back().second;
-                }
-                else {
-                    grouped.emplace_back(factor, 1);
-                }
-            }
-            return grouped;
-        } ();
-
-        auto e_divisors = std::vector<int64_t>{};
-
-        for (auto [factor, amount] : grouped_factors) {
-            auto powed_factor = factor;
-            for (auto degree = 0; degree < amount; ++degree, powed_factor *= factor) {
-                if (mod(Polynomial::x(qm / powed_factor), _irreducible) != Polynomial{1}) {
-                    e_divisors.push_back(std::pow(factor, amount - degree));
-                    break;
-                }
-
-            }
-        }
-        return std::accumulate (e_divisors.begin(), e_divisors.end(), 1,
-                                [] (const auto sum, const auto divisor) {
-                                    return sum * divisor;
-                                });
-    }
 
 } // namespace lab
