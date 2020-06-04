@@ -47,8 +47,11 @@ public:
     [[nodiscard]]
     Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
+    /**
+     *  @return Order of _irreducible
+     */
     [[nodiscard]]
-    int64_t order_of_irreducible (const Polynomial& polynomial) const;
+    int64_t order_of_irreducible () const;
 
 private:
     void _generateElements();

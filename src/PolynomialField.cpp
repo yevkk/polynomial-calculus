@@ -147,12 +147,9 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
 }
 
 
-    int64_t PolynomialField::order_of_irreducible(const Polynomial &polynomial) const {
+    int64_t PolynomialField::order_of_irreducible() const {
 
-        assert(isIrreducible(polynomial));   // waiting for his time
-
-        const auto qm = static_cast<int64_t> (std::pow(std::pow(getP(), getN()),
-                                                       polynomial.degree())) - 1;
+        const auto qm = static_cast<int64_t> (std::pow(getP(), getN())) - 1;
 
         const auto factors = utils::get_divisors(qm);
 
@@ -175,7 +172,7 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
         for (auto [factor, amount] : grouped_factors) {
             auto powed_factor = factor;
             for (auto degree = 0; degree < amount; ++degree, powed_factor *= factor) {
-                if (mod(Polynomial::x(qm / powed_factor), polynomial) != Polynomial{1}) {
+                if (mod(Polynomial::x(qm / powed_factor), _irreducible) != Polynomial{1}) {
                     e_divisors.push_back(std::pow(factor, amount - degree));
                     break;
                 }
