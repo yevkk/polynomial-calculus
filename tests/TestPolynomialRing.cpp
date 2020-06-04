@@ -457,7 +457,6 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 REQUIRE(!r.isIrreducible(Polynomial{4, 0, 1, 1, 1}));
                 REQUIRE(!r.isIrreducible(Polynomial{6, 5, 6, 1, 1}));
                 REQUIRE(!r.isIrreducible(Polynomial{6, 6, 6, 6, 1}));
-
             }
         }
 
