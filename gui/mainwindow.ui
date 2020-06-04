@@ -737,6 +737,11 @@ QTabWidget::pane {
                 <string>roots count</string>
                </property>
               </item>
+              <item>
+               <property name="text">
+                <string>is irreducible</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item>
