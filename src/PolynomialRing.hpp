@@ -15,6 +15,8 @@ namespace lab {
         Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
 
         std::vector<uint64_t> integerFactorization(uint64_t n);
+
+        int rankOfMatrix(std::vector<std::vector<uint64_t>> matrix);
     }//namespace detail
 
     class PolynomialRing {
@@ -84,6 +86,7 @@ namespace lab {
          */
         [[nodiscard]] virtual bool isIrreducible(const Polynomial &polynomial) const;
 
+
         /**
          * @return vector of roots
          */
@@ -91,6 +94,20 @@ namespace lab {
 
         [[nodiscard]] std::vector<uint64_t> returnRoots(Polynomial& gPoly, Polynomial& toMod) const;
 
+
+        /**
+         * @brief GCD method requires only GCD function,
+         *        Matrix method - uses matrix rank calculation
+         */
+        enum class CountPolicy {
+            GCD,
+            Matrix
+        };
+
+        /**
+         * @return the count of roots of equation P(x) = 0
+         */
+        [[nodiscard]] int countRoots(const Polynomial &polynomial, PolynomialRing::CountPolicy policy = PolynomialRing::CountPolicy::GCD) const;
 
     private:
         uint64_t _p;

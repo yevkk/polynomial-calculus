@@ -397,6 +397,46 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
     }
 
 
+int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy) const {
+    if (policy == PolynomialRing::CountPolicy::GCD) {
+        auto temp = subtract(Polynomial::x(this->getP()), Polynomial{0,1}); //creating temp: x^mod - x
+        temp = gcd(polynomial, temp);
+        return temp.degree();
+    } else {
+        auto result = 0;
+
+        // check 0 is root or not:
+        if(polynomial.coefficient(0) == 0)
+            result++;
+
+        auto temp = subtract(Polynomial::x(this->getP() - 1), Polynomial{1}); //creating temp: x^mod - x
+
+        temp = gcd(polynomial, temp);
+
+        // b^mod-1 = 1, b in Fmod
+        if(temp.degree() == this->getP() - 1) {
+            int max_coef = temp.coefficient(temp.degree());
+            temp = subtract(temp, multiply(Polynomial::x(temp.degree()), max_coef));
+            temp = add(temp, Polynomial{max_coef});
+        }
+
+        // create circular matrix of coefs
+        std::vector<std::vector<uint64_t>> matrix;
+
+        for(int i = 0; i <= temp.degree(); i++) {
+            std::vector<uint64_t> tmp_vec;
+            for(int j = 0; j <= temp.degree(); j++) {
+                tmp_vec.push_back(temp.coefficient((i + j) % (temp.degree() + 1)));
+            }
+            matrix.push_back(tmp_vec);
+        }
+
+        result += this->getP() - 1 - detail::rankOfMatrix(matrix);
+
+        return result;
+    }
+}
+
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
         std::vector<char> prime(n + 1, true);
@@ -465,6 +505,82 @@ namespace detail {
         }
 
         return result;
+    }
+
+
+
+    void swap(std::vector<std::vector<uint64_t>> matrix, int row1, int row2, int col) {
+        for (int i = 0; i < col; i++) {
+            int temp = matrix[row1][i];
+            matrix[row1][i] = matrix[row2][i];
+            matrix[row2][i] = temp;
+        }
+    }
+
+/* function for finding rank of matrix */
+    int rankOfMatrix(std::vector<std::vector<uint64_t>> matrix) {
+        int rank = matrix[0].size();
+
+        for (int row = 0; row < rank; row++) {
+            // Before we visit current row 'row', we make
+            // sure that mat[row][0],....mat[row][row-1]
+            // are 0.
+
+            // Diagonal element is not zero
+            if (matrix[row][row]) {
+                for (int col = 0; col < matrix.size(); col++) {
+                    if (col != row) {
+                        // This makes all entries of current
+                        // column as 0 except entry 'mat[row][row]'
+                        double mult = (double)matrix[col][row] /
+                                      matrix[row][row];
+                        for (int i = 0; i < rank; i++)
+                            matrix[col][i] -= mult * matrix[row][i];
+                    }
+                }
+            }
+
+                // Diagonal element is already zero. Two cases
+                // arise:
+                // 1) If there is a row below it with non-zero
+                //    entry, then swap this row with that row
+                //    and process that row
+                // 2) If all elements in current column below
+                //    mat[r][row] are 0, then remvoe this column
+                //    by swapping it with last column and
+                //    reducing number of columns by 1.
+            else {
+                bool reduce = true;
+
+                /* Find the non-zero element in current
+                    column  */
+                for (int i = row + 1; i < matrix.size();  i++) {
+                    // Swap the row with non-zero element
+                    // with this row.
+                    if (matrix[i][row]) {
+                        swap(matrix, row, i, rank);
+                        reduce = false;
+                        break ;
+                    }
+                }
+
+                // If we did not find any row with non-zero
+                // element in current columnm, then all
+                // values in this column are 0.
+                if (reduce) {
+                    // Reduce number of columns
+                    rank--;
+
+                    // Copy the last column here
+                    for (auto & i : matrix)
+                        i[row] = i[rank];
+                }
+
+                // Process this row again
+                row--;
+            }
+        }
+        return rank;
     }
 }//namespace detail
 

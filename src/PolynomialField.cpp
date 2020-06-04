@@ -123,6 +123,7 @@ Polynomial PolynomialField::_gcdExtended(const Polynomial& a, const Polynomial& 
 }
 
 
+
 Polynomial PolynomialField::inverted(const Polynomial& polynomial) const {
     Polynomial p, result, tmp, div;
     p = _reduceDegree(polynomial);
@@ -144,7 +145,6 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
     const auto poly2 = pow(poly, power / 2);
     return multiply(poly2, poly2);
 }
-
 
 
     int64_t PolynomialField::order_of_irreducible(const Polynomial &polynomial) const {
