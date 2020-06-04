@@ -33,6 +33,10 @@ private slots:
 
     void on_fieldActionSelect_activated(int index);
 
+    void on_ringActionSelect_activated(int index);
+
+    void on_runRingBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
 

@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     displayIrreducible(_irreducible_vector);
 
     on_fieldActionSelect_activated(0);
+    on_ringActionSelect_activated(0);
 }
 
 MainWindow::~MainWindow() {
@@ -232,3 +233,152 @@ void MainWindow::on_runFieldBtn_clicked() {
     ui->fieldResultLabel->setText(QString::fromStdString(result_str));
 }
 
+
+void MainWindow::on_ringActionSelect_activated(int index) {
+    QString action_info;
+    switch (index) {
+    case 0:
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        break;
+    case 1:
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        break;
+    case 2:
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        break;
+    case 3:
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        break;
+    case 4:
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        break;
+    case 5:
+        action_info = "Polynomial 1: --- ;\nPolynomial 2: --- ;\nNumber: order;";
+        break;
+    case 6:
+        action_info = "Polynomial 1: --- ;\nPolynomial 2: --- ;\nNumber: order;";
+        break;
+    case 7:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
+    case 8:
+        action_info = "Polynomial 1: polyonomial ;\nPolynomial 2: --- ;\nNumber: variable value;";
+        break;
+    case 9:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
+    default:
+        break;
+    }
+
+    ui->ringInputInfoLabel->setText(action_info);
+}
+
+void MainWindow::on_runRingBtn_clicked() {
+    int index = ui->ringActionSelect->currentIndex();
+    auto pol_str1 = ui->polynomial1RingLine->text();
+    auto pol_str2 = ui->polynomial2RingLine->text();
+    auto num_str = ui->numRingLine->text();
+
+    std::string result_str;
+
+    switch (index) {
+    case 0: {
+        auto left = detail_ui::from_qstring(pol_str1);
+        auto right = detail_ui::from_qstring(pol_str2);
+
+        result_str = to_string(_ring->add(left, right));
+
+        break;
+    }
+
+    case 1: {
+        auto left = detail_ui::from_qstring(pol_str1);
+        auto right = detail_ui::from_qstring(pol_str2);
+
+        result_str = to_string(_ring->subtract(left, right));
+
+        break;
+    }
+
+    case 2: {
+        auto left = detail_ui::from_qstring(pol_str1);
+        auto right = detail_ui::from_qstring(pol_str2);
+
+        result_str = to_string(_ring->multiply(left, right));
+
+        break;
+    }
+
+    case 3: {
+        auto left = detail_ui::from_qstring(pol_str1);
+        auto right = detail_ui::from_qstring(pol_str2);
+
+        auto result = _ring->div_mod(left, right);
+
+        result_str = "div: " + to_string(result.first) + "\nmod: " + to_string(result.second);
+
+        break;
+    }
+
+    case 4: {
+        auto left = detail_ui::from_qstring(pol_str1);
+        auto right = detail_ui::from_qstring(pol_str2);
+
+        result_str = to_string(_ring->gcd(left, right));
+
+        break;
+    }
+
+    case 5: {
+        int num = num_str.toInt();
+
+        result_str = to_string(_ring->cyclotomicPolinomial(num));
+
+        break;
+    }
+
+    case 6: {
+        int num = num_str.toInt();
+
+        auto result = _ring->cyclotomicFactorization(num);
+
+        result_str = "(" + to_string(result[0]) + ")";
+        for (size_t i = 1; i < result.size(); i++) {
+             result_str += "*(" + to_string(result[1]) + ")";
+        }
+
+        break;
+    }
+
+    case 7: {
+        auto left = detail_ui::from_qstring(pol_str1);
+
+        result_str = to_string(_ring->normalize(left));
+
+        break;
+    }
+
+    case 8: {
+        auto left = detail_ui::from_qstring(pol_str1);
+        int num = num_str.toInt();
+
+        result_str = std::to_string(_ring->evaluate(left, num));
+
+        break;
+    }
+
+    case 9: {
+        auto left = detail_ui::from_qstring(pol_str1);
+
+        result_str = to_string(_ring->derivate(left));
+
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    ui->ringResultLabel->setText(QString::fromStdString(result_str));
+}
