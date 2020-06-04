@@ -391,6 +391,15 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 const PolynomialRing r{13};
                 REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
             }
+            SECTION("F2"){
+                const PolynomialRing r{2};
+                REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1,1});
+                REQUIRE(r.cyclotomicPolinomial(4) == Polynomial{1, 0, 1});
+            }
+            SECTION("F13"){
+                const PolynomialRing r{13};
+                REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
+            }
             SECTION("F13"){
                 const PolynomialRing r{13};
                 REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
@@ -507,7 +516,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
         REQUIRE(r5.irreducibleOfOrder(4).size() == 150);
     }
-  
+
     SECTION("Calculating Count of Roots") {
         const PolynomialRing r5{5};
         SECTION("easy") {

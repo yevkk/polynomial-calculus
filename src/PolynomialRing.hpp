@@ -65,6 +65,8 @@ namespace lab {
         [[nodiscard]]
         std::vector<Polynomial> irreducibleOfOrder(uint64_t order) const;
 
+        [[nodiscard]]
+        Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
         /**
          * @brief Finds normalized polynomial in field
