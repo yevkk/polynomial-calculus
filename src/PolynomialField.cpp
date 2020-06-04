@@ -149,9 +149,8 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
 
     int64_t PolynomialField::order_of_irreducible(const Polynomial &polynomial) const {
 
-//        assert(isIrreducible(polynomial));   // waiting for his time
+        assert(isIrreducible(polynomial));   // waiting for his time
 
-        auto s = std::pow(getP(), getN());
         const auto qm = static_cast<int64_t> (std::pow(std::pow(getP(), getN()),
                                                        polynomial.degree())) - 1;
 

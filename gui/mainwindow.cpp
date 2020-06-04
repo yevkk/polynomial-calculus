@@ -240,6 +240,10 @@ void MainWindow::on_runFieldBtn_clicked() {
             showError();
             return;
         }
+        if (!_field->isIrreducible(left)) {
+            showError();
+            return;
+        }
 
         result_str = std::to_string(_field->order_of_irreducible(left));
 
