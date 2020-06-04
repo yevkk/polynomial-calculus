@@ -189,10 +189,4 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
                                 });
     }
 
-    bool PolynomialField::isIrreducible(const Polynomial &polynomial) const {
-        if(normalize(polynomial) == normalize(_irreducible))
-            return false;
-        return PolynomialRing::isIrreducible(polynomial);
-    }
-
 } // namespace lab
