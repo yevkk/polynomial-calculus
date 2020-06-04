@@ -457,7 +457,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             }
         }
 
-    }
+
 
     SECTION("Integer number factorization") {
         REQUIRE(detail::integerFactorization(24) == std::vector<uint64_t>{1, 24, 2, 12, 3, 8, 4, 6});
