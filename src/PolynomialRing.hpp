@@ -14,7 +14,8 @@ namespace lab {
          */
         Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
 
-        }//namespace detail
+        std::vector<uint64_t> integerFactorization(uint64_t n);
+    }//namespace detail
 
     class PolynomialRing {
     public:
@@ -59,6 +60,9 @@ namespace lab {
         [[nodiscard]]
         std::vector<Polynomial> cyclotomicFactorization(uint64_t order) const;
 
+        [[nodiscard]]
+        std::vector<Polynomial> irreducibleOfOrder(uint64_t order) const;
+
 
         /**
          * @brief Finds normalized polynomial in field
@@ -86,7 +90,6 @@ namespace lab {
         std::vector <std::vector <uint64_t>> _dividing_table;
         [[nodiscard]] uint64_t _divide_coefficients(uint64_t a, uint64_t b) const;
         void _create_dividing_table(int field);
-
     };
 
 } // namespace lab

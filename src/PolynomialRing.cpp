@@ -249,6 +249,42 @@ std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) 
     return factors;
 }
 
+std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const {
+    // expression = p^order - 1
+    std::vector<uint64_t> expression_divisors = detail::integerFactorization(std::pow(_p, order) - 1);
+    std::vector<uint64_t> n_divisors = detail::integerFactorization(order);
+
+    // needed numbers -- such m that p^order - 1 % m = 0 and p^t - 1 % m != 0 for each t < order
+    std::vector<uint64_t> needed;
+
+
+    for(auto expression_divisor : expression_divisors){
+        bool need = true;
+        for(auto n_divisor : n_divisors){
+            if ((uint64_t)std::pow(_p, n_divisor) % expression_divisor == 0){
+                need = false;
+            }
+        }
+
+        if (need){
+            needed.push_back(expression_divisor);
+        }
+    }
+
+
+    std::vector<Polynomial> irreducible;
+
+    for(auto& cyclotomic_polynomial_order : needed){
+        for(auto& irreducible_polynomial : cyclotomicFactorization(cyclotomic_polynomial_order)){
+            if (irreducible_polynomial.degree() == order){
+                irreducible.push_back(irreducible_polynomial);
+            }
+        }
+    }
+
+    return irreducible;
+}
+
 
     bool PolynomialRing::isIrreducible(const Polynomial &polynomial) const {
         if(polynomial == Polynomial{0})
@@ -323,6 +359,21 @@ namespace detail {
 
         return Polynomial(rCoefs);
 
+    }
+
+    std::vector<uint64_t> integerFactorization(uint64_t n){
+        std::vector<uint64_t> result;
+
+        for (uint64_t i = 1; i*i <= n; ++i) {
+            if (n % i == 0) {
+                result.push_back(i);
+                if (i*i != n){
+                    result.push_back(n/i);
+                }
+            }
+        }
+
+        return result;
     }
 }//namespace detail
 
