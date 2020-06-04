@@ -15,6 +15,7 @@ namespace lab {
         Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
 
         std::vector<uint64_t> integerFactorization(uint64_t n);
+
         int rankOfMatrix(std::vector<std::vector<uint64_t>> matrix);
     }//namespace detail
 
@@ -84,6 +85,14 @@ namespace lab {
          * @brief Checks if polynomial is irreducible over the field by modulo
          */
         [[nodiscard]] virtual bool isIrreducible(const Polynomial &polynomial) const;
+
+
+        /**
+         * @return vector of roots
+         */
+        [[nodiscard]] std::vector<uint64_t> roots(Polynomial &polynomial) const;
+
+        [[nodiscard]] std::vector<uint64_t> returnRoots(Polynomial& gPoly, Polynomial& toMod) const;
 
 
         /**
