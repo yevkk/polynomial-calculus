@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     _irreducible_vector = _ring->irreducibleOfOrder(_setup.n);
     displayIrreducible(_irreducible_vector);
 
+    ui->stackedWidget->setCurrentIndex(0);
+
     on_fieldActionSelect_activated(0);
     on_ringActionSelect_activated(0);
 }
@@ -121,6 +123,8 @@ void MainWindow::on_setupBtn_clicked() {
 }
 
 void MainWindow::on_fieldActionSelect_activated(int index) {
+    ui->statusbar->showMessage("p: " + QString::number(_setup.p) + ", n: " + QString::number(_setup.n) + "; " + QString::fromStdString(to_string(_setup.irreducible)));
+
     QString action_info;
     switch (index) {
     case 0:
@@ -138,9 +142,9 @@ void MainWindow::on_fieldActionSelect_activated(int index) {
     case 4:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: power;";
         break;
-//    case 5:
-//        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
-//        break;
+    case 5:
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        break;
     default:
         break;
     }
@@ -149,6 +153,7 @@ void MainWindow::on_fieldActionSelect_activated(int index) {
 }
 
 void MainWindow::on_runFieldBtn_clicked() {
+    ui->statusbar->showMessage("p: " + QString::number(_setup.p) + ", n: " + QString::number(_setup.n) + "; " + QString::fromStdString(to_string(_setup.irreducible)));
     int index = ui->fieldActionSelect->currentIndex();
     auto pol_str1 = ui->polynomial1FieldLine->text();
     auto pol_str2 = ui->polynomial2FieldLine->text();
@@ -226,6 +231,21 @@ void MainWindow::on_runFieldBtn_clicked() {
         break;
 
     }
+
+    case 5: {
+        auto left = detail_ui::from_qstring(pol_str1);
+        //TODO: check if left is irreducible;
+
+        if (!(left.degree() < _setup.n)) {
+            showError();
+            return;
+        }
+
+        result_str = std::to_string(_field->order_of_irreducible(left));
+
+        break;
+
+    }
     default:
         break;
     }
@@ -235,6 +255,8 @@ void MainWindow::on_runFieldBtn_clicked() {
 
 
 void MainWindow::on_ringActionSelect_activated(int index) {
+    ui->statusbar->showMessage("p: " + QString::number(_setup.p) + ", n: " + QString::number(_setup.n) + "; " + QString::fromStdString(to_string(_setup.irreducible)));
+
     QString action_info;
     switch (index) {
     case 0:
@@ -267,6 +289,9 @@ void MainWindow::on_ringActionSelect_activated(int index) {
     case 9:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
+    case 10:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
     default:
         break;
     }
@@ -275,6 +300,8 @@ void MainWindow::on_ringActionSelect_activated(int index) {
 }
 
 void MainWindow::on_runRingBtn_clicked() {
+    ui->statusbar->showMessage("p: " + QString::number(_setup.p) + ", n: " + QString::number(_setup.n) + "; " + QString::fromStdString(to_string(_setup.irreducible)));
+
     int index = ui->ringActionSelect->currentIndex();
     auto pol_str1 = ui->polynomial1RingLine->text();
     auto pol_str2 = ui->polynomial2RingLine->text();
@@ -313,6 +340,11 @@ void MainWindow::on_runRingBtn_clicked() {
     case 3: {
         auto left = detail_ui::from_qstring(pol_str1);
         auto right = detail_ui::from_qstring(pol_str2);
+
+        if (right == Polynomial{0}) {
+            showError();
+            return;
+        }
 
         auto result = _ring->div_mod(left, right);
 
@@ -376,9 +408,30 @@ void MainWindow::on_runRingBtn_clicked() {
         break;
     }
 
+    case 10: {
+        auto left = detail_ui::from_qstring(pol_str1);
+
+        result_str = std::to_string(_ring->countRoots(left, PolynomialRing::CountPolicy::GCD));
+
+        break;
+    }
+
     default:
         break;
     }
 
     ui->ringResultLabel->setText(QString::fromStdString(result_str));
+}
+
+void MainWindow::on_actionReset_triggered() {
+    setP(2);
+    setN(2);
+
+    _irreducible_vector = _ring->irreducibleOfOrder(_setup.n);
+    displayIrreducible(_irreducible_vector);
+
+    ui->stackedWidget->setCurrentIndex(0);
+
+    on_fieldActionSelect_activated(0);
+    on_ringActionSelect_activated(0);
 }
