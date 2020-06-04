@@ -9,6 +9,9 @@ namespace lab {
 
         int8_t moebiusFunction (uint64_t n);
 
+        /**
+         * @brief Finds auxiliary polynomials for cyclotomic factorization algorithm
+         */
         Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
 
         std::vector<uint64_t> integerFactorization(uint64_t n);
@@ -54,6 +57,7 @@ namespace lab {
         [[nodiscard]]
         Polynomial cyclotomicPolinomial(uint64_t order) const;
 
+        [[nodiscard]]
         std::vector<Polynomial> cyclotomicFactorization(uint64_t order) const;
 
         [[nodiscard]]
@@ -63,7 +67,7 @@ namespace lab {
         /**
          * @brief Finds normalized polynomial in field
          */
-        [[nodiscard]] Polynomial normalize(Polynomial &polynomial) const;
+        [[nodiscard]] Polynomial normalize(const Polynomial &polynomial) const;
 
         /**
          * @brief Evaluates polynomial in point
@@ -74,6 +78,11 @@ namespace lab {
          * @brief Calculates derivative from polynomial
          */
         [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
+
+        /**
+         * @brief Checks if polynomial is irreducible over the field by modulo
+         */
+        [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
 
 
     private:

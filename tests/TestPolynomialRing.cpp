@@ -280,6 +280,10 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             const PolynomialRing ring277{277};
             const Polynomial p1{1, 2, 1};
             const Polynomial p2{1, 1};
+
+            const PolynomialRing r7{7};
+            REQUIRE(r7.gcd(Polynomial{4, 1, 0, 0, 0, 0, 0, 1}, Polynomial{1, 0, 0, 0, 1})==Polynomial{1, 4, 1});
+
             REQUIRE(ring23.gcd(p1, p2) == Polynomial{1,1});
 
             const Polynomial p3{1, 0, 1, 0, -3, -3, 8, 2, -5};
@@ -396,15 +400,62 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         }
         SECTION("Cyclotomic factorization"){
             const PolynomialRing r7{7};
-            REQUIRE(r7.cyclotomicFactorization(8) == std::vector <Polynomial>{Polynomial{1, 3, 1}, Polynomial{1, 4, 1}});
-            REQUIRE(r7.cyclotomicFactorization(2) == std::vector <Polynomial>{Polynomial{1, 1}});
+            REQUIRE(r7.cyclotomicFactorization(8) == std::vector {Polynomial{1, 3, 1}, Polynomial{1, 4, 1}});
+            REQUIRE(r7.cyclotomicFactorization(2) == std::vector {Polynomial{1, 1}});
             const PolynomialRing r3{3};
-            REQUIRE(r3.cyclotomicFactorization(52) == std::vector <Polynomial>
+            REQUIRE(r3.cyclotomicFactorization(52) == std::vector
                     {Polynomial{1, 0, 2, 0, 0, 0, 1}, Polynomial{1, 0, 2, 0, 1, 0, 1},
                      Polynomial{1, 0, 1, 0, 2, 0, 1}, Polynomial{1, 0, 0, 0, 2, 0, 1}});
+            const PolynomialRing r13{13};
+            REQUIRE(r13.cyclotomicFactorization(14) == std::vector
+                    {Polynomial{1, 7, 1}, Polynomial{1, 8, 1},
+                    Polynomial{1, 10, 1}});
         }
 
 
+    SECTION("Irreducibility") {
+        SECTION("F3") {
+            const PolynomialRing r{3};
+            REQUIRE(r.isIrreducible(Polynomial{1, 2, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{1, 1, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 2, 2, 0, 1, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 2, 2, 2, 2, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1, 2, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{1, 2, 2, 2, 2, 2, 1, 1}));
+
+            REQUIRE(!r.isIrreducible(Polynomial{0}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 0, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 1, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 2, 2, 0, 2, 0, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 2, 1, 2, 1, 0, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 1, 2, 0, 1, 1, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 0, 1, 2, 1, 2, 2, 1}));
+        }
+        SECTION("F7") {
+            const PolynomialRing r{7};
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 0, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{5, 0, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{6, 6, 5, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 1, 5, 5, 1}));
+
+            REQUIRE(!r.isIrreducible(Polynomial{0}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{0, 0, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 6, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{4, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 5, 6, 1 ,1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 6, 6, 6, 1}));
+
+        }
     }
 
     SECTION("Integer number factorization"){
