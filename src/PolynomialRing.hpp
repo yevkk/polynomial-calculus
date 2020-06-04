@@ -63,7 +63,7 @@ namespace lab {
         /**
          * @brief Finds normalized polynomial in field
          */
-        [[nodiscard]] Polynomial normalize(Polynomial &polynomial) const;
+        [[nodiscard]] Polynomial normalize(const Polynomial &polynomial) const;
 
         /**
          * @brief Evaluates polynomial in point
@@ -74,6 +74,11 @@ namespace lab {
          * @brief Calculates derivative from polynomial
          */
         [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
+
+        /**
+         * @brief Checks if polynomial is irreducible over the field by modulo
+         */
+        [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
 
 
     private:
