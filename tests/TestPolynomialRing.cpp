@@ -502,7 +502,6 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         REQUIRE(r5.irreducibleOfOrder(4).size() == 150);
     }
 
-
     SECTION("Calculating Count of Roots") {
         const PolynomialRing r5{5};
         SECTION("easy") {

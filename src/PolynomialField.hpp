@@ -55,6 +55,7 @@ public:
      */
     [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const final;
 
+
 private:
     void _generateElements();
     

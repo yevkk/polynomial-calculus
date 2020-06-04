@@ -342,7 +342,6 @@ int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy)
     }
 }
 
-
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
         std::vector<char> prime(n + 1, true);
