@@ -88,7 +88,6 @@ namespace lab {
          */
         [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
 
-
         /**
          * @return vector of roots
          */

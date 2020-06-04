@@ -135,6 +135,7 @@ Polynomial PolynomialField::inverted(const Polynomial& polynomial) const {
     return result;
 }
 
+
 Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
     if (power == 1){
         return poly;
