@@ -234,8 +234,11 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     case 5: {
         auto left = detail_ui::from_qstring(pol_str1);
-        //TODO: check if left is irreducible;
 
+        if (_ring->isIrreducible(left)) {
+            showError();
+            return;
+        }
 
         result_str = std::to_string(_field->order_of_irreducible());
 
