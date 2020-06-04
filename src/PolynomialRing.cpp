@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cassert>
+#include <numeric>
 
 namespace lab {
 
@@ -199,6 +200,56 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
     return divide(polynomial1, polynomial2);
 }
 
+std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
+    uint64_t factorDegree = 1,
+                tmp = getP();
+    while (tmp % order != 1) {
+        factorDegree++;
+        tmp *= getP();
+    }
+
+    Polynomial cyclotomic = cyclotomicPolinomial(order);
+    std::vector<Polynomial> factors{cyclotomic};
+
+    int64_t i = 1;
+    Polynomial factorizationR = detail::rPolynom(i, order, getP());
+    bool factorized = false;
+
+    while (!factorized && i < order) {
+        while (mod(factorizationR, cyclotomic).degree() == 0 && i < order - 1){
+            factorizationR = detail::rPolynom(++i, order, getP());
+        }
+
+        std::vector <Polynomial> updatedFactors;
+        factorized = true;
+
+        for (auto &item: factors){
+            if (item.degree() > factorDegree){
+                for(int64_t c = 0; c < getP(); c++){
+                    Polynomial f = gcd(item, factorizationR + Polynomial{c});
+                    if (f.degree())
+                        updatedFactors.push_back(f);
+                    if (f.degree() > factorDegree)
+                        factorized = false;
+                }
+            } else{
+                updatedFactors.push_back(item);
+            }
+        }
+        factors = std::move(updatedFactors);
+        if (i < order - 1) {
+            factorizationR = detail::rPolynom(++i, order, getP());
+        }
+    }
+
+    for (auto &it: factors){
+        it = normalize(it);
+    }
+
+    return factors;
+}
+
+
     bool PolynomialRing::isIrreducible(const Polynomial &polynomial) const {
         if(polynomial == Polynomial{0})
             return false;
@@ -217,6 +268,7 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
         }
         return true;
     }
+
 
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
@@ -254,6 +306,23 @@ namespace detail {
         }
 
         return pow ? 1 : -1;
+    }
+
+    Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod){
+        uint64_t m = 1, modulo = order / std::gcd(order, i), tmp = polyMod;
+        while(tmp % modulo != 1){
+            tmp *= polyMod;
+            m++;
+        }
+
+        std::vector<int64_t> rCoefs(i * (tmp / polyMod) + 1);
+        tmp = 1;
+        for (uint64_t polyModPow = 0; polyModPow < m; polyModPow++, tmp *= polyMod){
+            rCoefs[i * tmp] = 1;
+        }
+
+        return Polynomial(rCoefs);
+
     }
 }//namespace detail
 
