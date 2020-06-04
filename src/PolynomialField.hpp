@@ -50,6 +50,11 @@ public:
     [[nodiscard]]
     int64_t order_of_irreducible (const Polynomial& polynomial) const;
 
+    /**
+     * @brief Checks if polynomial is irreducible over the field by modulo
+     */
+    [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const final;
+
 private:
     void _generateElements();
     

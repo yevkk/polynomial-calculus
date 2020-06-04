@@ -82,7 +82,7 @@ namespace lab {
         /**
          * @brief Checks if polynomial is irreducible over the field by modulo
          */
-        [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
+        [[nodiscard]] virtual bool isIrreducible(const Polynomial &polynomial) const;
 
 
     private:
