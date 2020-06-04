@@ -53,7 +53,7 @@ QLineEdit {
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="setupPage">
        <property name="styleSheet">
@@ -391,7 +391,7 @@ QTabWidget::pane {
 }</string>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="fieldTab">
            <attribute name="title">
@@ -434,6 +434,11 @@ QTabWidget::pane {
               <item>
                <property name="text">
                 <string>power</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>order of irreducible</string>
                </property>
               </item>
              </widget>
@@ -730,6 +735,11 @@ QTabWidget::pane {
                 <string>derivative</string>
                </property>
               </item>
+              <item>
+               <property name="text">
+                <string>roots count</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item>
@@ -973,8 +983,20 @@ QTabWidget::pane {
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSession">
+    <property name="title">
+     <string>Session</string>
+    </property>
+    <addaction name="actionReset"/>
+   </widget>
+   <addaction name="menuSession"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionReset">
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

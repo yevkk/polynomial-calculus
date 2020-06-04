@@ -123,6 +123,7 @@ Polynomial PolynomialField::_gcdExtended(const Polynomial& a, const Polynomial& 
 }
 
 
+
 Polynomial PolynomialField::inverted(const Polynomial& polynomial) const {
     Polynomial p, result, tmp, div;
     p = _reduceDegree(polynomial);
@@ -145,13 +146,11 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
     return multiply(poly2, poly2);
 }
 
-  
 
     int64_t PolynomialField::order_of_irreducible(const Polynomial &polynomial) const {
 
-//        assert(isIrreducible(polynomial));   // waiting for his time
+        assert(isIrreducible(polynomial));   // waiting for his time
 
-        auto s = std::pow(getP(), getN());
         const auto qm = static_cast<int64_t> (std::pow(std::pow(getP(), getN()),
                                                        polynomial.degree())) - 1;
 
@@ -189,9 +188,4 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
                                 });
     }
 
-    bool PolynomialField::isIrreducible(const Polynomial &polynomial) const {
-        if(normalize(polynomial) == normalize(_irreducible))
-            return false;
-        return PolynomialRing::isIrreducible(polynomial);
-    }
 } // namespace lab
