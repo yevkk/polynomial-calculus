@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Polynomial.hpp"
+#include "PolynomialRing.hpp"
 #include <vector>
 
 namespace lab {
@@ -9,7 +10,7 @@ namespace lab {
  * @brief class for extension of field Fp to Fq
  * @note q = p^n, where n is a degree of irreducible polynomial in Fp
  */
-class PolynomialField {
+class PolynomialField : public PolynomialRing {
 public:
     PolynomialField(const PolynomialField& that) = default;
 
@@ -21,24 +22,54 @@ public:
     /*
      * @return elements of field
      */
-    [[nodiscard]] const std::vector<Polynomial>& elements() const;
+    [[nodiscard]]
+    const std::vector<Polynomial>& elements() const;
 
-    [[nodiscard]] uint64_t getP() const;
+    [[nodiscard]]
+    uint64_t getN() const;
 
-    [[nodiscard]] uint64_t getN() const;
+    [[nodiscard]]
+    const Polynomial& getIrreducible() const;
 
-    [[nodiscard]] const Polynomial& getIrreducible() const;
+    [[nodiscard]]
+    Polynomial add(const Polynomial& left, const Polynomial& right) const final;
 
-    [[nodiscard]] Polynomial add(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]]
+    Polynomial subtract(const Polynomial& left, const Polynomial& right) const final;
 
-    [[nodiscard]] Polynomial subtract(const Polynomial& left, const Polynomial& right) const;
+    [[nodiscard]]
+    Polynomial multiply(const Polynomial& left, const Polynomial& right) const final;
 
-    [[nodiscard]] Polynomial multiply(const Polynomial& left, const Polynomial& right) const;
+
+    [[nodiscard]] 
+    Polynomial inverted(const Polynomial& polynomial) const;
+
+    [[nodiscard]]
+    Polynomial pow(const Polynomial& num, uint64_t pow) const;
+
+    [[nodiscard]]
+    int64_t order_of_irreducible (const Polynomial& polynomial) const;
+
+    /**
+     * @brief Checks if polynomial is irreducible over the field by modulo
+     */
+    [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const final;
 
 private:
     void _generateElements();
+    
+    /*
+     * @note gcd(a,b) = x*a + y*b
+     */
+    [[nodiscard]] 
+    Polynomial _gcdExtended(const Polynomial& a, const Polynomial& b, Polynomial& x, Polynomial& y) const;
 
-    uint64_t _p;
+    /*
+     * @note transforms of any polynomial to polynomial which belongs to field
+     */
+    [[nodiscard]]
+    Polynomial _reduceDegree(Polynomial polynomial) const;
+
     uint64_t _n;
     Polynomial _irreducible;
     Polynomial _from_irreducible;

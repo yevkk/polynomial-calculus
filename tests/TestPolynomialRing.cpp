@@ -1,6 +1,7 @@
 #include "../src/PolynomialRing.hpp"
 
 #include "catch.hpp"
+#include <iostream>
 
 TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
     using namespace lab;
@@ -169,7 +170,146 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(ring157.multiply(p6, p5) == Polynomial{91, 57, 49, 16, 127, 68, 95, 45, 90, 26, 63, 16, 45, 150, 152, 17, 33, 133});
         }
     }
-    
+
+    SECTION("Division") {
+        const PolynomialRing ring5{5};
+        const PolynomialRing ring7{7};
+        const PolynomialRing ring23{23};
+        const PolynomialRing ring31{31};
+        SECTION("Div") {
+            SECTION("Simple"){
+
+                const Polynomial p1{1, 2, 1};
+                const Polynomial p2{1, 1};
+                REQUIRE(ring7.divide(p1, p2) == Polynomial{1,1});
+                REQUIRE(ring7.div_mod(p1, p2) == std::make_pair(Polynomial{1,1}, Polynomial{0}));
+
+                const Polynomial p3{4, 3, 0, 3, 2};
+                const Polynomial p4{1, 3, 2};
+                REQUIRE(ring5.divide(p3, p4) == Polynomial{2, 0, 1});
+                REQUIRE(ring7.divide(p3, p4) != Polynomial{2, 0, 1});
+            }
+
+            SECTION("by number"){
+                const Polynomial p3{2, 4, 6};
+                const Polynomial p4_0{0};
+                const Polynomial p4_1{1};
+                const Polynomial p4_2{2};
+                const Polynomial p4_3{3};
+                const Polynomial p4_4{4};
+                const Polynomial p4_5{5};
+                const Polynomial p4_6{6};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4_1) == Polynomial{2,4,6});
+                REQUIRE(ring7.divide(p3, p4_2) == Polynomial{1,2,3});
+                REQUIRE(ring7.divide(p3, p4_3) == Polynomial{3,6,2});
+                REQUIRE(ring7.divide(p3, p4_4) == Polynomial{4,1,5});
+                REQUIRE(ring7.divide(p3, p4_5) == Polynomial{6,5,4});
+                REQUIRE(ring7.divide(p3, p4_6) == Polynomial{5,3,1});
+            }
+
+            SECTION("a < b"){
+                const Polynomial p3{2, 4, 6};
+                const Polynomial p4{3, 5, 5, 11};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4) == Polynomial{0});
+                REQUIRE(ring7.mod(p3, p4) == p3);
+
+            }
+
+            SECTION("Middle"){
+
+                const Polynomial p3{2, 4, 6, 10};
+                const Polynomial p4{3, 5, 5, 11};
+                //REQUIRE(ring11.divide(p3, p4_0) == Polynomial{0});
+                REQUIRE(ring7.divide(p3, p4) == Polynomial{6});
+                REQUIRE(ring7.mod(p3, p4) == Polynomial{5,2,4});
+
+
+                const Polynomial p1[3] = {{1, 2, 2},{1, 0, 2},{21, 0, 1}};
+                const Polynomial p2{1, 1};
+                REQUIRE(ring7.divide(p1[0], p2) == Polynomial{0,2});
+                REQUIRE(ring7.divide(p1[1], p2) == Polynomial{5,2});
+
+                std::pair <const Polynomial, const Polynomial> pp[3] = {
+                        ring7.div_mod(p1[0], p2),
+                        ring7.div_mod(p1[1], p2),
+                        ring23.div_mod(p1[2], p2)
+                };
+
+                REQUIRE(pp[0].first == Polynomial{0,2});
+                REQUIRE(pp[0].second == Polynomial{1});
+
+                REQUIRE(pp[1].first == Polynomial{5,2});
+                REQUIRE(pp[1].second == Polynomial{3});
+
+                REQUIRE(pp[2].first == Polynomial{22,1});
+                REQUIRE(pp[2].second == Polynomial{22});
+
+            }
+
+            SECTION("Hard"){
+                const Polynomial px{7,30,0,0,10,6,0,15,23};
+                const Polynomial py{4,17,0,0,5};
+                REQUIRE(ring31.divide(px, py) == Polynomial{3,24,0,3,17});
+                REQUIRE(ring31.mod(px, py) == Polynomial{26,7,26,19});
+
+                REQUIRE(ring23.divide(px, py) == Polynomial{1,15,0,3});
+                REQUIRE(ring23.mod(px, py) == Polynomial{3,22,21,11});
+            }
+
+
+
+        }
+
+        SECTION("Mod") {
+            const Polynomial p1{7, 13};
+            const Polynomial p2{15};
+            REQUIRE(ring23.mod(p1, p2).degree() == 0);
+
+            const Polynomial p3{4, 3, 0, 3, 2};
+            const Polynomial p4{1, 3, 2};
+            REQUIRE(ring5.mod(p3, p4) == Polynomial{2, 2});
+        }
+    }
+
+    SECTION("GCD") {
+
+        SECTION("without overflow") {
+            const PolynomialRing ring23{23};
+            const PolynomialRing ring277{277};
+            const Polynomial p1{1, 2, 1};
+            const Polynomial p2{1, 1};
+
+            const PolynomialRing r7{7};
+            REQUIRE(r7.gcd(Polynomial{4, 1, 0, 0, 0, 0, 0, 1}, Polynomial{1, 0, 0, 0, 1})==Polynomial{1, 4, 1});
+
+            const Polynomial p3{1, 0, 1, 0, -3, -3, 8, 2, -5};
+            const Polynomial p4{3, 0, 5, 0, -4, -9, 21};
+            Polynomial g1 = ring23.gcd(p3, p4);
+            REQUIRE(ring277.normalize(g1) == Polynomial{1});
+
+            const Polynomial p5{4, 0, 13, 0, 4, 4, 13, 77, 0, 208};
+            const Polynomial p6{4, 4, 13, 13};
+
+            Polynomial g2 = ring277.gcd(p5, p6);
+            Polynomial gg2 = Polynomial{4, 0, 13};
+            REQUIRE(ring277.normalize(g2) == ring277.normalize(gg2));
+
+
+        }
+        SECTION("overflow") {
+
+            const Polynomial p5{4, 0, 13, 0, 4, 4, 13, 77, 0, 208};
+            const Polynomial p6{4, 4, 13, 13};
+            const PolynomialRing ring5{5};
+
+            Polynomial g3 = ring5.gcd(p5, p6);
+            Polynomial gg3 = Polynomial{3, 3, 1, 1};
+            REQUIRE(ring5.normalize(g3) == ring5.normalize(gg3));
+        }
+    }
+
     SECTION("Derivative") {
         const PolynomialRing r{11};
         Polynomial p1{};
@@ -186,12 +326,12 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         Polynomial p4{1, 14, 10, 2, 1, 7, 8};
         REQUIRE(r.derivate(p4) == Polynomial{3, 9, 6, 4, 2, 4});
         REQUIRE(r.derivate(p4).degree() == 5);
-        
+
         Polynomial p5{0, 1};
         REQUIRE(r.derivate(p5) == Polynomial{1});
         REQUIRE(r.derivate(p5).degree() == 0);
     }
-    
+
     SECTION("Evaluation") {
         const PolynomialRing r{11};
         Polynomial p1{};
@@ -205,11 +345,11 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
         Polynomial p4{1, 14, 10, 2, 1, 7, 8};
         REQUIRE(r.evaluate(p4, 0) == 1);
-        
+
         Polynomial p5{0, 1};
         REQUIRE(r.evaluate(p5, 42) == 9);
     }
-    
+
     SECTION("Normalize") {
         const PolynomialRing r{11};
         Polynomial p1{};
@@ -220,8 +360,145 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
         Polynomial p3{1, 14, 10, 2, 1, 7, 8};
         REQUIRE(r.normalize(p3) == Polynomial{7, 10, 4, 3, 7, 5, 1});
-        
+
         Polynomial p4{0, 1};
         REQUIRE(r.normalize(p4) == Polynomial{0, 1});
+    }
+    SECTION("Cyclotomic polinomial") {
+        SECTION("Moebius`s function") {
+            REQUIRE(detail::moebiusFunction(1) == 1);
+            REQUIRE(detail::moebiusFunction(5) == -1);
+            REQUIRE(detail::moebiusFunction(25) == 0);
+            REQUIRE(detail::moebiusFunction(190) == -1);
+            REQUIRE(detail::moebiusFunction(214) == 1);
+            REQUIRE(detail::moebiusFunction(5 * 13 * 17) == -1);
+        }
+        SECTION("Cyclotomic") {
+            SECTION("F11"){
+                const PolynomialRing r{11};
+                REQUIRE(r.cyclotomicPolinomial(12) == Polynomial{1, 0, 10, 0, 1});
+                REQUIRE(r.cyclotomicPolinomial(8) == Polynomial{1, 0, 0, 0, 1});
+
+            }
+            SECTION("F3"){
+                const PolynomialRing r{3};
+                REQUIRE(r.cyclotomicPolinomial(52) ==
+                        Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
+                REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1, 1});
+            }
+            SECTION("F13"){
+                const PolynomialRing r{13};
+                REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
+            }
+        }
+    }
+    SECTION("Cyclotomic factorization") {
+        SECTION("RPolynomial") {
+            REQUIRE(detail::rPolynom(2, 52, 3) == Polynomial{0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+            REQUIRE(detail::rPolynom(1, 8, 3) == Polynomial{0, 1, 0, 1});
+            REQUIRE(detail::rPolynom(2, 8, 3) == Polynomial{0, 0, 1, 0, 0, 0, 1});
+            REQUIRE(detail::rPolynom(1, 3, 2) == Polynomial{0, 1, 1});
+            REQUIRE(detail::rPolynom(1, 8, 7) == Polynomial{0, 1, 0, 0, 0, 0, 0, 1});
+        }
+        SECTION("Cyclotomic factorization") {
+            const PolynomialRing r7{7};
+            REQUIRE(r7.cyclotomicFactorization(8) == std::vector{Polynomial{1, 3, 1}, Polynomial{1, 4, 1}});
+            REQUIRE(r7.cyclotomicFactorization(2) == std::vector{Polynomial{1, 1}});
+            const PolynomialRing r3{3};
+            REQUIRE(r3.cyclotomicFactorization(52) == std::vector
+                    {Polynomial{1, 0, 2, 0, 0, 0, 1}, Polynomial{1, 0, 2, 0, 1, 0, 1},
+                     Polynomial{1, 0, 1, 0, 2, 0, 1}, Polynomial{1, 0, 0, 0, 2, 0, 1}});
+            const PolynomialRing r13{13};
+            REQUIRE(r13.cyclotomicFactorization(14) == std::vector
+                    {Polynomial{1, 7, 1}, Polynomial{1, 8, 1},
+                     Polynomial{1, 10, 1}});
+        }
+    }
+
+
+        SECTION("Irreducibility") {
+            SECTION("F3") {
+                const PolynomialRing r{3};
+                REQUIRE(r.isIrreducible(Polynomial{1, 2, 0, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{2, 0, 1, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{1, 1, 1, 1, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{2, 2, 2, 0, 1, 1, 1, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{2, 0, 2, 2, 2, 2, 0, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1, 2, 1, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{1, 2, 2, 2, 2, 2, 1, 1}));
+
+                REQUIRE(!r.isIrreducible(Polynomial{0}));
+                REQUIRE(!r.isIrreducible(Polynomial{1, 1, 0, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{2, 0, 2, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{2, 1, 1, 0, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{2, 0, 1, 1, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{1, 2, 2, 0, 2, 0, 1, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{1, 2, 1, 2, 1, 0, 2, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{1, 1, 2, 0, 1, 1, 2, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{1, 0, 1, 2, 1, 2, 2, 1}));
+            }
+            SECTION("F7") {
+                const PolynomialRing r{7};
+                REQUIRE(r.isIrreducible(Polynomial{2, 0, 0, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{4, 0, 0, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{5, 0, 1, 1, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{6, 6, 5, 1, 1}));
+                REQUIRE(r.isIrreducible(Polynomial{4, 1, 5, 5, 1}));
+
+                REQUIRE(!r.isIrreducible(Polynomial{0}));
+                REQUIRE(!r.isIrreducible(Polynomial{2, 1, 0, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{0, 0, 0, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{6, 6, 2, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{6, 0, 1, 1, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{4, 0, 1, 1, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{6, 5, 6, 1, 1}));
+                REQUIRE(!r.isIrreducible(Polynomial{6, 6, 6, 6, 1}));
+            }
+        }
+
+
+
+    SECTION("Integer number factorization") {
+        REQUIRE(detail::integerFactorization(24) == std::vector<uint64_t>{1, 24, 2, 12, 3, 8, 4, 6});
+        REQUIRE(detail::integerFactorization(101) == std::vector<uint64_t>{1, 101});
+        REQUIRE(detail::integerFactorization(25) == std::vector<uint64_t>{1, 25, 5});
+        REQUIRE(detail::integerFactorization(256) == std::vector<uint64_t>{1, 256, 2, 128, 4, 64, 8, 32, 16});
+    }
+
+    SECTION("Irreducible polynomials of given order") {
+        const PolynomialRing r3{3};
+
+        REQUIRE(r3.irreducibleOfOrder(2) == std::vector{Polynomial{2, 1, 1}, Polynomial{2, 2, 1}});
+        REQUIRE(r3.irreducibleOfOrder(3) == std::vector{
+                Polynomial{1, 2, 0, 1},
+                Polynomial{1, 2, 1, 1},
+                Polynomial{1, 1, 2, 1},
+                Polynomial{1, 0, 2, 1},
+                Polynomial{2, 2, 0, 1},
+                Polynomial{2, 1, 1, 1},
+                Polynomial{2, 0, 1, 1},
+                Polynomial{2, 2, 2, 1}
+        });
+
+        const PolynomialRing r5{5};
+
+        REQUIRE(r5.irreducibleOfOrder(2) == std::vector<Polynomial>{
+                Polynomial{2, 1, 1},
+                Polynomial{3, 2, 1},
+                Polynomial{3, 3, 1},
+                Polynomial{2, 4, 1},
+                Polynomial{4, 2, 1},
+                Polynomial{4, 3, 1},
+                Polynomial{1, 1, 1},
+                Polynomial{2, 0, 1},
+                Polynomial{3, 0, 1},
+                Polynomial{1, 4, 1}
+        });
+
+        REQUIRE(r5.irreducibleOfOrder(4).size() == 150);
     }
 }

@@ -30,22 +30,26 @@ public:
     /**
      * @return the highest power of variable with non-zero coefficient
      */
-    [[nodiscard]] size_t degree() const;
+    [[nodiscard]]
+    size_t degree() const;
 
     /**
      * @return the coefficient corresponding to x^power
      */
-    [[nodiscard]] int64_t coefficient(size_t power) const;
+    [[nodiscard]]
+    int64_t coefficient(size_t power) const;
 
     /**
      * @brief calculates all coefficients by modulo
      */
-    [[nodiscard]] Polynomial modified(int64_t modulo) const;
+    [[nodiscard]]
+    Polynomial modified(int64_t modulo) const;
 
     /**
      * @return the vector of coefficients
      */
-    [[nodiscard]] const std::vector<int64_t>& coefficients() const;
+    [[nodiscard]]
+    const std::vector<int64_t>& coefficients() const;
 
     friend bool operator==(const Polynomial& left, const Polynomial& right);
     friend bool operator!=(const Polynomial& left, const Polynomial& right);
