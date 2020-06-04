@@ -29,6 +29,10 @@ private slots:
 
     void on_setupBtn_clicked();
 
+    void on_runFieldBtn_clicked();
+
+    void on_fieldActionSelect_activated(int index);
+
 private:
     Ui::MainWindow *ui;
 
@@ -37,6 +41,8 @@ private:
     void setN(int64_t n);
 
     void displayIrreducible(const std::vector<Polynomial>& polynomials);
+
+    void showError();
 
     struct {
         int64_t p;
