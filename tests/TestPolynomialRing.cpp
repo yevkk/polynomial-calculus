@@ -1,6 +1,7 @@
 #include "../src/PolynomialRing.hpp"
 
 #include "catch.hpp"
+#include <iostream>
 
 TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
     using namespace lab;
@@ -273,15 +274,39 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
     }
 
     SECTION("GCD") {
+
         SECTION("without overflow") {
-            const PolynomialRing ring11{23};
+            const PolynomialRing ring23{23};
+            const PolynomialRing ring277{277};
             const Polynomial p1{1, 2, 1};
             const Polynomial p2{1, 1};
-            REQUIRE(ring11.gcd(p1, p2) == Polynomial{1,1});
-            /*
+
+            const PolynomialRing r7{7};
+            REQUIRE(r7.gcd(Polynomial{4, 1, 0, 0, 0, 0, 0, 1}, Polynomial{1, 0, 0, 0, 1})==Polynomial{1, 4, 1});
+
             const Polynomial p3{1, 0, 1, 0, -3, -3, 8, 2, -5};
             const Polynomial p4{3, 0, 5, 0, -4, -9, 21};
-            REQUIRE(ring11.gcd(p3, p4) == Polynomial{1});*/
+            Polynomial g1 = ring23.gcd(p3, p4);
+            REQUIRE(ring277.normalize(g1) == Polynomial{1});
+
+            const Polynomial p5{4, 0, 13, 0, 4, 4, 13, 77, 0, 208};
+            const Polynomial p6{4, 4, 13, 13};
+
+            Polynomial g2 = ring277.gcd(p5, p6);
+            Polynomial gg2 = Polynomial{4, 0, 13};
+            REQUIRE(ring277.normalize(g2) == ring277.normalize(gg2));
+
+
+        }
+        SECTION("overflow") {
+
+            const Polynomial p5{4, 0, 13, 0, 4, 4, 13, 77, 0, 208};
+            const Polynomial p6{4, 4, 13, 13};
+            const PolynomialRing ring5{5};
+
+            Polynomial g3 = ring5.gcd(p5, p6);
+            Polynomial gg3 = Polynomial{3, 3, 1, 1};
+            REQUIRE(ring5.normalize(g3) == ring5.normalize(gg3));
         }
     }
 
@@ -352,17 +377,87 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             SECTION("F11"){
                 const PolynomialRing r{11};
                 REQUIRE(r.cyclotomicPolinomial(12) == Polynomial{1, 0, 10, 0, 1});
+                REQUIRE(r.cyclotomicPolinomial(8) == Polynomial{1, 0, 0, 0, 1});
 
             }
             SECTION("F3"){
                 const PolynomialRing r{3};
                 REQUIRE(r.cyclotomicPolinomial(52) ==
                         Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
+                REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1, 1});
             }
             SECTION("F13"){
                 const PolynomialRing r{13};
                 REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
             }
+        }
+    }
+    SECTION("Cyclotomic factorization") {
+        SECTION("RPolynomial") {
+            REQUIRE(detail::rPolynom(2, 52, 3) == Polynomial{0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+            REQUIRE(detail::rPolynom(1, 8, 3) == Polynomial{0, 1, 0, 1});
+            REQUIRE(detail::rPolynom(2, 8, 3) == Polynomial{0, 0, 1, 0, 0, 0, 1});
+            REQUIRE(detail::rPolynom(1, 3, 2) == Polynomial{0, 1, 1});
+            REQUIRE(detail::rPolynom(1, 8, 7) == Polynomial{0, 1, 0, 0, 0, 0, 0, 1});
+        }
+        SECTION("Cyclotomic factorization") {
+            const PolynomialRing r7{7};
+            REQUIRE(r7.cyclotomicFactorization(8) == std::vector{Polynomial{1, 3, 1}, Polynomial{1, 4, 1}});
+            REQUIRE(r7.cyclotomicFactorization(2) == std::vector{Polynomial{1, 1}});
+            const PolynomialRing r3{3};
+            REQUIRE(r3.cyclotomicFactorization(52) == std::vector
+                    {Polynomial{1, 0, 2, 0, 0, 0, 1}, Polynomial{1, 0, 2, 0, 1, 0, 1},
+                     Polynomial{1, 0, 1, 0, 2, 0, 1}, Polynomial{1, 0, 0, 0, 2, 0, 1}});
+            const PolynomialRing r13{13};
+            REQUIRE(r13.cyclotomicFactorization(14) == std::vector
+                    {Polynomial{1, 7, 1}, Polynomial{1, 8, 1},
+                     Polynomial{1, 10, 1}});
+        }
+    }
+
+
+    SECTION("Irreducibility") {
+        SECTION("F3") {
+            const PolynomialRing r{3};
+            REQUIRE(r.isIrreducible(Polynomial{1, 2, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{1, 1, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 2, 2, 0, 1, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 2, 2, 2, 2, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{2, 1, 1, 2, 1, 2, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{1, 2, 2, 2, 2, 2, 1, 1}));
+
+            REQUIRE(!r.isIrreducible(Polynomial{0}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 0, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 1, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 2, 2, 0, 2, 0, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 2, 1, 2, 1, 0, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 1, 2, 0, 1, 1, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{1, 0, 1, 2, 1, 2, 2, 1}));
+        }
+        SECTION("F7") {
+            const PolynomialRing r{7};
+            REQUIRE(r.isIrreducible(Polynomial{2, 0, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 0, 0, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 6, 2, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{5, 0, 1, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{6, 6, 5, 1, 1}));
+            REQUIRE(r.isIrreducible(Polynomial{4, 1, 5, 5, 1}));
+
+            REQUIRE(!r.isIrreducible(Polynomial{0}));
+            REQUIRE(!r.isIrreducible(Polynomial{2, 1, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{0, 0, 0, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 6, 2, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{4, 0, 1, 1, 1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 5, 6, 1 ,1}));
+            REQUIRE(!r.isIrreducible(Polynomial{6, 6, 6, 6, 1}));
+
         }
     }
 }

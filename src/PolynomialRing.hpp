@@ -8,7 +8,13 @@ namespace lab {
         std::vector<uint64_t> sieveOfEratosthenes (uint64_t n);
 
         int8_t moebiusFunction (uint64_t n);
-    }//namespace detail
+
+        /**
+         * @brief Finds auxiliary polynomials for cyclotomic factorization algorithm
+         */
+        Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
+
+        }//namespace detail
 
     class PolynomialRing {
     public:
@@ -50,10 +56,14 @@ namespace lab {
         [[nodiscard]]
         Polynomial cyclotomicPolinomial(uint64_t order) const;
 
+        [[nodiscard]]
+        std::vector<Polynomial> cyclotomicFactorization(uint64_t order) const;
+
+
         /**
          * @brief Finds normalized polynomial in field
          */
-        [[nodiscard]] Polynomial normalize(Polynomial &polynomial) const;
+        [[nodiscard]] Polynomial normalize(const Polynomial &polynomial) const;
 
         /**
          * @brief Evaluates polynomial in point
@@ -65,12 +75,18 @@ namespace lab {
          */
         [[nodiscard]] Polynomial derivate(Polynomial &polynomial) const;
 
+        /**
+         * @brief Checks if polynomial is irreducible over the field by modulo
+         */
+        [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
+
 
     private:
         uint64_t _p;
         std::vector <std::vector <uint64_t>> _dividing_table;
         [[nodiscard]] uint64_t _divide_coefficients(uint64_t a, uint64_t b) const;
         void _create_dividing_table(int field);
+
     };
 
 } // namespace lab
