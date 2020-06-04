@@ -33,6 +33,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
       <widget class="QWidget" name="setupPage">
        <property name="styleSheet">
         <string notr="true">QPushButton {
@@ -336,7 +339,66 @@ border-bottom: 5px solid #fcab35;</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_2"/>
+      <widget class="QWidget" name="page_2">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <property name="leftMargin">
+         <number>3</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>3</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QTabBar::tab {
+   width: 150px;
+}
+
+QTabBar::tab:selected {
+    background: #fcab35;
+	color: #272727;
+}
+
+QTabBar::tab:!selected {
+    background: #272727;
+	color: #fcab35;
+}
+
+QTabWidget::pane {
+    border-top: 5px solid #fcab35;
+}</string>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="fieldTab">
+           <attribute name="title">
+            <string>Field</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="ringTab">
+           <attribute name="title">
+            <string>Ring</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>

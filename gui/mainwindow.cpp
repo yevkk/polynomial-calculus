@@ -77,7 +77,7 @@ void MainWindow::on_changePBtn_clicked() {
 void MainWindow::on_changeNBtn_clicked() {
     bool ok;
 
-    int input = QInputDialog::getInt(this, "n input", "Enter a positive number:", _setup.n, 0, INT_MAX, 1, &ok);
+    int input = QInputDialog::getInt(this, "n input", "Enter a positive number:", _setup.n, 1, INT_MAX, 1, &ok);
 
     if (ok) {
         setN(input);
