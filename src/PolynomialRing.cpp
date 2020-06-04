@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cassert>
 #include <numeric>
+#include <iostream>
 
 namespace lab {
 
@@ -280,6 +281,7 @@ namespace detail {
         if (i >= order){
             return Polynomial{1};
         }
+
         uint64_t m = 1, modulo = order / std::gcd(order, i), tmp = polyMod;
         while(tmp % modulo != 1){
             tmp *= polyMod;
