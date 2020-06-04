@@ -82,15 +82,17 @@ Polynomial PolynomialRing::multiply(const uint64_t &num, const Polynomial &polyn
  */
 std::pair <Polynomial, Polynomial> PolynomialRing::div_mod(const Polynomial &left, const Polynomial &right) const {
 
-    assert(right != Polynomial{0});
+    
     Polynomial divided = left.modified(_p);
     Polynomial divisor = right.modified(_p);
+    assert(divisor != Polynomial{0} && "Division by zero");
 
     const auto PolyLen = divisor.degree();
     const auto PolyDiff = divided.degree() - divisor.degree();
 
-    if(divided.degree() < divisor.degree())
+    if(PolyDiff < 0){
         return {Polynomial{0}, divided};
+    }
     std::vector <int64_t> div(PolyDiff+1);
     std::vector <int64_t> mod;
     auto rest = divided.coefficients();
