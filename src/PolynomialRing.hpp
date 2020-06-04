@@ -14,7 +14,10 @@ namespace lab {
          */
         Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
 
-        }//namespace detail
+        std::vector<uint64_t> integerFactorization(uint64_t n);
+
+        int rankOfMatrix(std::vector<std::vector<uint64_t>> matrix);
+    }//namespace detail
 
     class PolynomialRing {
     public:
@@ -59,6 +62,11 @@ namespace lab {
         [[nodiscard]]
         std::vector<Polynomial> cyclotomicFactorization(uint64_t order) const;
 
+        [[nodiscard]]
+        std::vector<Polynomial> irreducibleOfOrder(uint64_t order) const;
+
+        [[nodiscard]]
+        Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
         /**
          * @brief Finds normalized polynomial in field
@@ -81,12 +89,33 @@ namespace lab {
         [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
 
 
+        /**
+         * @return vector of roots
+         */
+        [[nodiscard]] std::vector<uint64_t> roots(Polynomial &polynomial) const;
+
+        [[nodiscard]] std::vector<uint64_t> returnRoots(Polynomial& gPoly, Polynomial& toMod) const;
+
+
+        /**
+         * @brief GCD method requires only GCD function,
+         *        Matrix method - uses matrix rank calculation
+         */
+        enum class CountPolicy {
+            GCD,
+            Matrix
+        };
+
+        /**
+         * @return the count of roots of equation P(x) = 0
+         */
+        [[nodiscard]] int countRoots(const Polynomial &polynomial, PolynomialRing::CountPolicy policy = PolynomialRing::CountPolicy::GCD) const;
+
     private:
         uint64_t _p;
         std::vector <std::vector <uint64_t>> _dividing_table;
         [[nodiscard]] uint64_t _divide_coefficients(uint64_t a, uint64_t b) const;
         void _create_dividing_table(int field);
-
     };
 
 } // namespace lab

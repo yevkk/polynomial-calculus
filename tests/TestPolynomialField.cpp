@@ -328,6 +328,24 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             }
         }
 
-        system("pause");
+        SECTION("order of irreducible") {
+
+            for (int64_t p : {2, 5, 7}) {
+
+                for (int64_t i = 1; i < p; ++i) {
+
+                    for (int64_t j = 1; j < p; ++j) {
+
+                        const auto irreducable = Polynomial{i, j};
+
+                        const auto field = PolynomialField{p, irreducable};
+
+                        REQUIRE (field.mod(                   // According to theorem x^e = 1 (mod f(x))
+                                Polynomial::x(field.order_of_irreducible()),
+                                irreducable) == Polynomial{1});
+                    }
+                }
+            }
+        }
     }
 }
