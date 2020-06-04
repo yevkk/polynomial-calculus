@@ -169,7 +169,15 @@ Polynomial PolynomialRing::normalize(const Polynomial &polynomial) const {
     }
 
 Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
-    assert((order % _p) && "_p can`t be a divider of order");
+    auto power = 1;
+    if (!order % _p){
+        power = _p - 1;
+        order /= _p;
+        while (!order % _p){
+            power *= _p;
+            order /= _p;
+        }
+    }
     auto polynomial1 = Polynomial{1};
     auto polynomial2 = Polynomial{1};
     for (uint64_t i = 1; i <= static_cast<uint64_t>(sqrt(order)); i++){
@@ -197,8 +205,21 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
             }
         }
     }
-    return divide(polynomial1, polynomial2);
+    if (power == 1)
+        return  divide(polynomial1, polynomial2);
+    return pow(divide(polynomial1, polynomial2), static_cast<uint64_t>(power));
 }
+
+    Polynomial PolynomialRing::pow(const Polynomial& poly, uint64_t power) const {
+        if (power == 1){
+            return poly;
+        }
+        if (power % 2 == 1){
+            return multiply(pow(poly, power - 1), poly);
+        }
+        const auto poly2 = pow(poly, power / 2);
+        return multiply(poly2, poly2);
+    }
 
 std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
     uint64_t factorDegree = 1,

@@ -391,6 +391,10 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 const PolynomialRing r{13};
                 REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
             }
+            SECTION("F2"){
+                const PolynomialRing r{2};
+                REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1,1});
+            }
             SECTION("F13"){
                 const PolynomialRing r{13};
                 REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
