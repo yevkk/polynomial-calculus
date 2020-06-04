@@ -55,6 +55,10 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             REQUIRE(F3.pow(Polynomial{ 2 }, 4) == F3.multiply(F3.multiply(Polynomial{ 2 }, Polynomial{ 2 }),
                 F3.multiply(Polynomial{ 2 }, Polynomial{ 2 })));
         }
+        SECTION("Irreducibility") {
+            REQUIRE(!F3.isIrreducible(Polynomial{0}));
+            REQUIRE(!F3.isIrreducible(Polynomial{1, 1}));
+        }
 
         SECTION("F4") {
             PolynomialField F4{ 2, {1, 1, 1} };

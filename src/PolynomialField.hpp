@@ -47,6 +47,11 @@ public:
     [[nodiscard]]
     Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
+    /**
+     * @brief Checks if polynomial is irreducible over the field by modulo
+     */
+    [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const final;
+
 private:
     void _generateElements();
     
