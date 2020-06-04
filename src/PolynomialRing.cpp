@@ -16,7 +16,7 @@ namespace lab {
             }
             return true;
         }
-        
+
         int64_t modulusPow(int64_t number, uint64_t power, uint64_t modulus) {
             if (power == 0) {
                 return 1;
@@ -170,6 +170,10 @@ Polynomial PolynomialRing::normalize(const Polynomial &polynomial) const {
 
 Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
     assert((order % _p) && "_p can`t be a divider of order");
+    if (order == 1){
+        auto poly = Polynomial{-1, 1};
+        return normalize(poly);
+    }
     auto polynomial1 = Polynomial{1};
     auto polynomial2 = Polynomial{1};
     for (uint64_t i = 1; i <= static_cast<uint64_t>(sqrt(order)); i++){
@@ -193,7 +197,6 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
                 polynomial1 = multiply(polynomial1, poly2);
             } else if (pow == -1) {
                 polynomial2 = multiply(polynomial2, poly2);
-
             }
         }
     }
@@ -287,24 +290,57 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
 
 
     bool PolynomialRing::isIrreducible(const Polynomial &polynomial) const {
-        if(polynomial == Polynomial{0})
+        if(polynomial.degree() == 0)
             return false;
         auto f = normalize(polynomial);
-        if(mod(Polynomial::x(std::pow(getP(), f.degree())), f) != Polynomial{0, 1})
-            return false;
-        auto primes = detail::sieveOfEratosthenes(f.degree());
-        //for all prime divisors of f.degree
-        for(auto i : primes) {
-            if(i != f.degree() && f.degree() % i == 0) {
-                auto g = subtract(Polynomial::x(std::pow(getP(), f.degree()/i)), Polynomial{0, 1});
-                //is a product of irreducible polynomials
-                if(gcd(f, g).degree() > 0)
-                    return false;
-            }
+        for(int i = 1; i <= f.degree() / 2; i++) {
+            auto g = subtract(Polynomial::x(std::pow(_p, i)), Polynomial{0, 1});
+            g = mod(g, f);
+            if(gcd(g, f).degree() > 0)
+                return false;
         }
         return true;
     }
 
+int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy) const {
+    if (policy == PolynomialRing::CountPolicy::GCD) {
+        auto temp = subtract(Polynomial::x(this->getP()), Polynomial{0,1}); //creating temp: x^mod - x
+        temp = gcd(polynomial, temp);
+        return temp.degree();
+    } else {
+        auto result = 0;
+
+        // check 0 is root or not:
+        if(polynomial.coefficient(0) == 0)
+            result++;
+
+        auto temp = subtract(Polynomial::x(this->getP() - 1), Polynomial{1}); //creating temp: x^mod - x
+
+        temp = gcd(polynomial, temp);
+
+        // b^mod-1 = 1, b in Fmod
+        if(temp.degree() == this->getP() - 1) {
+            int max_coef = temp.coefficient(temp.degree());
+            temp = subtract(temp, multiply(Polynomial::x(temp.degree()), max_coef));
+            temp = add(temp, Polynomial{max_coef});
+        }
+
+        // create circular matrix of coefs
+        std::vector<std::vector<uint64_t>> matrix;
+
+        for(int i = 0; i <= temp.degree(); i++) {
+            std::vector<uint64_t> tmp_vec;
+            for(int j = 0; j <= temp.degree(); j++) {
+                tmp_vec.push_back(temp.coefficient((i + j) % (temp.degree() + 1)));
+            }
+            matrix.push_back(tmp_vec);
+        }
+
+        result += this->getP() - 1 - detail::rankOfMatrix(matrix);
+
+        return result;
+    }
+}
 
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
@@ -374,6 +410,81 @@ namespace detail {
         }
 
         return result;
+    }
+
+
+    void swap(std::vector<std::vector<uint64_t>> matrix, int row1, int row2, int col) {
+        for (int i = 0; i < col; i++) {
+            int temp = matrix[row1][i];
+            matrix[row1][i] = matrix[row2][i];
+            matrix[row2][i] = temp;
+        }
+    }
+
+/* function for finding rank of matrix */
+    int rankOfMatrix(std::vector<std::vector<uint64_t>> matrix) {
+        int rank = matrix[0].size();
+
+        for (int row = 0; row < rank; row++) {
+            // Before we visit current row 'row', we make
+            // sure that mat[row][0],....mat[row][row-1]
+            // are 0.
+
+            // Diagonal element is not zero
+            if (matrix[row][row]) {
+                for (int col = 0; col < matrix.size(); col++) {
+                    if (col != row) {
+                        // This makes all entries of current
+                        // column as 0 except entry 'mat[row][row]'
+                        double mult = (double)matrix[col][row] /
+                                      matrix[row][row];
+                        for (int i = 0; i < rank; i++)
+                            matrix[col][i] -= mult * matrix[row][i];
+                    }
+                }
+            }
+
+                // Diagonal element is already zero. Two cases
+                // arise:
+                // 1) If there is a row below it with non-zero
+                //    entry, then swap this row with that row
+                //    and process that row
+                // 2) If all elements in current column below
+                //    mat[r][row] are 0, then remvoe this column
+                //    by swapping it with last column and
+                //    reducing number of columns by 1.
+            else {
+                bool reduce = true;
+
+                /* Find the non-zero element in current
+                    column  */
+                for (int i = row + 1; i < matrix.size();  i++) {
+                    // Swap the row with non-zero element
+                    // with this row.
+                    if (matrix[i][row]) {
+                        swap(matrix, row, i, rank);
+                        reduce = false;
+                        break ;
+                    }
+                }
+
+                // If we did not find any row with non-zero
+                // element in current columnm, then all
+                // values in this column are 0.
+                if (reduce) {
+                    // Reduce number of columns
+                    rank--;
+
+                    // Copy the last column here
+                    for (auto & i : matrix)
+                        i[row] = i[rank];
+                }
+
+                // Process this row again
+                row--;
+            }
+        }
+        return rank;
     }
 }//namespace detail
 

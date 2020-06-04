@@ -283,7 +283,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
             const PolynomialRing r7{7};
             REQUIRE(r7.gcd(Polynomial{4, 1, 0, 0, 0, 0, 0, 1}, Polynomial{1, 0, 0, 0, 1})==Polynomial{1, 4, 1});
-          
+
             const Polynomial p3{1, 0, 1, 0, -3, -3, 8, 2, -5};
             const Polynomial p4{3, 0, 5, 0, -4, -9, 21};
             Polynomial g1 = ring23.gcd(p3, p4);
@@ -386,6 +386,10 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                         Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
                 REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1, 1});
             }
+            SECTION("F13"){
+                const PolynomialRing r{13};
+                REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
+            }
         }
     }
     SECTION("Cyclotomic factorization") {
@@ -453,7 +457,6 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 REQUIRE(!r.isIrreducible(Polynomial{4, 0, 1, 1, 1}));
                 REQUIRE(!r.isIrreducible(Polynomial{6, 5, 6, 1, 1}));
                 REQUIRE(!r.isIrreducible(Polynomial{6, 6, 6, 6, 1}));
-
             }
         }
 
@@ -497,5 +500,49 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         });
 
         REQUIRE(r5.irreducibleOfOrder(4).size() == 150);
+    }
+
+    SECTION("Calculating Count of Roots") {
+        const PolynomialRing r5{5};
+        SECTION("easy") {
+            REQUIRE(r5.countRoots(Polynomial{1, 0}) == 0);
+            REQUIRE(r5.countRoots(Polynomial{0, 1}) == 1);
+            REQUIRE(r5.countRoots(Polynomial{0, 1, 1}) == 2);
+        }
+        SECTION("middle") {
+            REQUIRE(r5.countRoots(Polynomial{0, 0, 1}) == 1);
+            REQUIRE(r5.countRoots(Polynomial{1, 1, 1, 1}) == 3);
+            REQUIRE(r5.countRoots(Polynomial{1, 1, 1, 1, 1, 1}) == 1);
+            REQUIRE(r5.countRoots(Polynomial{3, 1, 3, 3, 1, 3}) == 1);
+        }
+
+        SECTION("Matrix") {
+            REQUIRE(r5.countRoots(Polynomial{1, 1, 1, 1}, PolynomialRing::CountPolicy::Matrix) == 3);
+        }
+    }
+
+    SECTION("Calculating rank of Matrix") {
+        SECTION("simple") {
+            std::vector<std::vector<uint64_t>> matrix = {
+                    {10, 20, 10},
+                    {40, 70, 10},
+                    {30, 50, 0}
+            };
+            REQUIRE(detail::rankOfMatrix(matrix) == 2);
+
+            matrix = {
+                    {1, 0, 0},
+                    {0, 1, 0},
+                    {0, 0, 1}
+            };
+            REQUIRE(detail::rankOfMatrix(matrix) == 3);
+
+            matrix = {
+                    {2, 1, 0},
+                    {2, 1, 0},
+                    {6, 3, 0}
+            };
+            REQUIRE(detail::rankOfMatrix(matrix) == 1);
+        }
     }
 }
