@@ -170,10 +170,6 @@ Polynomial PolynomialRing::normalize(const Polynomial &polynomial) const {
 
 Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
     assert((order % _p) && "_p can`t be a divider of order");
-    if (order == 1){
-        auto poly = Polynomial{-1, 1};
-        return normalize(poly);
-    }
     auto polynomial1 = Polynomial{1};
     auto polynomial2 = Polynomial{1};
     for (uint64_t i = 1; i <= static_cast<uint64_t>(sqrt(order)); i++){
@@ -188,17 +184,18 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
                 polynomial2 = multiply(polynomial2, poly1);
             }
 
-
-            std::vector<int64_t> poly2(order / i, 0);
-            poly2[0] = -1;
-            poly2.push_back(1);
-            pow = detail::moebiusFunction(i);
-            if (pow == 1) {
-                polynomial1 = multiply(polynomial1, poly2);
-            } else if (pow == -1) {
-                polynomial2 = multiply(polynomial2, poly2);
+            if (i * i != order) {
+                std::vector<int64_t> poly2(order / i, 0);
+                poly2[0] = -1;
+                poly2.push_back(1);
+                pow = detail::moebiusFunction(i);
+                if (pow == 1) {
+                    polynomial1 = multiply(polynomial1, poly2);
+                } else if (pow == -1) {
+                    polynomial2 = multiply(polynomial2, poly2);
+                }
             }
-        }
+       }
     }
     return divide(polynomial1, polynomial2);
 }

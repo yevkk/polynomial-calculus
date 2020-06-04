@@ -385,6 +385,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 REQUIRE(r.cyclotomicPolinomial(52) ==
                         Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
                 REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1, 1});
+                REQUIRE(r.cyclotomicPolinomial(4) == Polynomial{1, 0, 1});
             }
             SECTION("F13"){
                 const PolynomialRing r{13};
