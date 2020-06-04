@@ -283,7 +283,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
             const PolynomialRing r7{7};
             REQUIRE(r7.gcd(Polynomial{4, 1, 0, 0, 0, 0, 0, 1}, Polynomial{1, 0, 0, 0, 1})==Polynomial{1, 4, 1});
-          
+
             const Polynomial p3{1, 0, 1, 0, -3, -3, 8, 2, -5};
             const Polynomial p4{3, 0, 5, 0, -4, -9, 21};
             Polynomial g1 = ring23.gcd(p3, p4);
@@ -385,6 +385,10 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 REQUIRE(r.cyclotomicPolinomial(52) ==
                         Polynomial{1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0,1});
                 REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1, 1});
+            }
+            SECTION("F13"){
+                const PolynomialRing r{13};
+                REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
             }
         }
     }
