@@ -11,7 +11,8 @@ namespace lab {
 
         Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod);
 
-        }//namespace detail
+        std::vector<uint64_t> integerFactorization(uint64_t n);
+    }//namespace detail
 
     class PolynomialRing {
     public:
@@ -54,6 +55,9 @@ namespace lab {
         Polynomial cyclotomicPolinomial(uint64_t order) const;
 
         std::vector<Polynomial> cyclotomicFactorization(uint64_t order) const;
+
+        [[nodiscard]]
+        std::vector<Polynomial> irreducibleOfOrder(uint64_t order) const;
 
 
         /**
