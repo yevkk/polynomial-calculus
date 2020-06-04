@@ -143,7 +143,7 @@ void MainWindow::on_fieldActionSelect_activated(int index) {
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: power;";
         break;
     case 5:
-        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
     default:
         break;
