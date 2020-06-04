@@ -65,6 +65,8 @@ namespace lab {
         [[nodiscard]]
         std::vector<Polynomial> irreducibleOfOrder(uint64_t order) const;
 
+        [[nodiscard]]
+        Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
         /**
          * @brief Finds normalized polynomial in field
@@ -84,16 +86,13 @@ namespace lab {
         /**
          * @brief Checks if polynomial is irreducible over the field by modulo
          */
-        [[nodiscard]] virtual bool isIrreducible(const Polynomial &polynomial) const;
+        [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
 
 
         /**
          * @return vector of roots
          */
-        [[nodiscard]] std::vector<uint64_t> roots(Polynomial &polynomial) const;
-
-        [[nodiscard]] std::vector<uint64_t> returnRoots(Polynomial& gPoly, Polynomial& toMod) const;
-
+        [[nodiscard]] std::vector<uint64_t> findRoots(Polynomial &polynomial) const;
 
         /**
          * @brief GCD method requires only GCD function,

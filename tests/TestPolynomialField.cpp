@@ -55,10 +55,6 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
             REQUIRE(F3.pow(Polynomial{ 2 }, 4) == F3.multiply(F3.multiply(Polynomial{ 2 }, Polynomial{ 2 }),
                 F3.multiply(Polynomial{ 2 }, Polynomial{ 2 })));
         }
-        SECTION("Irreducibility") {
-            REQUIRE(!F3.isIrreducible(Polynomial{0}));
-            REQUIRE(!F3.isIrreducible(Polynomial{1, 1}));
-        }
 
         SECTION("F4") {
             PolynomialField F4{ 2, {1, 1, 1} };
@@ -334,18 +330,18 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
 
         SECTION("order of irreducible") {
 
-            for (auto p : {2l, 5l, 7l}) {
+            for (int64_t p : {2, 5, 7}) {
 
-                for (auto i = 1l; i < p; ++i) {
+                for (int64_t i = 1; i < p; ++i) {
 
-                    for (auto j = 1l; j < p; ++j) {
+                    for (int64_t j = 1; j < p; ++j) {
 
                         const auto irreducable = Polynomial{i, j};
 
                         const auto field = PolynomialField{p, irreducable};
 
                         REQUIRE (field.mod(                   // According to theorem x^e = 1 (mod f(x))
-                                Polynomial::x(field.order_of_irreducible(irreducable)),
+                                Polynomial::x(field.order_of_irreducible()),
                                 irreducable) == Polynomial{1});
                     }
                 }

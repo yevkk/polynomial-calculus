@@ -53,7 +53,7 @@ QLineEdit {
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="setupPage">
        <property name="styleSheet">
@@ -391,7 +391,7 @@ QTabWidget::pane {
 }</string>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="fieldTab">
            <attribute name="title">
@@ -434,6 +434,11 @@ QTabWidget::pane {
               <item>
                <property name="text">
                 <string>power</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>order of irreducible</string>
                </property>
               </item>
              </widget>
@@ -639,7 +644,7 @@ QTabWidget::pane {
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="fieldResultLabel">
+             <widget class="QPlainTextEdit" name="fieldResultText">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -647,16 +652,13 @@ QTabWidget::pane {
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">color: #272727; border-top: 5px solid #fcab35;</string>
+               <string notr="true">border-top: 4px solid #fcab35; color: #272727;</string>
               </property>
-              <property name="text">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
                <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-              </property>
-              <property name="margin">
-               <number>10</number>
               </property>
              </widget>
             </item>
@@ -666,7 +668,7 @@ QTabWidget::pane {
            <attribute name="title">
             <string>Ring</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,5,1,0,3">
+           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,5,1,0,0">
             <item>
              <widget class="QComboBox" name="ringActionSelect">
               <property name="font">
@@ -728,6 +730,16 @@ QTabWidget::pane {
               <item>
                <property name="text">
                 <string>derivative</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>roots count</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>is irreducible</string>
                </property>
               </item>
              </widget>
@@ -933,7 +945,7 @@ QTabWidget::pane {
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="ringResultLabel">
+             <widget class="QPlainTextEdit" name="ringResultText">
               <property name="font">
                <font>
                 <family>Segoe UI</family>
@@ -941,16 +953,10 @@ QTabWidget::pane {
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">color: #272727; border-top: 5px solid #fcab35;</string>
+               <string notr="true">border-top: 4px solid #fcab35; color: #272727;</string>
               </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-              </property>
-              <property name="margin">
-               <number>10</number>
+              <property name="readOnly">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -973,8 +979,20 @@ QTabWidget::pane {
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSession">
+    <property name="title">
+     <string>Session</string>
+    </property>
+    <addaction name="actionReset"/>
+   </widget>
+   <addaction name="menuSession"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionReset">
+   <property name="text">
+    <string>Reset</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

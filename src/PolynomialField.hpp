@@ -47,14 +47,11 @@ public:
     [[nodiscard]]
     Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
-    [[nodiscard]]
-    int64_t order_of_irreducible (const Polynomial& polynomial) const;
-
     /**
-     * @brief Checks if polynomial is irreducible over the field by modulo
+     *  @return Order of _irreducible
      */
-    [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const final;
-
+    [[nodiscard]]
+    int64_t order_of_irreducible () const;
 
 private:
     void _generateElements();

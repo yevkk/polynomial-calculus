@@ -37,6 +37,8 @@ private slots:
 
     void on_runRingBtn_clicked();
 
+    void on_actionReset_triggered();
+
 private:
     Ui::MainWindow *ui;
 

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cassert>
 #include <numeric>
+#include <algorithm>
 
 namespace lab {
 
@@ -169,10 +170,14 @@ Polynomial PolynomialRing::normalize(const Polynomial &polynomial) const {
     }
 
 Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
-    assert((order % _p) && "_p can`t be a divider of order");
-    if (order == 1){
-        auto poly = Polynomial{-1, 1};
-        return normalize(poly);
+    auto power = 1;
+    if (!order % _p){
+        power = _p - 1;
+        order /= _p;
+        while (!order % _p){
+            power *= _p;
+            order /= _p;
+        }
     }
     auto polynomial1 = Polynomial{1};
     auto polynomial2 = Polynomial{1};
@@ -188,20 +193,34 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
                 polynomial2 = multiply(polynomial2, poly1);
             }
 
-
-            std::vector<int64_t> poly2(order / i, 0);
-            poly2[0] = -1;
-            poly2.push_back(1);
-            pow = detail::moebiusFunction(i);
-            if (pow == 1) {
-                polynomial1 = multiply(polynomial1, poly2);
-            } else if (pow == -1) {
-                polynomial2 = multiply(polynomial2, poly2);
+            if (i * i != order) {
+                std::vector<int64_t> poly2(order / i, 0);
+                poly2[0] = -1;
+                poly2.push_back(1);
+                pow = detail::moebiusFunction(i);
+                if (pow == 1) {
+                    polynomial1 = multiply(polynomial1, poly2);
+                } else if (pow == -1) {
+                    polynomial2 = multiply(polynomial2, poly2);
+                }
             }
         }
     }
-    return divide(polynomial1, polynomial2);
+    if (power == 1)
+        return  divide(polynomial1, polynomial2);
+    return pow(divide(polynomial1, polynomial2), static_cast<uint64_t>(power));
 }
+
+    Polynomial PolynomialRing::pow(const Polynomial& poly, uint64_t power) const {
+        if (power == 1){
+            return poly;
+        }
+        if (power % 2 == 1){
+            return multiply(pow(poly, power - 1), poly);
+        }
+        const auto poly2 = pow(poly, power / 2);
+        return multiply(poly2, poly2);
+    }
 
 std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
     uint64_t factorDegree = 1,
@@ -262,15 +281,19 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
 
 
     for(auto expression_divisor : expression_divisors){
-        bool need = true;
-        for(auto n_divisor : n_divisors){
-            if ((uint64_t)std::pow(_p, n_divisor) % expression_divisor == 0){
-                need = false;
+        if (expression_divisor < 1000) {
+            bool need = true;
+            for (auto n_divisor : n_divisors) {
+                if ((uint64_t) std::pow(_p, n_divisor) % expression_divisor == 0) {
+                    need = false;
+                }
             }
-        }
 
-        if (need){
-            needed.push_back(expression_divisor);
+            if (need) {
+                needed.push_back(expression_divisor);
+            }
+        } else{
+            break;
         }
     }
 
@@ -301,101 +324,6 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
         }
         return true;
     }
-
-    std::vector<uint64_t> PolynomialRing::returnRoots(Polynomial& gPoly, Polynomial& toMod) const{
-        Polynomial modPolynomial;
-        Polynomial changedPolynomial = Polynomial{0};
-        Polynomial changedPolynomialtemp;
-
-        int b = 0;
-        do {
-            //polynomial x-b, b = 0, 1... .
-            //used to replace x in the current polynomial with x-b
-            Polynomial forCalc = Polynomial::x(1)-Polynomial{b};
-
-            if (b != 0) {
-                for (uint64_t i = gPoly.degree(); i > 0; i--){
-                    changedPolynomialtemp = forCalc;
-                    for (uint64_t j = 1; j < i; j++)
-                        changedPolynomialtemp = multiply(changedPolynomialtemp, forCalc);
-                    changedPolynomial = add(changedPolynomial, (gPoly.coefficient(i) * changedPolynomialtemp));
-                }
-                changedPolynomial = add(changedPolynomial, Polynomial{gPoly.coefficient(0)});
-            }
-
-            modPolynomial = mod(toMod, changedPolynomial);
-            b++;
-        } while (modPolynomial == Polynomial{1} || modPolynomial == Polynomial{-1});
-
-        Polynomial poly1 = add(modPolynomial, Polynomial{1});
-        Polynomial poly2 = subtract(modPolynomial, Polynomial{1});
-
-        poly1 = gcd(changedPolynomial, poly1);
-        poly2 = gcd(changedPolynomial, poly2);
-
-        b--;
-        Polynomial forbackCalc = Polynomial::x(1)+Polynomial{b};
-
-        if (b != 0) {
-            for (uint64_t i = poly1.degree(); i > 0; i--){
-                changedPolynomialtemp = forbackCalc;
-                for (uint64_t j = 1; j < i; j++)
-                    changedPolynomialtemp = multiply(changedPolynomialtemp, forbackCalc);
-                changedPolynomial = add(changedPolynomial, (poly1.coefficient(i) * changedPolynomialtemp));
-            }
-            changedPolynomial = add(changedPolynomial, Polynomial{poly1.coefficient(0)});
-            poly1 = changedPolynomial;
-
-            for (uint64_t i = poly2.degree(); i > 0; i--){
-                changedPolynomialtemp = forbackCalc;
-                for (uint64_t j = 1; j < i; j++)
-                    changedPolynomialtemp = multiply(changedPolynomialtemp, forbackCalc);
-                changedPolynomial = add(changedPolynomial, (poly2.coefficient(i) * changedPolynomialtemp));
-            }
-            changedPolynomial = add(changedPolynomial, Polynomial{poly2.coefficient(0)});
-            poly2 = changedPolynomial;
-        }
-
-        std::vector<uint64_t> roots;
-        if (poly2.degree() == 1){
-            uint64_t root = poly2.coefficient(0) * (-1);
-            roots.push_back(root);
-        }
-        if (poly1.degree() == 1){
-            uint64_t root = poly1.coefficient(0) * (-1);
-            roots.push_back(root);
-        }
-        if (poly2.degree() != 1){
-            std::vector<uint64_t> newRoots;
-            newRoots = returnRoots(poly2, toMod);
-            for (uint64_t i = 0; i < newRoots.size(); i++){
-                roots.push_back(newRoots[i]);
-            }
-        }
-        if (poly1.degree() != 1){
-            std::vector<uint64_t> newRoots;
-            newRoots = returnRoots(poly1, toMod);
-            for (uint64_t i = 0; i < newRoots.size(); i++){
-                roots.push_back(newRoots[i]);
-            }
-        }
-
-        return roots;
-    }
-
-    std::vector<uint64_t> PolynomialRing::roots(Polynomial &polynomial) const{
-
-        //polynomial x^p-x
-        Polynomial gcdPoly = Polynomial::x(getP())-Polynomial::x(1);
-        //polynomial-gcd of x^p-x and current polynomial
-        Polynomial gPoly = gcd(polynomial, gcdPoly);
-
-        //polynomial x^(p-1)/2
-        Polynomial toMod = Polynomial::x((getP()-1)/2);
-
-        return PolynomialRing::returnRoots(gPoly, toMod);
-    }
-
 
 int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy) const {
     if (policy == PolynomialRing::CountPolicy::GCD) {
@@ -437,7 +365,29 @@ int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy)
     }
 }
 
-namespace detail {
+    uint64_t calculatePolynomial(Polynomial &polynomial, uint64_t number, uint64_t p){
+        uint64_t result = 0;
+        for (uint64_t i = 0; i <= polynomial.degree(); i++){
+            result += (pow(number, i) * polynomial.coefficient(i));
+        }
+        result %= p;
+        return result;
+    }
+
+    std::vector<uint64_t> PolynomialRing::findRoots(Polynomial &polynomial) const {
+        uint64_t p = getP();
+        std::vector<uint64_t> roots;
+
+        for (uint64_t allNumb = 0; allNumb < p; allNumb++){
+            if (calculatePolynomial(polynomial, allNumb, p) == 0) {
+                roots.push_back(allNumb);
+            }
+        }
+
+        return roots;
+    }
+
+    namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
         std::vector<char> prime(n + 1, true);
         prime[0] = prime[1] = false;
@@ -503,6 +453,8 @@ namespace detail {
                 }
             }
         }
+
+        std::sort(result.begin(), result.end());
 
         return result;
     }
