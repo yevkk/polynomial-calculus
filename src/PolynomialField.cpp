@@ -174,8 +174,8 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
         auto e_divisors = std::vector<int64_t>{};
 
         for (auto [factor, amount] : grouped_factors) {
-            for (auto degree = 0l, powed_factor = factor; degree < amount; ++degree, powed_factor *= factor) {
-                auto s = mod(Polynomial::x(qm / factor), polynomial);
+            auto powed_factor = factor;
+            for (auto degree = 0; degree < amount; ++degree, powed_factor *= factor) {
                 if (mod(Polynomial::x(qm / powed_factor), polynomial) != Polynomial{1}) {
                     e_divisors.push_back(std::pow(factor, amount - degree));
                     break;
