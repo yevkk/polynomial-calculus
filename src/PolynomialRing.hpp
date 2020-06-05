@@ -103,10 +103,7 @@ namespace lab {
         /**
          *  @return vector of roots
          */
-        [[nodiscard]] std::vector<uint64_t> roots(Polynomial &polynomial) const;
-
-        [[nodiscard]] std::vector<uint64_t> returnRoots(Polynomial& gPoly, Polynomial& toMod) const;
-
+        [[nodiscard]] std::vector<uint64_t> findRoots(Polynomial &polynomial) const;
 
         /**
          * @brief GCD method requires only GCD function,
