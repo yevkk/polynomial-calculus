@@ -624,4 +624,5 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
         Polynomial polynomial4{0, 2, 1, 1};
         REQUIRE(r4.findRoots(polynomial4) == roots4);
     }
+    
 }

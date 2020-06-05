@@ -5,6 +5,8 @@
 namespace lab {
 
     namespace detail{
+        uint64_t calculatePolynomial(const Polynomial &polynomial, uint64_t number, uint64_t p);
+
         std::vector<uint64_t> sieveOfEratosthenes (uint64_t n);
 
         int8_t moebiusFunction (uint64_t n);
@@ -98,7 +100,7 @@ namespace lab {
         /**
          * @return vector of roots
          */
-        [[nodiscard]] std::vector<uint64_t> findRoots(Polynomial &polynomial) const;
+        [[nodiscard]] std::vector<uint64_t> findRoots(const Polynomial &polynomial) const;
 
 
         /**
