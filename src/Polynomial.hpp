@@ -51,6 +51,8 @@ public:
     [[nodiscard]]
     const std::vector<int64_t>& coefficients() const;
 
+    static std::optional<Polynomial> from_string(std::string str);
+
     friend bool operator==(const Polynomial& left, const Polynomial& right);
     friend bool operator!=(const Polynomial& left, const Polynomial& right);
     friend bool operator<(const Polynomial& left, const Polynomial& right);

@@ -63,16 +63,16 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
 
         SECTION("normal") {
             const Polynomial p1{1, 1};
-            REQUIRE(to_string(p1) == "1*x^1 +1");
+            REQUIRE(to_string(p1) == "x +1");
 
             const Polynomial p2{-4, 1, -8};
-            REQUIRE(to_string(p2) == "-8*x^2 +1*x^1 -4");
+            REQUIRE(to_string(p2) == "-8*x^2 +x -4");
 
             const Polynomial p3{0, 0, 1, -2, 4};
-            REQUIRE(to_string(p3) == "4*x^4 -2*x^3 +1*x^2");
-            REQUIRE(to_string(p3, 'a') == "4*a^4 -2*a^3 +1*a^2");
-            REQUIRE(to_string(p3, '(') == "4*x^4 -2*x^3 +1*x^2");
-            REQUIRE(to_string(p3, 'A', true) == "4*A^4 -2*A^3 +1*A^2 +0*A^1 +0*A^0");
+            REQUIRE(to_string(p3) == "4*x^4 -2*x^3 +x^2");
+            REQUIRE(to_string(p3, 'a') == "4*a^4 -2*a^3 +a^2");
+            REQUIRE(to_string(p3, '(') == "4*x^4 -2*x^3 +x^2");
+            REQUIRE(to_string(p3, 'A', true) == "4*A^4 -2*A^3 +A^2 +0*A +0*A^0");
         }
     }
 
@@ -193,10 +193,10 @@ TEST_CASE("Polynomials test", "[Polynomial]") {
         REQUIRE(to_string(p1.modified(3)) == "0");
 
         Polynomial p2{56, 132, 46, 13, 75, 13, 2};
-        REQUIRE(to_string(p2.modified(2)) == "1*x^5 +1*x^4 +1*x^3");
+        REQUIRE(to_string(p2.modified(2)) == "x^5 +x^4 +x^3");
 
         Polynomial p3{56, 132, -45, 13, 75, -13, 3};
-        REQUIRE(to_string(p3.modified(5)) == "3*x^6 +2*x^5 +3*x^3 +2*x^1 +1");
+        REQUIRE(to_string(p3.modified(5)) == "3*x^6 +2*x^5 +3*x^3 +2*x +1");
 
         Polynomial p4{1, 14, 10, 2, 1, 7, 8};
         REQUIRE(to_string(p4.modified(17)) == to_string(p4));
