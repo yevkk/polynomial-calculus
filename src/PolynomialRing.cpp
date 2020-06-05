@@ -406,12 +406,12 @@ int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy)
     }
 }
 
-    std::vector<uint64_t> PolynomialRing::findRoots(const Polynomial &polynomial) const {
+    std::vector<uint64_t> PolynomialRing::findRoots(Polynomial &polynomial) const {
         uint64_t p = getP();
         std::vector<uint64_t> roots;
 
         for (uint64_t allNumb = 0; allNumb < p; allNumb++){
-            if (detail::calculatePolynomial(polynomial, allNumb, p) == 0) {
+            if (evaluate(polynomial, allNumb) == 0) {
                 roots.push_back(allNumb);
             }
         }
@@ -420,15 +420,6 @@ int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy)
     }
 
 namespace detail {
-    uint64_t calculatePolynomial(const Polynomial &polynomial, uint64_t number, uint64_t p){
-        uint64_t result = 0;
-        for (uint64_t i = 0; i <= polynomial.degree(); i++){
-            result += (pow(number, i) * polynomial.coefficient(i));
-        }
-        result %= p;
-        return result;
-    }
-
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
         std::vector<char> prime(n + 1, true);
         prime[0] = prime[1] = false;

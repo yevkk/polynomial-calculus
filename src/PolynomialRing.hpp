@@ -100,7 +100,7 @@ namespace lab {
         /**
          * @return vector of roots
          */
-        [[nodiscard]] std::vector<uint64_t> findRoots(const Polynomial &polynomial) const;
+        [[nodiscard]] std::vector<uint64_t> findRoots(Polynomial &polynomial) const;
 
 
         /**
