@@ -599,4 +599,29 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(detail::rankOfMatrix(matrix) == 1);
         }
     }
+    SECTION("Finding roots"){
+
+        std::vector<uint64_t> roots1;
+        roots1.push_back(4);
+        const PolynomialRing r1{5};
+        Polynomial polynomial1{1, 2, 1};
+        REQUIRE(r1.findRoots(polynomial1) == roots1);
+
+        std::vector<uint64_t> roots2;
+        roots2.push_back(1);
+        const PolynomialRing r2{5};
+        Polynomial polynomial2{1, 2, 1, 1};
+        REQUIRE(r2.findRoots(polynomial2) == roots2);
+
+        std::vector<uint64_t> roots3;
+        const PolynomialRing r3{7};
+        Polynomial polynomial3{2, 1, -3, 2, 2};
+        REQUIRE(r3.findRoots(polynomial3) == roots3);
+
+        std::vector<uint64_t> roots4;
+        roots4.push_back(0);
+        const PolynomialRing r4{5};
+        Polynomial polynomial4{0, 2, 1, 1};
+        REQUIRE(r4.findRoots(polynomial4) == roots4);
+    }
 }
