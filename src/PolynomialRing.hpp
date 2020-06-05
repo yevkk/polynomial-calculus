@@ -96,11 +96,9 @@ namespace lab {
         int order_of_irreducible (const Polynomial& polynomial) const;
 
         /**
-         *  @return vector of roots
+         * @return vector of roots
          */
-        [[nodiscard]] std::vector<uint64_t> roots(Polynomial &polynomial) const;
-
-        [[nodiscard]] std::vector<uint64_t> returnRoots(Polynomial& gPoly, Polynomial& toMod) const;
+        [[nodiscard]] std::vector<uint64_t> findRoots(Polynomial &polynomial) const;
 
 
         /**
