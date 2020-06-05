@@ -15,7 +15,7 @@ Polynomial::Polynomial(std::initializer_list<int64_t> coefs) : _coefs{coefs} {
         _coefs.push_back(0);
     }
 
-    finilize();
+    finalize();
 }
 
 Polynomial::Polynomial(std::vector<int64_t> coefs) : _coefs{coefs} {
@@ -23,7 +23,7 @@ Polynomial::Polynomial(std::vector<int64_t> coefs) : _coefs{coefs} {
         _coefs.push_back(0);
     }
 
-    finilize();
+    finalize();
 }
 
 /**
@@ -50,7 +50,7 @@ const std::vector<int64_t>& Polynomial::coefficients() const {
 /*
  * @brief removes extra 0 from back of coefficients vector
  */
-void Polynomial::finilize() {
+void Polynomial::finalize() {
     while ((_coefs.back() == 0) && (_coefs.begin() + 1 != _coefs.end())) {
         _coefs.pop_back();
     }
@@ -69,7 +69,7 @@ Polynomial Polynomial::modified(int64_t modulo) const {
         item = item % modulo;
     }
 
-    result.finilize();
+        result.finalize();
 
     return result;
 }
@@ -84,7 +84,7 @@ Polynomial Polynomial::unpowered(const int64_t modulo) const
         }
     }
 
-    result.finilize();
+    result.finalize();
     return result;
 }
 
@@ -113,7 +113,7 @@ Polynomial operator+(const Polynomial &left, const Polynomial &right) {
         result._coefs.push_back(left.coefficient(i) + right.coefficient(i));
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
@@ -128,7 +128,7 @@ Polynomial operator-(const Polynomial &left, const Polynomial &right) {
         result._coefs.push_back(left.coefficient(i) - right.coefficient(i));
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
@@ -143,7 +143,7 @@ Polynomial operator*(const Polynomial &left, const Polynomial &right) {
         }
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
@@ -155,7 +155,7 @@ Polynomial operator*(const Polynomial &left, int64_t right) {
         item = item * right;
     }
 
-    result.finilize();
+    result.finalize();
 
     return result;
 }
@@ -174,12 +174,11 @@ Polynomial Polynomial::x(size_t power) {
 /**
  * @brief Converts polynomial to string
  */
-std::string to_string(const Polynomial &polynomial, char var, const bool show_zero) {
-    //TODO: (yevkk) 1*x^n = x^n
-    std::string result;
+std::string to_string(const Polynomial &polynomial, char var_ch, bool show_zero) {
+    std::string result = "";
 
-    if (!std::isalpha(var)) {
-        var = 'x';
+    if (!std::isalpha(var_ch)) {
+        var_ch = 'x';
     }
 
     for (auto i = polynomial.degree(); i > 0; i--) {
@@ -189,7 +188,19 @@ std::string to_string(const Polynomial &polynomial, char var, const bool show_ze
                 result += (polynomial.coefficient(i) >= 0) ? " +" : " ";
             }
 
-            result += std::to_string(polynomial.coefficient(i)) + '*' + var + '^' + std::to_string(i);
+            if (polynomial.coefficient(i) == 1) {
+                result.push_back(var_ch);
+            } else if  (polynomial.coefficient(i) == - 1) {
+                result += "-";
+                result.push_back(var_ch);
+            } else {
+                result += std::to_string(polynomial.coefficient(i)) + '*' + var_ch;
+            }
+
+            if (i != 1) {
+                result.push_back('^');
+                result += std::to_string(i);
+            }
         }
     }
 
@@ -197,7 +208,7 @@ std::string to_string(const Polynomial &polynomial, char var, const bool show_ze
         if (!result.empty()) {
             result += (polynomial.coefficient(0) >= 0) ? " +" : " ";
         }
-        result += std::to_string(polynomial.coefficient(0)) + '*' + var + "^0";
+        result += std::to_string(polynomial.coefficient(0)) + '*' + var_ch + "^0";
     } else if (polynomial.coefficient(0)) {
         if (!result.empty()) {
             result += (polynomial.coefficient(0) >= 0) ? " +" : " ";
@@ -229,6 +240,135 @@ int64_t Polynomial::evaluate(int64_t point) const {
         point_power *= point;
     }
     return result;
+}
+
+std::optional<Polynomial> Polynomial::from_string(std::string str) {
+    std::vector<int64_t> coefs = {0};
+
+    enum ReadingStates {
+        COEF, POWER
+    };
+
+    std::string coef_str = "";
+    std::string power_str = "";
+    bool x_met = false;
+
+    auto increase_coef = [&]() {
+        if (x_met) {
+            if (coef_str == "+") {
+                coef_str = "1";
+            } else if (coef_str == "-") {
+                coef_str = "-1";
+            }
+
+            if (coef_str.empty()) {
+                coef_str = "1";
+            }
+
+            if (power_str.empty()) {
+                power_str = "1";
+            }
+        } else {
+            if (coef_str == "+" || coef_str == "-") {
+                coef_str = "0";
+            }
+
+            if (coef_str.empty()) {
+                coef_str = "0";
+            }
+
+            if (power_str.empty()) {
+                power_str = "0";
+            }
+        }
+
+        size_t index = std::stoi(power_str);
+        int64_t value = std::stoi(coef_str);
+
+        while (index >= coefs.size()) {
+            coefs.push_back(0);
+        }
+
+        coefs[index] += value;
+
+        coef_str.clear();
+        power_str.clear();
+        x_met = false;
+    };
+
+
+    size_t i = 0;
+    while (i < str.size()) {
+        if (str[i] == ' ' || str[i] == '*') {
+            str.erase(str.begin() + i);
+        } else {
+            i++;
+        }
+    }
+
+    auto state = COEF;
+    i = 0;
+    while (i <= str.size()) {
+        switch (state) {
+            case COEF: {
+                if (i == str.size()) {
+                    increase_coef();
+                    i++;
+                } else if (std::isdigit(str[i])) {
+                    coef_str.push_back(str[i]);
+                    i++;
+                } else if (str[i] == 'x') {
+                    i++;
+                    x_met = true;
+                    if (i == str.size()) {
+                        if (power_str.empty()) {
+                            power_str = "1";
+                        }
+                        increase_coef();
+                        i++;
+                    } else if (str[i] == '^') {
+                        i++;
+                        state = POWER;
+                    } else if (str[i] == '+' || str[i] == '-') {
+                        increase_coef();
+                        coef_str.push_back(str[i]);
+                        i++;
+                        state = COEF;
+                    } else {
+                        return std::nullopt;
+                    }
+                } else if (str[i] == '+' || str[i] == '-') {
+                    increase_coef();
+                    coef_str.push_back(str[i]);
+                    i++;
+                    state = COEF;
+                } else {
+                    return std::nullopt;
+                }
+                break;
+            }
+
+            case POWER: {
+                if (i == str.size()) {
+                    increase_coef();
+                    i++;
+                } else if (std::isdigit(str[i])) {
+                    power_str.push_back(str[i]);
+                    i++;
+                } else if (str[i] == '+' || str[i] == '-') {
+                    increase_coef();
+                    coef_str.push_back(str[i]);
+                    i++;
+                    state = COEF;
+                } else {
+                    return std::nullopt;
+                }
+                break;
+            }
+        }
+    }
+
+    return Polynomial{coefs};
 }
 
 } // namespace lab
