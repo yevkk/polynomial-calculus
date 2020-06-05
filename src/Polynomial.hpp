@@ -51,6 +51,8 @@ public:
     [[nodiscard]]
     const std::vector<int64_t>& coefficients() const;
 
+    static std::optional<Polynomial> from_string(std::string str);
+
     friend bool operator==(const Polynomial& left, const Polynomial& right);
     friend bool operator!=(const Polynomial& left, const Polynomial& right);
     friend bool operator<(const Polynomial& left, const Polynomial& right);
@@ -88,7 +90,7 @@ private:
     /*
      * @brief removes extra 0 from back of coefficients vector
      */
-    void finilize();
+    void finalize();
 };
 
 } // namespace lab
