@@ -1,8 +1,9 @@
 #include "Polynomial.hpp"
 
-#include <cctype>
 #include <algorithm>
 #include <utility>
+#include <cctype>
+#include <regex>
 
 namespace lab {
 
@@ -71,6 +72,20 @@ Polynomial Polynomial::modified(int64_t modulo) const {
 
     result.finilize();
 
+    return result;
+}
+
+Polynomial Polynomial::unpowered(const int64_t modulo) const
+{
+    auto result = *this;
+    for (int i = 0; i <= degree(); ++i) {
+        result._coefs[i] = 0;
+        if (i % modulo == 0) {
+            result._coefs[i / modulo] = _coefs[i];
+        }
+    }
+
+    result.finilize();
     return result;
 }
 
@@ -160,12 +175,12 @@ Polynomial Polynomial::x(size_t power) {
 /**
  * @brief Converts polynomial to string
  */
-std::string to_string(const Polynomial &polynomial, char var_ch, bool show_zero) {
+std::string to_string(const Polynomial &polynomial, char var, const bool show_zero) {
     //TODO: (yevkk) 1*x^n = x^n
-    std::string result = "";
+    std::string result;
 
-    if (!std::isalpha(var_ch)) {
-        var_ch = 'x';
+    if (!std::isalpha(var)) {
+        var = 'x';
     }
 
     for (auto i = polynomial.degree(); i > 0; i--) {
@@ -175,7 +190,7 @@ std::string to_string(const Polynomial &polynomial, char var_ch, bool show_zero)
                 result += (polynomial.coefficient(i) >= 0) ? " +" : " ";
             }
 
-            result += std::to_string(polynomial.coefficient(i)) + '*' + var_ch + '^' + std::to_string(i);
+            result += std::to_string(polynomial.coefficient(i)) + '*' + var + '^' + std::to_string(i);
         }
     }
 
@@ -183,7 +198,7 @@ std::string to_string(const Polynomial &polynomial, char var_ch, bool show_zero)
         if (!result.empty()) {
             result += (polynomial.coefficient(0) >= 0) ? " +" : " ";
         }
-        result += std::to_string(polynomial.coefficient(0)) + '*' + var_ch + "^0";
+        result += std::to_string(polynomial.coefficient(0)) + '*' + var + "^0";
     } else if (polynomial.coefficient(0)) {
         if (!result.empty()) {
             result += (polynomial.coefficient(0) >= 0) ? " +" : " ";
@@ -192,6 +207,18 @@ std::string to_string(const Polynomial &polynomial, char var_ch, bool show_zero)
     }
 
     return (result.empty() ? "0" : result);
+}
+
+std::optional<Polynomial> Polynomial::from_string(const std::string_view str)
+{
+    /// <coefficient>*(optional)<variable>^<power>
+    const std::regex r{R"(([-+]?\b\d*)(\*?)(\w+)(\^)(\d+\b)|([+-]?\b\d*))"};
+    
+    struct Match {
+
+    };
+
+    return {};
 }
 
 Polynomial Polynomial::derivate() const {

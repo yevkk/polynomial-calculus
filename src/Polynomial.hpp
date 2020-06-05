@@ -1,31 +1,26 @@
 #pragma once
 
+#include <optional>
 #include <vector>
 #include <string>
-#include <optional>
 
 namespace lab {
-class Polynomial;
-
-/**
- * @brief Converts polynomial to string
- */
-std::string to_string(const Polynomial& polynomial, char var_ch = 'x', bool show_zero = false);
 
 /**
  * @brief Class for holding polynomials with uint coefficients
  */
 class Polynomial {
 public:
-    Polynomial(const Polynomial& that) = default;
-
-    Polynomial(std::initializer_list<int64_t> coefs);
-
-    Polynomial(std::vector<int64_t> coefs);
+    using coefficient_type = int64_t;
 
     Polynomial();
+    Polynomial(std::vector<coefficient_type> coefs);
+    Polynomial(std::initializer_list<coefficient_type> coefs);
 
+    Polynomial(const Polynomial& that) = default;
     Polynomial& operator=(const Polynomial& that) = default;
+    Polynomial(Polynomial&& that) noexcept = default;
+    Polynomial& operator=(Polynomial&& that) noexcept = default;
 
     /**
      * @return the highest power of variable with non-zero coefficient
@@ -46,10 +41,16 @@ public:
     Polynomial modified(int64_t modulo) const;
 
     /**
+     * @brief calculates all coefficients by modulo
+     */
+    [[nodiscard]]
+    Polynomial unpowered(int64_t modulo) const;
+
+    /**
      * @return the vector of coefficients
      */
     [[nodiscard]]
-    const std::vector<int64_t>& coefficients() const;
+    const std::vector<coefficient_type>& coefficients() const;
 
     friend bool operator==(const Polynomial& left, const Polynomial& right);
     friend bool operator!=(const Polynomial& left, const Polynomial& right);
@@ -61,34 +62,50 @@ public:
     friend Polynomial operator*(const Polynomial& left, const Polynomial& right);
     friend Polynomial operator*(const Polynomial& left, int64_t right);
     friend Polynomial operator*(int64_t left, const Polynomial& right);
-    
+
     /**
      * @brief Calculates derivative from polynomial
      */
+    [[nodiscard]]
     Polynomial derivate() const;
-    
+
     /**
      * @brief Evaluates polynomial in point
      */
-    int64_t evaluate(int64_t point) const;
-    
+    [[nodiscard]]
+    coefficient_type evaluate(coefficient_type point) const;
 
     template <typename OStream>
-    friend inline OStream& operator<<(OStream& os, const Polynomial& polynomial) {
-        os << to_string(polynomial);
-        return os;
-    }
+    friend OStream& operator<<(OStream& os, const Polynomial& polynomial);
 
+    [[nodiscard]]
     static Polynomial x(size_t power);
+
+    /**
+     * @brief Parse polynomial from string.
+     */
+    struct std::optional<Polynomial> from_string(std::string_view std);
 
 private:
     // Array of polynomial's coefficients
     std::vector<int64_t> _coefs;
 
-    /*
+    /**
      * @brief removes extra 0 from back of coefficients vector
      */
     void finilize();
 };
+
+/**
+ * @brief Converts polynomial to string
+ */
+std::string to_string(const Polynomial& polynomial, char var = 'x', bool show_zero = false);
+
+template <typename OStream>
+inline OStream& operator<<(OStream& os, const Polynomial& polynomial)
+{
+    os << to_string(polynomial);
+    return os;
+}
 
 } // namespace lab

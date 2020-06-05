@@ -330,7 +330,7 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
 
         SECTION("order of irreducible") {
 
-            for (auto p : {2l, 5l, 7l}) {
+            for (auto p : {2ul, 5ul, 7ul}) {
 
                 for (auto i = 1l; i < p; ++i) {
 
