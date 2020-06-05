@@ -65,6 +65,8 @@ namespace lab {
         [[nodiscard]]
         std::vector<Polynomial> irreducibleOfOrder(uint64_t order) const;
 
+        [[nodiscard]]
+        Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
         /**
          * @brief Finds normalized polynomial in field
@@ -88,7 +90,13 @@ namespace lab {
 
 
         /**
-         * @return vector of roots
+         *  @return Order of irreducible polynomial
+         */
+        [[nodiscard]]
+        int order_of_irreducible (const Polynomial& polynomial) const;
+
+        /**
+         *  @return vector of roots
          */
         [[nodiscard]] std::vector<uint64_t> roots(Polynomial &polynomial) const;
 

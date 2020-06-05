@@ -327,25 +327,5 @@ TEST_CASE("Polynomial Field test", "[Polynomial field]") {
                 REQUIRE(F9.inverted(Polynomial{ 1,0,0,0,2,1,0,0,2 }) == Polynomial({ 1,1 }));
             }
         }
-
-        SECTION("order of irreducible") {
-
-            for (auto p : {2ul, 5ul, 7ul}) {
-
-                for (auto i = 1l; i < p; ++i) {
-
-                    for (auto j = 1l; j < p; ++j) {
-
-                        const auto irreducable = Polynomial{i, j};
-
-                        const auto field = PolynomialField{p, irreducable};
-
-                        REQUIRE (field.mod(                   // According to theorem x^e = 1 (mod f(x))
-                                Polynomial::x(field.order_of_irreducible(irreducable)),
-                                irreducable) == Polynomial{1});
-                    }
-                }
-            }
-        }
     }
 }

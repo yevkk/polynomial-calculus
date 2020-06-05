@@ -391,6 +391,15 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
                 const PolynomialRing r{13};
                 REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
             }
+            SECTION("F2"){
+                const PolynomialRing r{2};
+                REQUIRE(r.cyclotomicPolinomial(2) == Polynomial{1,1});
+                REQUIRE(r.cyclotomicPolinomial(4) == Polynomial{1, 0, 1});
+            }
+            SECTION("F13"){
+                const PolynomialRing r{13};
+                REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
+            }
             SECTION("F13"){
                 const PolynomialRing r{13};
                 REQUIRE(r.cyclotomicPolinomial(1) == Polynomial{12, 1});
@@ -465,6 +474,45 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             }
         }
 
+        SECTION ("Order of irreducible") {
+
+            SECTION("F2") {
+
+                const auto ring = PolynomialRing{2};
+                const std::vector pols = {
+                        Polynomial{0, 1},
+                        Polynomial{1, 1, 0, 1},
+                        Polynomial{1, 0, 1, 0, 0, 1}
+                };
+                REQUIRE(ring.order_of_irreducible(pols[0]) == 1);
+                REQUIRE(ring.order_of_irreducible(pols[1]) == 7);
+                REQUIRE(ring.order_of_irreducible(pols[2]) == 31);
+            }
+
+            SECTION ("F3") {
+                const auto ring = PolynomialRing{3};
+                const std::vector pols = {
+                        Polynomial{1, 1},
+                        Polynomial{2, 1, 0, 0, 1},
+                        Polynomial{1, 2, 0, 0, 0, 1}
+                };
+                REQUIRE(ring.order_of_irreducible(pols[0]) == 2);
+                REQUIRE(ring.order_of_irreducible(pols[1]) == 80);
+                REQUIRE(ring.order_of_irreducible(pols[2]) == 242);
+            }
+
+            SECTION ("F5") {
+                const auto ring = PolynomialRing{5};
+                const std::vector pols = {
+                        Polynomial{2, 1, 1},
+                        Polynomial{4, 1, 0, 1},
+                        Polynomial{4, 4, 0, 0, 1}
+                };
+                REQUIRE(ring.order_of_irreducible(pols[0]) == 24);
+                REQUIRE(ring.order_of_irreducible(pols[1]) == 31);
+                REQUIRE(ring.order_of_irreducible(pols[2]) == 312);
+            }
+        }
 
 
     SECTION("Integer number factorization") {
@@ -507,7 +555,7 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
 
         REQUIRE(r5.irreducibleOfOrder(4).size() == 150);
     }
-  
+
     SECTION("Calculating Count of Roots") {
         const PolynomialRing r5{5};
         SECTION("easy") {

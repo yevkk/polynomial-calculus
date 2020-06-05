@@ -1,4 +1,5 @@
 #include "PolynomialRing.hpp"
+#include "Utils.hpp"
 
 #include <cmath>
 #include <cassert>
@@ -170,7 +171,15 @@ Polynomial PolynomialRing::normalize(const Polynomial &polynomial) const {
     }
 
 Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
-    assert((order % _p) && "_p can`t be a divider of order");
+    auto power = 1;
+    if (!order % _p){
+        power = _p - 1;
+        order /= _p;
+        while (!order % _p){
+            power *= _p;
+            order /= _p;
+        }
+    }
     auto polynomial1 = Polynomial{1};
     auto polynomial2 = Polynomial{1};
     for (uint64_t i = 1; i <= static_cast<uint64_t>(sqrt(order)); i++){
@@ -198,8 +207,21 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
             }
         }
     }
-    return divide(polynomial1, polynomial2);
+    if (power == 1)
+        return  divide(polynomial1, polynomial2);
+    return pow(divide(polynomial1, polynomial2), static_cast<uint64_t>(power));
 }
+
+    Polynomial PolynomialRing::pow(const Polynomial& poly, uint64_t power) const {
+        if (power == 1){
+            return poly;
+        }
+        if (power % 2 == 1){
+            return multiply(pow(poly, power - 1), poly);
+        }
+        const auto poly2 = pow(poly, power / 2);
+        return multiply(poly2, poly2);
+    }
 
 std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
     uint64_t factorDegree = 1,
@@ -302,6 +324,45 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
                 return false;
         }
         return true;
+    }
+
+    int PolynomialRing::order_of_irreducible(const Polynomial& polynomial) const {
+
+        assert (isIrreducible(polynomial));
+        const auto qm = static_cast<int64_t> (std::pow(getP(), polynomial.degree())) - 1;
+
+        const auto factors = utils::get_divisors(qm);
+
+        const auto grouped_factors = [&] {
+            std::vector <std::pair <int64_t, std::size_t>> grouped;
+
+            for (const auto factor : factors) {
+                if (!grouped.empty() && grouped.back().first == factor) {
+                    ++grouped.back().second;
+                }
+                else {
+                    grouped.emplace_back(factor, 1);
+                }
+            }
+            return grouped;
+        } ();
+
+        auto e_divisors = std::vector<int64_t>{};
+
+        for (auto [factor, amount] : grouped_factors) {
+            auto powed_factor = factor;
+            for (auto degree = 0; degree < amount; ++degree, powed_factor *= factor) {
+                if (mod(Polynomial::x(qm / powed_factor), polynomial) != Polynomial{1}) {
+                    e_divisors.push_back(std::pow(factor, amount - degree));
+                    break;
+                }
+
+            }
+        }
+        return std::accumulate (e_divisors.begin(), e_divisors.end(), 1,
+                                [] (const auto sum, const auto divisor) {
+                                    return sum * divisor;
+                                });
     }
 
     std::vector<uint64_t> PolynomialRing::returnRoots(Polynomial& gPoly, Polynomial& toMod) const{
