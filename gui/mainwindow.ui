@@ -757,6 +757,11 @@ QTabWidget::pane {
                 <string>order of polynomial</string>
                </property>
               </item>
+              <item>
+               <property name="text">
+                <string>find roots</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item>
