@@ -116,6 +116,11 @@ namespace lab {
          */
         [[nodiscard]] int countRoots(const Polynomial &polynomial, PolynomialRing::CountPolicy policy = PolynomialRing::CountPolicy::GCD) const;
 
+        /**
+         * @return vector of pair - <multiplicity of root, count of roots>
+         */
+        [[nodiscard]] std::vector<std::pair<int, uint64_t>> countMultipleRoots(const Polynomial &polynomial) const;
+
         [[nodiscard]]
         std::vector<std::pair<Polynomial, std::size_t>> berlekampFactorization(Polynomial polynomial) const;
 

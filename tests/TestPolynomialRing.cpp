@@ -611,4 +611,16 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(detail::rankOfMatrix(matrix) == 1);
         }
     }
+
+    SECTION("Count of Multiple roots") {
+        const PolynomialRing r5{5};
+        REQUIRE(r5.countMultipleRoots(Polynomial{0, 1, 1}) == std::vector<std::pair<int, uint64_t>>{{1, 2}});
+        REQUIRE(r5.countMultipleRoots(Polynomial{0, 0, 1}) == std::vector<std::pair<int, uint64_t>>{{2, 1}});
+        REQUIRE(r5.countMultipleRoots(Polynomial{1, 2, 1}) == std::vector<std::pair<int, uint64_t>>{{2, 1}});
+        REQUIRE(r5.countMultipleRoots(Polynomial{1, 3, 3, 1}) == std::vector<std::pair<int, uint64_t>>{{3, 1}});
+        const Polynomial temp = r5.multiply(Polynomial{0,0,1}, Polynomial{1, 2, 1});
+        REQUIRE(r5.countMultipleRoots(temp) == std::vector<std::pair<int, uint64_t>>{{2, 2}});
+        const Polynomial temp2 = r5.multiply(temp, Polynomial{2, 1});
+        REQUIRE(r5.countMultipleRoots(temp2) == std::vector<std::pair<int, uint64_t>>{{1,1}, {2, 2}});
+    }
 }
