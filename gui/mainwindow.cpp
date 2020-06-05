@@ -313,6 +313,9 @@ void MainWindow::on_ringActionSelect_activated(int index) {
     case 13:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
+    case 14:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
     default:
         break;
     }
@@ -516,12 +519,31 @@ void MainWindow::on_runRingBtn_clicked() {
 
         Polynomial left = left_opt.value();
 
-        result_str = std::to_string(_ring->isIrreducible(left));
+        auto result = _ring->countMultipleRoots(left);
+
+        for(const auto& item : result) {
+            result_str += "multiplicity: " + std::to_string(item.first) + ", count: " + std::to_string(item.second) + ";\n";
+        }
 
         break;
     }
 
     case 12: {
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+
+        result_str = std::to_string(_ring->isIrreducible(left));
+
+        break;
+    }
+
+    case 13: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
 
         if (!left_opt.has_value()) {
@@ -541,7 +563,7 @@ void MainWindow::on_runRingBtn_clicked() {
         break;
     }
 
-    case 13: {
+    case 14: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
 
         if (!left_opt.has_value()) {
