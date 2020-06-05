@@ -1,7 +1,6 @@
 #include "../src/PolynomialRing.hpp"
 
 #include "catch.hpp"
-#include <iostream>
 
 TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
     using namespace lab;
@@ -422,10 +421,23 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             REQUIRE(r3.cyclotomicFactorization(52) == std::vector
                     {Polynomial{1, 0, 2, 0, 0, 0, 1}, Polynomial{1, 0, 2, 0, 1, 0, 1},
                      Polynomial{1, 0, 1, 0, 2, 0, 1}, Polynomial{1, 0, 0, 0, 2, 0, 1}});
+            REQUIRE(r3.cyclotomicFactorization(1) == std::vector{Polynomial{2, 1}});
+            REQUIRE(r3.cyclotomicFactorization(2) == std::vector{Polynomial{1, 1}});
             const PolynomialRing r13{13};
             REQUIRE(r13.cyclotomicFactorization(14) == std::vector
                     {Polynomial{1, 7, 1}, Polynomial{1, 8, 1},
                      Polynomial{1, 10, 1}});
+        }
+        SECTION("Order is a multiple of p"){
+            const PolynomialRing r2{2};
+            const PolynomialRing r3{3};
+            const PolynomialRing r5{5};
+            REQUIRE(r3.cyclotomicFactorization(45) == std::vector <Polynomial>(6,Polynomial{1,1,1,1,1}));
+            REQUIRE(r3.cyclotomicFactorization(15) == std::vector <Polynomial>(2,Polynomial{1,1,1,1,1}));
+            REQUIRE(r2.cyclotomicFactorization(12) == std::vector <Polynomial>(2,Polynomial{1, 1, 1}));
+            REQUIRE(r2.cyclotomicFactorization(14) == std::vector{Polynomial{1,1,0,1}, Polynomial{1, 0, 1, 1}});
+            REQUIRE(r5.cyclotomicFactorization(45) == std::vector <Polynomial>(4,Polynomial{1, 0, 0, 1, 0, 0, 1}));
+            REQUIRE(r5.cyclotomicFactorization(25) == std::vector <Polynomial>(20,Polynomial{4, 1}));
         }
     }
 
@@ -638,5 +650,17 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             };
             REQUIRE(detail::rankOfMatrix(matrix) == 1);
         }
+    }
+
+    SECTION("Count of Multiple roots") {
+        const PolynomialRing r5{5};
+        REQUIRE(r5.countMultipleRoots(Polynomial{0, 1, 1}) == std::vector<std::pair<int, uint64_t>>{{1, 2}});
+        REQUIRE(r5.countMultipleRoots(Polynomial{0, 0, 1}) == std::vector<std::pair<int, uint64_t>>{{2, 1}});
+        REQUIRE(r5.countMultipleRoots(Polynomial{1, 2, 1}) == std::vector<std::pair<int, uint64_t>>{{2, 1}});
+        REQUIRE(r5.countMultipleRoots(Polynomial{1, 3, 3, 1}) == std::vector<std::pair<int, uint64_t>>{{3, 1}});
+        const Polynomial temp = r5.multiply(Polynomial{0,0,1}, Polynomial{1, 2, 1});
+        REQUIRE(r5.countMultipleRoots(temp) == std::vector<std::pair<int, uint64_t>>{{2, 2}});
+        const Polynomial temp2 = r5.multiply(temp, Polynomial{2, 1});
+        REQUIRE(r5.countMultipleRoots(temp2) == std::vector<std::pair<int, uint64_t>>{{1,1}, {2, 2}});
     }
 }

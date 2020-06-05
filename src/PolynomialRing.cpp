@@ -224,10 +224,21 @@ Polynomial PolynomialRing::cyclotomicPolinomial(uint64_t order) const {
     }
 
 std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) const {
-    uint64_t factorDegree = 1,
-                tmp = getP();
-    while (tmp % order != 1) {
-        factorDegree++;
+    uint64_t factor_degree = 1,
+                tmp = getP(),
+                multiplicity = 1;
+
+    if (order % getP() == 0) {
+        multiplicity = getP() - 1;
+        order /= getP();
+        while (order % getP() == 0) {
+            order /= getP();
+            multiplicity *= getP(); //multiplicity = (p - 1)*p^(enters-1)
+        }
+    }
+
+    while (tmp % order != 1 && order > 1) {
+        factor_degree++;
         tmp *= getP();
     }
 
@@ -235,41 +246,45 @@ std::vector<Polynomial> PolynomialRing::cyclotomicFactorization(uint64_t order) 
     std::vector<Polynomial> factors{cyclotomic};
 
     int64_t i = 1;
-    Polynomial factorizationR = detail::rPolynom(i, order, getP());
+    Polynomial factorization_r = detail::rPolynom(i, order, getP());
     bool factorized = false;
 
     while (!factorized && i < order) {
-        while (mod(factorizationR, cyclotomic).degree() == 0 && i < order - 1){
-            factorizationR = detail::rPolynom(++i, order, getP());
+        while (mod(factorization_r, cyclotomic).degree() == 0 && i < order - 1){
+            factorization_r = detail::rPolynom(++i, order, getP());
         }
 
-        std::vector <Polynomial> updatedFactors;
+        std::vector <Polynomial> updated_factors;
         factorized = true;
 
         for (auto &item: factors){
-            if (item.degree() > factorDegree){
+            if (item.degree() > factor_degree){
                 for(int64_t c = 0; c < getP(); c++){
-                    Polynomial f = gcd(item, factorizationR + Polynomial{c});
+                    Polynomial f = gcd(item, factorization_r + Polynomial{c});
                     if (f.degree())
-                        updatedFactors.push_back(f);
-                    if (f.degree() > factorDegree)
+                        updated_factors.push_back(f);
+                    if (f.degree() > factor_degree)
                         factorized = false;
                 }
             } else{
-                updatedFactors.push_back(item);
+                updated_factors.push_back(item);
             }
         }
-        factors = std::move(updatedFactors);
+        factors = std::move(updated_factors);
         if (i < order - 1) {
-            factorizationR = detail::rPolynom(++i, order, getP());
+            factorization_r = detail::rPolynom(++i, order, getP());
         }
     }
 
-    for (auto &it: factors){
-        it = normalize(it);
+    std::vector <Polynomial> updated_factors;
+    for (auto & factor : factors){
+        factor = normalize(factor);
+        for (auto k = 0; k < multiplicity; k++){
+            updated_factors.push_back(factor);
+        }
     }
 
-    return factors;
+    return updated_factors;
 }
 
 std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const {
@@ -520,6 +535,82 @@ int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy)
     }
 }
 
+std::vector<std::pair<int, uint64_t>> PolynomialRing::countMultipleRoots(const Polynomial &polynomial) const {
+    std::vector<std::pair<int, uint64_t>> multiplicity_count;
+    auto prev_roots = this->countRoots(polynomial);
+    Polynomial temp = polynomial;
+    auto der = derivate(temp);
+    temp = gcd(temp, der);
+    int current_roots = this->countRoots(temp);
+    if(temp.degree() == 0 || current_roots == 0) {
+        multiplicity_count.emplace_back(1, prev_roots - current_roots);
+        return multiplicity_count;
+    }
+    if(prev_roots - current_roots > 0){
+        multiplicity_count.emplace_back(1, prev_roots - current_roots);
+    }
+    int index = 1;
+    while(current_roots != 0) {
+        index++;
+        prev_roots = current_roots;
+        temp = gcd(der, derivate(der));
+        der = derivate(der);
+        current_roots = this->countRoots(temp);
+        if(prev_roots - current_roots > 0){
+            multiplicity_count.emplace_back(index, prev_roots - current_roots);
+        }
+    }
+    return multiplicity_count;
+}
+
+std::vector<std::pair<Polynomial, std::size_t>> PolynomialRing::berlekampFactorization(Polynomial polynomial) const {
+    std::size_t i = 1;
+    const auto unit = Polynomial::x(0);
+    const auto derivative = polynomial.derivate();
+    std::vector<std::pair<Polynomial, std::size_t>> result;
+
+    constexpr auto is_null = [] (const auto& p) {
+        return std::all_of(
+                p.coefficients().begin(),
+                p.coefficients().end(),
+                [] (const auto& x) {
+                    return x == 0;
+                });
+    };
+
+    if (!is_null(derivative)) {
+        auto gcd = this->gcd(polynomial, derivative);
+        auto div = divide(polynomial, gcd);
+
+        while (div != unit) {
+            const auto y = this->gcd(div, gcd);
+            const auto z = divide(div, y);
+            if (z != unit) {
+                result.push_back(std::pair{z, i});
+            }
+
+            ++i;
+            div = y;
+            gcd = divide(gcd, y);
+        }
+
+        if (gcd != unit) {
+            gcd = gcd.unpowered(getP());
+            result.push_back(std::pair{gcd, static_cast<std::size_t>(getP())});
+        }
+
+        return result;
+    } else {
+        polynomial = polynomial.unpowered(getP());
+        result = berlekampFactorization(polynomial);
+        for(auto& [_, count] : result) {
+            count *= getP();
+        }
+
+        return result;
+    }
+}
+
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
         std::vector<char> prime(n + 1, true);
@@ -559,6 +650,9 @@ namespace detail {
     }
 
     Polynomial rPolynom(uint64_t i, uint64_t order, uint64_t polyMod){
+        if (i >= order){
+            return Polynomial{1};
+        }
         uint64_t m = 1, modulo = order / std::gcd(order, i), tmp = polyMod;
         while(tmp % modulo != 1){
             tmp *= polyMod;

@@ -88,7 +88,6 @@ namespace lab {
          */
         [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
 
-
         /**
          *  @return Order of irreducible polynomial
          */
@@ -122,6 +121,14 @@ namespace lab {
          * @return the count of roots of equation P(x) = 0
          */
         [[nodiscard]] int countRoots(const Polynomial &polynomial, PolynomialRing::CountPolicy policy = PolynomialRing::CountPolicy::GCD) const;
+
+        /**
+         * @return vector of pair - <multiplicity of root, count of roots>
+         */
+        [[nodiscard]] std::vector<std::pair<int, uint64_t>> countMultipleRoots(const Polynomial &polynomial) const;
+
+        [[nodiscard]]
+        std::vector<std::pair<Polynomial, std::size_t>> berlekampFactorization(Polynomial polynomial) const;
 
     private:
         uint64_t _p;
