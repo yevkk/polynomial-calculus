@@ -752,6 +752,11 @@ QTabWidget::pane {
                 <string>Berlekamp factorization</string>
                </property>
               </item>
+              <item>
+               <property name="text">
+                <string>order of polynomial</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item>

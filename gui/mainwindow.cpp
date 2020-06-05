@@ -316,6 +316,9 @@ void MainWindow::on_ringActionSelect_activated(int index) {
     case 14:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
+    case 15:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
     default:
         break;
     }
@@ -579,6 +582,21 @@ void MainWindow::on_runRingBtn_clicked() {
         for (size_t i = 1; i < result.size(); i++) {
              result_str += "*(" + to_string(_ring->normalize(result[i].first)) + ")^" + std::to_string(result[i].second);;
         }
+
+        break;
+    }
+
+    case 15: {
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+
+        result_str = std::to_string(_ring->order(left));
 
         break;
     }
