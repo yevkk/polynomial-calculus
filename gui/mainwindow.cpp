@@ -229,6 +229,7 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     }
 
+
     default:
         break;
     }
@@ -279,6 +280,9 @@ void MainWindow::on_ringActionSelect_activated(int index) {
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
     case 12:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
+    case 13:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
     default:
@@ -415,13 +419,26 @@ void MainWindow::on_runRingBtn_clicked() {
 
     case 12: {
         auto left = detail_ui::from_qstring(pol_str1);
-          qDebug() << QString("w");
+
         if (!_ring->isIrreducible(left)) {
             showError();
             return;
         }
 
         result_str = std::to_string(_ring->order_of_irreducible(left));
+
+        break;
+    }
+
+    case 13: {
+        auto left = detail_ui::from_qstring(pol_str1);
+
+        auto result = _ring->berlekampFactorization(left);
+
+        result_str = "(" + to_string(_ring->normalize(result[0].first)) + ")^" + std::to_string(result[0].second);
+        for (size_t i = 1; i < result.size(); i++) {
+             result_str += "*(" + to_string(_ring->normalize(result[i].first)) + ")^" + std::to_string(result[i].second);;
+        }
 
         break;
     }

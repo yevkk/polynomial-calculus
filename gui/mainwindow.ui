@@ -742,6 +742,11 @@ QTabWidget::pane {
                 <string>order of irreducible</string>
                </property>
               </item>
+              <item>
+               <property name="text">
+                <string>Berlekamp factorization</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item>
