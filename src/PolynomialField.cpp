@@ -5,6 +5,7 @@
 #include <cmath>
 #include <optional>
 #include <numeric>
+#include <algorithm>
 
 namespace lab {
 
@@ -147,5 +148,54 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
 
 
 
+
+std::vector<std::pair<Polynomial, std::size_t>> PolynomialField::berlekampFactorization(Polynomial polynomial) const
+{
+    std::size_t i = 1;
+    const auto unit = Polynomial::x(0);
+    const auto derivative = polynomial.derivate();
+    std::vector<std::pair<Polynomial, std::size_t>> result;
+
+    constexpr auto is_null = [] (const auto& p) {
+        return std::all_of(
+            p.coefficients().begin(), 
+            p.coefficients().end(),
+            [] (const auto& x) {
+                return x == 0;
+        });
+    };
+
+    if (!is_null(derivative)) {
+        auto gcd = this->gcd(polynomial, derivative);
+        auto div = divide(polynomial, gcd);
+
+        while (div != unit) {
+            const auto y = this->gcd(div, gcd);
+            const auto z = divide(div, y);
+            if (z != unit) {
+                result.push_back(std::pair{z, i});
+            }
+
+            ++i;
+            div = y;
+            gcd = divide(gcd, y);
+        }
+
+        if (gcd != unit) {
+            gcd = gcd.unpowered(getP());
+            result.push_back(std::pair{gcd, static_cast<std::size_t>(getP())});
+        }
+
+        return result;
+    } else {
+        polynomial = polynomial.unpowered(getP());
+        result = berlekampFactorization(polynomial);
+        for(auto& [_, count] : result) {
+            count *= getP();
+        }
+
+        return result;
+    }
+}
 
 } // namespace lab

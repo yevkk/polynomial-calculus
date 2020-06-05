@@ -1,8 +1,8 @@
 #include "Polynomial.hpp"
 
-#include <cctype>
 #include <algorithm>
 #include <utility>
+#include <cctype>
 
 namespace lab {
 
@@ -71,6 +71,20 @@ Polynomial Polynomial::modified(int64_t modulo) const {
 
         result.finalize();
 
+    return result;
+}
+
+Polynomial Polynomial::unpowered(const int64_t modulo) const
+{
+    auto result = *this;
+    for (int i = 0; i <= degree(); ++i) {
+        result._coefs[i] = 0;
+        if (i % modulo == 0) {
+            result._coefs[i / modulo] = _coefs[i];
+        }
+    }
+
+    result.finalize();
     return result;
 }
 

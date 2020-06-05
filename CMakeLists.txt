@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(TOP_DIR ${CMAKE_SOURCE_DIR})
 set(SRC_DIR ${TOP_DIR}/src)
 set(TESTS_DIR ${TOP_DIR}/tests)
-set(CMAKE_BUILD_TYPE Debug)
 
 # output dirs
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -38,7 +37,3 @@ endif()
 # executable for quick testing in main.cpp
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE ${LIB_NAME})
-
-
-
-

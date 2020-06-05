@@ -47,6 +47,11 @@ public:
     [[nodiscard]]
     Polynomial pow(const Polynomial& num, uint64_t pow) const;
 
+    [[nodiscard]]
+    int64_t order_of_irreducible(const Polynomial& polynomial) const;
+
+    [[nodiscard]]
+    std::vector<std::pair<Polynomial, std::size_t>> berlekampFactorization(Polynomial polynomial) const;
 
 private:
     void _generateElements();
