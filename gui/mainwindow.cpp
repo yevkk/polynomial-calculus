@@ -43,17 +43,6 @@ namespace detail_ui {
         }
         return true;
     }
-
-    Polynomial from_qstring(const QString& qstr) {
-        std::stringstream iss{qstr.toStdString()};
-
-        int number;
-        std::vector<int64_t> coefs;
-        while ( iss >> number )
-          coefs.push_back( number );
-
-        return Polynomial{coefs};
-    }
 }
 
 void MainWindow::setP(int64_t p) {
@@ -160,8 +149,16 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     switch (index) {
     case 0: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         if (!(left.degree() < _setup.n && right.degree() < _setup.n)) {
             showError();
@@ -174,8 +171,16 @@ void MainWindow::on_runFieldBtn_clicked() {
     }
 
     case 1: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         if (!(left.degree() < _setup.n && right.degree() < _setup.n)) {
             showError();
@@ -188,8 +193,16 @@ void MainWindow::on_runFieldBtn_clicked() {
     }
 
     case 2: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         if (!(left.degree() < _setup.n && right.degree() < _setup.n)) {
             showError();
@@ -202,7 +215,14 @@ void MainWindow::on_runFieldBtn_clicked() {
     }
 
     case 3: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
 
         if (!(left.degree() < _setup.n)) {
             showError();
@@ -215,7 +235,15 @@ void MainWindow::on_runFieldBtn_clicked() {
     }
 
     case 4: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+
         int num = num_str.toInt();
 
         if (!(left.degree() < _setup.n)) {
@@ -304,8 +332,16 @@ void MainWindow::on_runRingBtn_clicked() {
 
     switch (index) {
     case 0: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         result_str = to_string(_ring->add(left, right));
 
@@ -313,8 +349,16 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 1: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         result_str = to_string(_ring->subtract(left, right));
 
@@ -322,8 +366,16 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 2: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         result_str = to_string(_ring->multiply(left, right));
 
@@ -331,8 +383,16 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 3: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         if (right == Polynomial{0}) {
             showError();
@@ -347,8 +407,16 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 4: {
-        auto left = detail_ui::from_qstring(pol_str1);
-        auto right = detail_ui::from_qstring(pol_str2);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+        auto right_opt = Polynomial::from_string(pol_str2.toStdString());
+
+        if (!left_opt.has_value() || !right_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+        Polynomial right = right_opt.value();
 
         result_str = to_string(_ring->gcd(left, right));
 
@@ -377,7 +445,14 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 7: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
 
         result_str = to_string(_ring->normalize(left));
 
@@ -385,7 +460,15 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 8: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+
         int num = num_str.toInt();
 
         result_str = std::to_string(_ring->evaluate(left, num));
@@ -394,7 +477,14 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 9: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
 
         result_str = to_string(_ring->derivate(left));
 
@@ -402,7 +492,14 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 10: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
 
         result_str = std::to_string(_ring->countRoots(left, PolynomialRing::CountPolicy::GCD));
 
@@ -410,7 +507,14 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 11: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
 
         result_str = std::to_string(_ring->isIrreducible(left));
 
@@ -418,7 +522,14 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 12: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
 
         if (!_ring->isIrreducible(left)) {
             showError();
@@ -431,7 +542,14 @@ void MainWindow::on_runRingBtn_clicked() {
     }
 
     case 13: {
-        auto left = detail_ui::from_qstring(pol_str1);
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
 
         auto result = _ring->berlekampFactorization(left);
 
