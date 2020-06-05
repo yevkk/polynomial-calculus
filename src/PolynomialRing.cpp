@@ -380,6 +380,26 @@ std::vector<Polynomial> PolynomialRing::irreducibleOfOrder(uint64_t order) const
                                 });
     }
 
+    int PolynomialRing::order(const Polynomial& polynomial) const {
+        std::vector<int64_t> coefs = {0, 1};
+        while (true) {
+            auto curr = Polynomial(coefs);
+            auto res = mod(curr, polynomial);
+            if (res.degree() == 0 && res.coefficient(0) < this->getP()) {
+                int r = static_cast<int>(coefs.size() - 1);
+                int a = res.coefficient(0);
+                int l = 1;
+                while (a != 1) {
+                    a *= a;
+                    a %= this->getP();
+                    ++l;
+                }
+                return l*r;
+            }
+            coefs.insert(begin(coefs), 0);
+        }
+    }
+
     std::vector<uint64_t> PolynomialRing::returnRoots(Polynomial& gPoly, Polynomial& toMod) const{
         Polynomial modPolynomial;
         Polynomial changedPolynomial = Polynomial{0};
