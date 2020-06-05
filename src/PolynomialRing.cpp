@@ -342,6 +342,33 @@ int PolynomialRing::countRoots(const Polynomial &polynomial, CountPolicy policy)
     }
 }
 
+std::vector<std::pair<int, uint64_t>> PolynomialRing::countMultipleRoots(const Polynomial &polynomial) const {
+    std::vector<std::pair<int, uint64_t>> multiplicity_count;
+    auto prev_roots = this->countRoots(polynomial);
+    Polynomial temp = polynomial;
+    auto der = derivate(temp);
+    temp = gcd(temp, der);
+    int current_roots = this->countRoots(temp);
+    if(temp.degree() == 0 || current_roots == 0) {
+        multiplicity_count.emplace_back(1, prev_roots - current_roots);
+        return multiplicity_count;
+    }
+    if(prev_roots - current_roots > 0){
+        multiplicity_count.emplace_back(1, prev_roots - current_roots);
+    }
+    int index = 1;
+    while(current_roots != 0) {
+        index++;
+        prev_roots = current_roots;
+        temp = gcd(der, derivate(der));
+        der = derivate(der);
+        current_roots = this->countRoots(temp);
+        if(prev_roots - current_roots > 0){
+            multiplicity_count.emplace_back(index, prev_roots - current_roots);
+        }
+    }
+    return multiplicity_count;
+}
 
 namespace detail {
     std::vector<uint64_t> sieveOfEratosthenes(uint64_t n) {
