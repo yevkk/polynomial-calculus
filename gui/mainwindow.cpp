@@ -291,6 +291,9 @@ void MainWindow::on_ringActionSelect_activated(int index) {
     case 10:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
+    case 11:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
     default:
         break;
     }
@@ -411,6 +414,14 @@ void MainWindow::on_runRingBtn_clicked() {
         auto left = detail_ui::from_qstring(pol_str1);
 
         result_str = std::to_string(_ring->countRoots(left, PolynomialRing::CountPolicy::GCD));
+
+        break;
+    }
+
+    case 11: {
+        auto left = detail_ui::from_qstring(pol_str1);
+
+        result_str = std::to_string(_ring->isIrreducible(left));
 
         break;
     }
