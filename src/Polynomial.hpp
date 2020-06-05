@@ -81,11 +81,6 @@ public:
     [[nodiscard]]
     static Polynomial x(size_t power);
 
-    /**
-     * @brief Parse polynomial from string.
-     */
-    struct std::optional<Polynomial> from_string(std::string_view std);
-
 private:
     // Array of polynomial's coefficients
     std::vector<int64_t> _coefs;

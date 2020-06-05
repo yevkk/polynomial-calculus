@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <utility>
 #include <cctype>
-#include <regex>
 
 namespace lab {
 
@@ -207,18 +206,6 @@ std::string to_string(const Polynomial &polynomial, char var, const bool show_ze
     }
 
     return (result.empty() ? "0" : result);
-}
-
-std::optional<Polynomial> Polynomial::from_string(const std::string_view str)
-{
-    /// <coefficient>*(optional)<variable>^<power>
-    const std::regex r{R"(([-+]?\b\d*)(\*?)(\w+)(\^)(\d+\b)|([+-]?\b\d*))"};
-    
-    struct Match {
-
-    };
-
-    return {};
 }
 
 Polynomial Polynomial::derivate() const {
