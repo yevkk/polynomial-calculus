@@ -142,9 +142,6 @@ void MainWindow::on_fieldActionSelect_activated(int index) {
     case 4:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: power;";
         break;
-    case 5:
-        action_info = "Polynomial 1: first argument;\nPolynomial 2: --- ;\nNumber: --- ;";
-        break;
     default:
         break;
     }
@@ -232,19 +229,6 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     }
 
-    case 5: {
-        auto left = detail_ui::from_qstring(pol_str1);
-
-        if (_ring->isIrreducible(left)) {
-            showError();
-            return;
-        }
-
-        result_str = std::to_string(_field->order_of_irreducible());
-
-        break;
-
-    }
     default:
         break;
     }
@@ -292,6 +276,9 @@ void MainWindow::on_ringActionSelect_activated(int index) {
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
     case 11:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
+    case 12:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
     default:
@@ -422,6 +409,19 @@ void MainWindow::on_runRingBtn_clicked() {
         auto left = detail_ui::from_qstring(pol_str1);
 
         result_str = std::to_string(_ring->isIrreducible(left));
+
+        break;
+    }
+
+    case 12: {
+        auto left = detail_ui::from_qstring(pol_str1);
+          qDebug() << QString("w");
+        if (!_ring->isIrreducible(left)) {
+            showError();
+            return;
+        }
+
+        result_str = std::to_string(_ring->order_of_irreducible(left));
 
         break;
     }

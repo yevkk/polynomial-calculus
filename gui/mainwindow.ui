@@ -436,11 +436,6 @@ QTabWidget::pane {
                 <string>power</string>
                </property>
               </item>
-              <item>
-               <property name="text">
-                <string>order of irreducible</string>
-               </property>
-              </item>
              </widget>
             </item>
             <item>
@@ -740,6 +735,11 @@ QTabWidget::pane {
               <item>
                <property name="text">
                 <string>is irreducible</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>order of irreducible</string>
                </property>
               </item>
              </widget>

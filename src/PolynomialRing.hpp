@@ -89,7 +89,13 @@ namespace lab {
         [[nodiscard]] bool isIrreducible(const Polynomial &polynomial) const;
 
         /**
-         * @return vector of roots
+         *  @return Order of irreducible polynomial
+         */
+        [[nodiscard]]
+        int order_of_irreducible (const Polynomial& polynomial) const;
+
+        /**
+         *  @return vector of roots
          */
         [[nodiscard]] std::vector<uint64_t> roots(Polynomial &polynomial) const;
 

@@ -486,6 +486,45 @@ TEST_CASE("Polynomial Rings test", "[Polynomial ring]") {
             }
         }
 
+        SECTION ("Order of irreducible") {
+
+            SECTION("F2") {
+
+                const auto ring = PolynomialRing{2};
+                const std::vector pols = {
+                        Polynomial{0, 1},
+                        Polynomial{1, 1, 0, 1},
+                        Polynomial{1, 0, 1, 0, 0, 1}
+                };
+                REQUIRE(ring.order_of_irreducible(pols[0]) == 1);
+                REQUIRE(ring.order_of_irreducible(pols[1]) == 7);
+                REQUIRE(ring.order_of_irreducible(pols[2]) == 31);
+            }
+
+            SECTION ("F3") {
+                const auto ring = PolynomialRing{3};
+                const std::vector pols = {
+                        Polynomial{1, 1},
+                        Polynomial{2, 1, 0, 0, 1},
+                        Polynomial{1, 2, 0, 0, 0, 1}
+                };
+                REQUIRE(ring.order_of_irreducible(pols[0]) == 2);
+                REQUIRE(ring.order_of_irreducible(pols[1]) == 80);
+                REQUIRE(ring.order_of_irreducible(pols[2]) == 242);
+            }
+
+            SECTION ("F5") {
+                const auto ring = PolynomialRing{5};
+                const std::vector pols = {
+                        Polynomial{2, 1, 1},
+                        Polynomial{4, 1, 0, 1},
+                        Polynomial{4, 4, 0, 0, 1}
+                };
+                REQUIRE(ring.order_of_irreducible(pols[0]) == 24);
+                REQUIRE(ring.order_of_irreducible(pols[1]) == 31);
+                REQUIRE(ring.order_of_irreducible(pols[2]) == 312);
+            }
+        }
 
 
     SECTION("Integer number factorization") {
