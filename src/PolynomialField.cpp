@@ -71,7 +71,7 @@ Polynomial PolynomialField::subtract(const Polynomial &left, const Polynomial &r
     return (left - right).modified(getP());
 }
 
-Polynomial PolynomialField::_reduceDegree(Polynomial polynomial) const {    
+Polynomial PolynomialField::_reduceDegree(Polynomial polynomial) const {
     while (polynomial.degree() >= _n) {
             auto tmp = polynomial.coefficients().back() * Polynomial::x(polynomial.degree() - _n);
 
@@ -145,6 +145,37 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
     }
     const auto poly2 = pow(poly, power / 2);
     return multiply(poly2, poly2);
+}
+
+/*
+ * @brief checks if element is a field generator
+ */
+bool PolynomialField:: isGenerator(const Polynomial &element) const {
+    utils::assert_(element, _n);
+
+    auto polynomial = element;
+    auto power_counter = 1;
+
+    while (polynomial != Polynomial{1} && power_counter != _elements.size()) {
+        polynomial = multiply(polynomial, element);
+        power_counter++;
+    }
+
+    return power_counter == _elements.size() - 1;
+}
+/*
+ * @return vector of field generators
+ */
+std::vector<Polynomial> PolynomialField::getGenerators() const {
+    std::vector<Polynomial> result;
+
+    for (const auto& item : _elements) {
+        if (isGenerator(item)) {
+            result.push_back(item);
+        }
+    }
+
+    return result;
 }
 
 } // namespace lab

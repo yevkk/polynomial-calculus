@@ -50,6 +50,18 @@ public:
     [[nodiscard]]
     int64_t order_of_irreducible(const Polynomial& polynomial) const;
 
+    /*
+     * @brief checks if element is a field generator
+     */
+    [[nodiscard]]
+    bool isGenerator(const Polynomial& element) const;
+
+    /*
+     * @return vector of field generators
+     */
+    [[nodiscard]]
+    std::vector<Polynomial> getGenerators() const;
+
 private:
     void _generateElements();
     
