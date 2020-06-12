@@ -779,12 +779,12 @@ QTabWidget::pane {
               </item>
               <item>
                <property name="text">
-                <string>Chein search (multiplicity = false)</string>
+                <string>Chien search (multiplicity = false)</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Chein search (multiplicity = true)</string>
+                <string>Chien search (multiplicity = true)</string>
                </property>
               </item>
              </widget>

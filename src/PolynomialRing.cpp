@@ -575,7 +575,7 @@ std::vector<uint64_t> PolynomialRing::chienSearch(const Polynomial &polynomial, 
         }
     }
 
-    for (int i = 0; i < getP(); i++) {
+    for (int i = 0; i < getP() - 1; i++) {
         auto sum = std::accumulate(gamma_vector.begin(), gamma_vector.end(), int64_t{0}) % getP();
         if (sum == 0) {
             counter = multiplicity ? _rootMultiplicity(polynomial, gen_power[i]) : 1;
