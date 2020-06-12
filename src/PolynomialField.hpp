@@ -6,7 +6,7 @@
 
 namespace lab {
 
-/*
+/**
  * @brief class for extension of field Fp to Fq
  * @note q = p^n, where n is a degree of irreducible polynomial in Fp
  */
@@ -14,12 +14,12 @@ class PolynomialField : public PolynomialRing {
 public:
     PolynomialField(const PolynomialField& that) = default;
 
-    /*
+    /**
      * @note irreducible polynomial should be normalized
      */
     PolynomialField(uint64_t p, const Polynomial& irreducible);
 
-    /*
+    /**
      * @return elements of field
      */
     [[nodiscard]]
@@ -50,13 +50,13 @@ public:
     [[nodiscard]]
     int64_t order_of_irreducible(const Polynomial& polynomial) const;
 
-    /*
+    /**
      * @brief checks if element is a field generator
      */
     [[nodiscard]]
     bool isGenerator(const Polynomial& element) const;
 
-    /*
+    /**
      * @return vector of field generators
      */
     [[nodiscard]]
@@ -65,13 +65,13 @@ public:
 private:
     void _generateElements();
     
-    /*
+    /**
      * @note gcd(a,b) = x*a + y*b
      */
     [[nodiscard]] 
     Polynomial _gcdExtended(const Polynomial& a, const Polynomial& b, Polynomial& x, Polynomial& y) const;
 
-    /*
+    /**
      * @note transforms of any polynomial to polynomial which belongs to field
      */
     [[nodiscard]]

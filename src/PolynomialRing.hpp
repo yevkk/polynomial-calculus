@@ -105,6 +105,8 @@ namespace lab {
          */
         [[nodiscard]] std::vector<uint64_t> findRoots(Polynomial &polynomial) const;
 
+
+
         /**
          * @brief GCD method requires only GCD function,
          *        Matrix method - uses matrix rank calculation

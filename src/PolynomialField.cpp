@@ -147,7 +147,7 @@ Polynomial PolynomialField::pow(const Polynomial& poly, uint64_t power) const {
     return multiply(poly2, poly2);
 }
 
-/*
+/**
  * @brief checks if element is a field generator
  */
 bool PolynomialField:: isGenerator(const Polynomial &element) const {
@@ -163,7 +163,7 @@ bool PolynomialField:: isGenerator(const Polynomial &element) const {
 
     return power_counter == _elements.size() - 1;
 }
-/*
+/**
  * @return vector of field generators
  */
 std::vector<Polynomial> PolynomialField::getGenerators() const {
