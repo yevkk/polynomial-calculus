@@ -108,7 +108,7 @@ namespace lab {
         /**
          *  @brief algorithm for finding all roots
          */
-        [[nodiscard]] std::vector<uint64_t> chienSearch(const Polynomial &polynomial, bool multipliity = false) const;
+        [[nodiscard]] std::vector<uint64_t> chienSearch(const Polynomial &polynomial, bool multiplicity = false) const;
 
         /**
          * @brief GCD method requires only GCD function,
@@ -137,6 +137,8 @@ namespace lab {
         std::vector <std::vector <uint64_t>> _dividing_table;
         [[nodiscard]] uint64_t _divide_coefficients(uint64_t a, uint64_t b) const;
         void _create_dividing_table(int field);
+
+        size_t _rootMultiplicity(const Polynomial& polynomial, int64_t root) const;
     };
 
 } // namespace lab

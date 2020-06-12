@@ -530,10 +530,29 @@ PolynomialRing::berlekampFactorization(Polynomial polynomial) const {
     }
 }
 
+size_t PolynomialRing::_rootMultiplicity(const Polynomial& polynomial, int64_t root) const {
+    size_t result = 0;
 
+    auto from_root = Polynomial{-root, 1};
 
-std::vector<uint64_t> PolynomialRing::chienSearch(const Polynomial &polynomial, bool multipliity) const {
+    std::pair<Polynomial, Polynomial> div_mod_res = div_mod(polynomial, from_root);
+    auto div = div_mod_res.first;
+    auto rest = div_mod_res.second;
+
+    while (rest == Polynomial{0}) {
+        result++;
+
+        div_mod_res = div_mod(div, from_root);
+        div = div_mod_res.first;
+        rest = div_mod_res.second;
+    }
+
+    return result;
+}
+
+std::vector<uint64_t> PolynomialRing::chienSearch(const Polynomial &polynomial, bool multiplicity) const {
     std::vector<uint64_t> result;
+    size_t counter = 0;
 
     PolynomialField number_field{getP(), Polynomial{1, 1}};
     auto gen = number_field.getGenerators()[0].coefficient(0);
@@ -550,13 +569,19 @@ std::vector<uint64_t> PolynomialRing::chienSearch(const Polynomial &polynomial, 
     }
 
     if (gamma_vector[0] == 0) {
-        result.push_back(0);
+        counter = multiplicity ? _rootMultiplicity(polynomial, 0) : 1;
+        for (int m = 0; m < counter; m++) {
+            result.push_back(0);
+        }
     }
 
     for (int i = 0; i < getP(); i++) {
         auto sum = std::accumulate(gamma_vector.begin(), gamma_vector.end(), int64_t{0}) % getP();
         if (sum == 0) {
-            result.push_back(gen_power[i]);
+            counter = multiplicity ? _rootMultiplicity(polynomial, gen_power[i]) : 1;
+            for (int m = 0; m < counter; m++) {
+                result.push_back(gen_power[i]);
+            }
         }
 
         for (int j = 0; j < gamma_vector.size(); j++) {
