@@ -117,7 +117,7 @@ void MainWindow::on_fieldActionSelect_activated(int index) {
     QString action_info;
     switch (index) {
     case 0:
-        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
+        action_info = "Polynomial 1: ---;\nPolynomial 2: --- ;\nNumber: ---;";
         break;
     case 1:
         action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
@@ -126,15 +126,18 @@ void MainWindow::on_fieldActionSelect_activated(int index) {
         action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
         break;
     case 3:
-        action_info = "Polynomial 1: argument;\nPolynomial 2: --- ;\nNumber: --- ;";
+        action_info = "Polynomial 1: first argument;\nPolynomial 2: second argument;\nNumber: --- ;";
         break;
     case 4:
-        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: power;";
+        action_info = "Polynomial 1: argument;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
     case 5:
-        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: ---;";
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: power;";
         break;
     case 6:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: ---;";
+        break;
+    case 7:
         action_info = "Polynomial 1: ---;\nPolynomial 2: --- ;\nNumber: ---;";
         break;
     default:
@@ -155,6 +158,15 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     switch (index) {
     case 0: {
+        auto result = _field->elements();
+
+        for (const auto& item : result) {
+            result_str += to_string(item) + "\n";
+        }
+
+        break;
+    }
+    case 1: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
         auto right_opt = Polynomial::from_string(pol_str2.toStdString());
 
@@ -176,7 +188,7 @@ void MainWindow::on_runFieldBtn_clicked() {
         break;
     }
 
-    case 1: {
+    case 2: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
         auto right_opt = Polynomial::from_string(pol_str2.toStdString());
 
@@ -198,7 +210,7 @@ void MainWindow::on_runFieldBtn_clicked() {
         break;
     }
 
-    case 2: {
+    case 3: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
         auto right_opt = Polynomial::from_string(pol_str2.toStdString());
 
@@ -220,7 +232,7 @@ void MainWindow::on_runFieldBtn_clicked() {
         break;
     }
 
-    case 3: {
+    case 4: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
 
         if (!left_opt.has_value()) {
@@ -240,7 +252,7 @@ void MainWindow::on_runFieldBtn_clicked() {
         break;
     }
 
-    case 4: {
+    case 5: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
 
         if (!left_opt.has_value()) {
@@ -263,7 +275,7 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     }
 
-    case 5: {
+    case 6: {
         auto left_opt = Polynomial::from_string(pol_str1.toStdString());
 
         if (!left_opt.has_value()) {
@@ -283,11 +295,11 @@ void MainWindow::on_runFieldBtn_clicked() {
         break;
     }
 
-    case 6: {
+    case 7: {
         auto result = _field->getGenerators();
 
         for (const auto& item : result) {
-            result_str += to_string(item) + "  ";
+            result_str += to_string(item) + "\n";
         }
 
         break;

@@ -413,6 +413,11 @@ QTabWidget::pane {
               </property>
               <item>
                <property name="text">
+                <string>print elements</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
                 <string>addition</string>
                </property>
               </item>
