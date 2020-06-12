@@ -105,7 +105,10 @@ namespace lab {
          */
         [[nodiscard]] std::vector<uint64_t> findRoots(Polynomial &polynomial) const;
 
-
+        /**
+         *  @brief algorithm for finding all roots
+         */
+        [[nodiscard]] std::vector<uint64_t> chienSearch(const Polynomial &polynomial, bool multipliity = false) const;
 
         /**
          * @brief GCD method requires only GCD function,
