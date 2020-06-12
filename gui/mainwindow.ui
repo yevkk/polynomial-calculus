@@ -391,7 +391,7 @@ QTabWidget::pane {
 }</string>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="fieldTab">
            <attribute name="title">
@@ -434,6 +434,16 @@ QTabWidget::pane {
               <item>
                <property name="text">
                 <string>power</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>is generator</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>get all generators</string>
                </property>
               </item>
              </widget>

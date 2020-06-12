@@ -131,6 +131,12 @@ void MainWindow::on_fieldActionSelect_activated(int index) {
     case 4:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: power;";
         break;
+    case 5:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: ---;";
+        break;
+    case 6:
+        action_info = "Polynomial 1: ---;\nPolynomial 2: --- ;\nNumber: ---;";
+        break;
     default:
         break;
     }
@@ -257,6 +263,35 @@ void MainWindow::on_runFieldBtn_clicked() {
 
     }
 
+    case 5: {
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+
+        if (!(left.degree() < _setup.n)) {
+            showError();
+            return;
+        }
+
+        result_str = _field->isGenerator(left) ? "yes" : "no";
+
+        break;
+    }
+
+    case 6: {
+        auto result = _field->getGenerators();
+
+        for (const auto& item : result) {
+            result_str += to_string(item) + "  ";
+        }
+
+        break;
+    }
 
     default:
         break;
