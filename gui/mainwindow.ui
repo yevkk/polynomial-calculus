@@ -391,7 +391,7 @@ QTabWidget::pane {
 }</string>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="fieldTab">
            <attribute name="title">
@@ -775,6 +775,16 @@ QTabWidget::pane {
               <item>
                <property name="text">
                 <string>find roots</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Chein search (multiplicity = false)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Chein search (multiplicity = true)</string>
                </property>
               </item>
              </widget>

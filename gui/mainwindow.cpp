@@ -369,6 +369,12 @@ void MainWindow::on_ringActionSelect_activated(int index) {
     case 16:
         action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
         break;
+    case 17:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
+    case 18:
+        action_info = "Polynomial 1: polynomial;\nPolynomial 2: --- ;\nNumber: --- ;";
+        break;
     default:
         break;
     }
@@ -662,6 +668,44 @@ void MainWindow::on_runRingBtn_clicked() {
         Polynomial left = left_opt.value();
 
         auto result = _ring->findRoots(left);
+
+        for (const auto& item : result) {
+            result_str += std::to_string(item) + " ";
+        }
+
+        break;
+    }
+
+    case 17: {
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+
+        auto result = _ring->chienSearch(left, false);
+
+        for (const auto& item : result) {
+            result_str += std::to_string(item) + " ";
+        }
+
+        break;
+    }
+
+    case 18: {
+        auto left_opt = Polynomial::from_string(pol_str1.toStdString());
+
+        if (!left_opt.has_value()) {
+            showError();
+            return;
+        }
+
+        Polynomial left = left_opt.value();
+
+        auto result = _ring->chienSearch(left, true);
 
         for (const auto& item : result) {
             result_str += std::to_string(item) + " ";
