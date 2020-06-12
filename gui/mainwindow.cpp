@@ -664,7 +664,7 @@ void MainWindow::on_runRingBtn_clicked() {
         auto result = _ring->findRoots(left);
 
         for (const auto& item : result) {
-            result_str += std::to_string(item);
+            result_str += std::to_string(item) + " ";
         }
 
         break;
